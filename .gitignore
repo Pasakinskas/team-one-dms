@@ -1,0 +1,50 @@
+/server/dms/target/
+!server/dms/.mvn/wrapper/maven-wrapper.jar`
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+/build/
+
+
+### ReactDependencies ###
+
+# dependencies
+/client/dms-react-app/node_modules
+/client/dms-react-app/.pnp
+/client/dms-react-app/.pnp.js
+
+# testing
+/client/dms-react-app/coverage
+
+# production
+/client/dms-react-app/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

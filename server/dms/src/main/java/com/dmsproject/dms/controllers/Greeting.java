@@ -17,6 +17,6 @@ public class Greeting {
 	)
     @ResponseBody
     public GreetMessage greeting() {
-        return new GreetMessage(5, "Honey");
+        return new GreetMessage(7, "Honey");
     }
 }
