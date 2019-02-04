@@ -2,7 +2,7 @@
 
 Current Project Structure:
 
-team-one-dms  
+```team-one-dms  
     +- client  
         +- dms-react-app  
             +- node_modules  
@@ -31,8 +31,8 @@ team-one-dms
                 DmsApplication.java  
     +- test  
     .gitignore  
-    README.md  
-
+    README.md
+```
 ## Next up is the create-react-app documentation ##
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
