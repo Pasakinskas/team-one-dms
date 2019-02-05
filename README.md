@@ -25,15 +25,15 @@ Current Project Structure:
             +- database.sql  
         +- dms  
             +- src/main
-				+- java
-					+- com/dmsproject/dms  
-						+- controllers  
-						+- dao  
-						+- dto
-						Constants.java
-						DmsApplication.java  
-				+- resources
-					application.properties
+		+- java
+			+- com/dmsproject/dms  
+				+- controllers  
+				+- dao  
+				+- dto
+				Constants.java
+				DmsApplication.java  
+		+- resources
+			application.properties
 						
     +- test  
     .gitignore  
