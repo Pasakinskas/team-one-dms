@@ -2,37 +2,43 @@
 
 Current Project Structure:
 
-team-one-dms
-    +- client
-        +- dms-react-app
-            +- node_modules
-            +- public
-                +- index.html
-            +- src
-                +- conponents
-                +- containers
-                +- css
-                +- img
-                +- test
-                +- App.js
-                +- index.js
-            package-lock.json
-            package.json
-    +- drawio
-        +- teamoneproject
-    +- server
-        +- db
-            +- database.sql
-        +- dms
-            +- src/main/java/com/dmsproject/dms
-                +- controllers
-                +- dao
-                +- dto
-                DmsApplication.java
-    +- test
-    .gitignore
+```team-one-dms  
+    +- client  
+        +- dms-react-app  
+            +- node_modules  
+            +- public  
+                +- index.html  
+            +- src  
+                +- conponents  
+                +- containers  
+                +- css  
+                +- img  
+                +- test  
+                +- App.js  
+                +- index.js  
+            package-lock.json  
+            package.json  
+    +- drawio  
+        +- teamoneproject  
+    +- server  
+        +- db  
+            +- database.sql  
+        +- dms  
+            +- src/main
+				+- java
+					+- com/dmsproject/dms  
+						+- controllers  
+						+- dao  
+						+- dto
+						Constants.java
+						DmsApplication.java  
+				+- resources
+					application.properties
+						
+    +- test  
+    .gitignore  
     README.md
-
+```
 ## Next up is the create-react-app documentation ##
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

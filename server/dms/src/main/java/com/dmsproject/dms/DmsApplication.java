@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
  * the exclude keyword excludes a few security 
  * classes so that we could test request easier.
  * it must be removed before continued work.
- * @author THE MASTER
  *
  */
 
