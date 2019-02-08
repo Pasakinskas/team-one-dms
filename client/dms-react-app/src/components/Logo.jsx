@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import Logo from '../images/Logo.png';
+import fine from '../img/fine.jpg';
+import '../css/Logo.css';
+
 
 class Logo extends Component {
     render() {
         return (
-            <div>
-                
+            <div className='container'> 
+               <img src={fine} alt=''></img> 
             </div>
         );
     }

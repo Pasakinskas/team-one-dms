@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import './css/App.css';
-import Login from "./containers/LoginPage";
+import HomePage from './containers/HomePage';
+import LoginPage from './containers/LoginPage';
+import RegistrationPage from './containers/RegistrationPage';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <Header className="App-header"/>
-        <Footer/>
-      </div>
+      <Router>
+        <Switch>          
+          <Route exact path="/" component={HomePage} />
+          <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/registration" component={RegistrationPage} />
+        </Switch>
+      </Router>
     );
   }
 }

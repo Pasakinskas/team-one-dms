@@ -1,0 +1,15 @@
+footer {
+    background-color: #2e2e2e;
+    text-align: center;
+    min-height: 80px;
+    font-size: 1em;
+    font-style: italic;
+    color: white;
+    position: absolute;
+    padding: 30px;
+    left: 0;
+    bottom: 0;
+    height: 70px;
+    width: 100%;
+    overflow: hidden;
+} 
