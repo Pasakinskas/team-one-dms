@@ -97,7 +97,6 @@ class Login extends Component {
             break;
         }
     }
-
     
     formValid = (e) => {
         const { password, email } = this.state;
