@@ -1,6 +1,6 @@
 package com.dmsproject.dms.dao;
 
-import com.dmsproject.dms.Constants;
+import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.DocStatus;
 
 import java.sql.PreparedStatement;
@@ -12,7 +12,7 @@ public class DocStatusDAO {
 
     public static boolean addDocStatus(final DocStatus docStatus) {
         try {
-            PreparedStatement statement = Constants.connection.prepareStatement(INSERT_SQL);
+            PreparedStatement statement = Database.connection.prepareStatement(INSERT_SQL);
             statement.setInt(1, docStatus.getStatusId());
             statement.setInt( 2, docStatus.getDocId());
             statement.setInt( 3, docStatus.getUserId());

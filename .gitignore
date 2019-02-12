@@ -1,6 +1,8 @@
 /server/dms/target/
 !server/dms/.mvn/wrapper/maven-wrapper.jar`
 
+*.class
+
 ### STS ###
 .apt_generated
 .classpath

@@ -20,10 +20,19 @@ public class User {
 	@NotNull
 	private String email;
 	
-	public User(String name, String surname, String email) {
+	@NotNull
+	private String position;
+	
+	@NotNull
+	private String password;
+	
+	public User(String name, String surname, String email,
+			String position, String password) {
 		this.setName(name);
 		this.setSurname(surname);
 		this.setEmail(email);
+		this.position = position;
+		this.password = password;
 	}
 
 	public String getName() {
@@ -56,5 +65,21 @@ public class User {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public String getPosition() {
+		return position;
+	}
+	
+	public String toString() {
+		return "{ name: "+ getName() +
+				" surname: " + getSurname() +
+				" email: " + getEmail() +
+				" position: " + getPosition() +
+				" pass: " + getPassword() + " }";
 	}
 }

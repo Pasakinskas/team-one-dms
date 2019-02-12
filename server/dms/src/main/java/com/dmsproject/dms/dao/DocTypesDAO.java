@@ -1,6 +1,6 @@
 package com.dmsproject.dms.dao;
 
-import com.dmsproject.dms.Constants;
+import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.DocTypes;
 
 import java.sql.PreparedStatement;
@@ -12,7 +12,7 @@ public class DocTypesDAO {
 
     public static boolean addDocType(final DocTypes docTypes) {
         try {
-            PreparedStatement statement = Constants.connection.prepareStatement(INSERT_SQL);
+            PreparedStatement statement = Database.connection.prepareStatement(INSERT_SQL);
             statement.setString(1, docTypes.getDescription());
 
             statement.executeUpdate();

@@ -1,6 +1,6 @@
 package com.dmsproject.dms.dao;
 
-import com.dmsproject.dms.Constants;
+import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.Document;
 
 import java.sql.PreparedStatement;
@@ -12,7 +12,7 @@ public class DocumentDAO {
 
     public static boolean addDocument(final Document document) {
         try {
-            PreparedStatement statement = Constants.connection.prepareStatement(INSERT_SQL);
+            PreparedStatement statement = Database.connection.prepareStatement(INSERT_SQL);
             statement.setInt(1, document.getTypeId());
             statement.setString(2, document.getName());
             statement.setInt( 3, document.getNumber());
