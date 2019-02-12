@@ -5,18 +5,18 @@ import NewDocButton from '../components/NewDocButton';
 import GroupView from '../components/GroupView';
 import Pagening from '../components/Pagening';
 
-class UserBoard extends Component {
+class UserBoardGetedDoc extends Component {
     render() {
         return (
-            <div className="UserBoard">
+            <div className="UserBoardGetedDoc">
                 <UserNavbar/>
                 <NewDocButton/>
                 <GroupView/>
                 <Pagening/>
-                <Footer/> 
+                <Footer/>
             </div>
         );
     }
 }
 
-export default UserBoard;
+export default UserBoardGetedDoc;

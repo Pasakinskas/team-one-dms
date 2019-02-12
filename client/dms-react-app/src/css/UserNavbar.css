@@ -1,0 +1,16 @@
+.navbar {
+    background-color: #2e2e2e;
+}
+.SignOut {
+	background-color: #fdfdfd;
+}
+
+a {
+	text-decoration: none;
+	color: #eccbcb;
+	padding: 10px;
+}
+
+a:hover{ 
+    color: #fdfdfd;
+}

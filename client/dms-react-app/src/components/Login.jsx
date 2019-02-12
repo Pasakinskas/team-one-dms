@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
 import '../css/Login.css';
 
 class Login extends Component {
@@ -50,7 +51,7 @@ class Login extends Component {
                     )}
                   </div> 
                   <div className="login">
-                    <Button variant="primary" type="submit">
+                    <Button variant="primary" type="submit" onClick={() =>this.nextPath(`/userboard`)}>
                         Prisijungti
                     </Button>
                   </div> 
@@ -58,6 +59,9 @@ class Login extends Component {
               </div>
             </div>
         );
+    }
+    nextPath = (path)=>{
+      this.props.history.push(path);
     }
 
     handleSubmit = e => {
@@ -95,6 +99,8 @@ class Login extends Component {
                 : "";
                 console.log(value);
             break;
+            default:
+            break;
         }
     }
     
@@ -111,4 +117,4 @@ class Login extends Component {
     };
 }
 
-export default Login;
+export default withRouter(Login);

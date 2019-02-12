@@ -1,0 +1,16 @@
+.pagening {
+    clear: both;
+    width: 290px;
+    float: right;
+    margin-right: 25px;
+    margin-top: 220px;
+}
+.pagening a{
+    color: #17a2b8;
+    border-color: #17a2b8;
+    background-color:  #2e2e2e;
+}
+ul.pagination {
+    margin-right: 0px;
+}
+

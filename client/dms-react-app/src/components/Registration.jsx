@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
 import '../css/Registration.css';
+import { withRouter } from 'react-router-dom';
 
 class Registration extends Component {
+  
   constructor(props) {
     super(props);
 
@@ -32,6 +34,9 @@ class Registration extends Component {
       //   { label: 'Valytoja', value: 6 },
       // ]
     };
+  }
+  nextPath = (path)=>{
+    this.props.history.push(path);
   }
 
   fetchData = async (url) => {
@@ -149,7 +154,7 @@ class Registration extends Component {
               )}
             </div> 
             <div className="register">
-              <Button variant="primary" type="submit">
+              <Button variant="primary" type="submit" onClick={() =>this.nextPath(`/userboard`)}>
                   Registruotis
               </Button>
             </div> 
@@ -278,4 +283,4 @@ class Registration extends Component {
   }
 }
 
-export default Registration;
+export default withRouter(Registration);
