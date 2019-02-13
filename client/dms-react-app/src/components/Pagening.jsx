@@ -11,11 +11,11 @@ class Pagening extends Component {
             <div>
                 <nav className="pagening" sticky="bottom">
                 <ul className="pagination">
-                    <li className="page-item"><a class="page-link" href="#">Pradinis</a></li>
-                    <li className="page-item"><a class="page-link" href="#">1</a></li>
-                    <li className="page-item"><a class="page-link" href="#">2</a></li>
-                    <li className="page-item"><a class="page-link" href="#">3</a></li>
-                    <li className="page-item"><a class="page-link" href="#">Paskutinis</a></li>
+                    <li className="page-item"><a className="page-link" href="#">Pradinis</a></li>
+                    <li className="page-item"><a className="page-link" href="#">1</a></li>
+                    <li className="page-item"><a className="page-link" href="#">2</a></li>
+                    <li className="page-item"><a className="page-link" href="#">3</a></li>
+                    <li className="page-item"><a className="page-link" href="#">Paskutinis</a></li>
                 </ul>
                 </nav>
             </div>

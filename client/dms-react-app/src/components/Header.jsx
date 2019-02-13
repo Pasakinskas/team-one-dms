@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import '../css/App.css';
 import Button from 'react-bootstrap/Button';
 import '../css/Header.css';
 import { library } from '@fortawesome/fontawesome-svg-core';

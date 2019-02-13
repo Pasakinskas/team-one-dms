@@ -17,6 +17,27 @@ class Login extends Component {
         };
     }
 
+    nextPath = (path)=>{
+      this.props.history.push(path);
+    }
+
+    fetchDataLogin = async (url) => {
+      const res = await fetch("http://localhost:8086", {
+        
+        method: "POST",
+        headers: {
+          "content-type": "Application/json",
+        
+        },
+        body: {
+          "email": this.state.email,
+          "password": this.state.password,
+        }
+      });
+      const json = await res.json();
+      return json;
+    }
+
     render() {
         const { password, email, formErrors } = this.state;
         return (
@@ -60,9 +81,6 @@ class Login extends Component {
             </div>
         );
     }
-    nextPath = (path)=>{
-      this.props.history.push(path);
-    }
 
     handleSubmit = e => {
         e.preventDefault();
@@ -73,10 +91,20 @@ class Login extends Component {
             Email: ${this.state.email}
             Password: ${this.state.password}
             `);
+            const loginanswerfrombackend = this.fetchDataLogin();
+            console.log(loginanswerfrombackend);
+            eval(loginanswerfrombackend);
         } else {
             console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
         }
     };
+    
+  // eval(isRegGood){
+  //   isRegGood = res.status == 201||200;
+  //   ? alert("Registracija pavyko, prisijunkite") && this.nextPath(`/userboard`)
+  //   : alert("Registracija nepavyko, bandykite vėliau dar kartą")
+  // }
+
     handleChange = (e) => {
         e.preventDefault();
         const { name, value } = e.target;

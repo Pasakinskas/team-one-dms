@@ -41,20 +41,22 @@ class Registration extends Component {
 
   fetchData = async (url) => {
     const res = await fetch("http://localhost:8086", {
+      
+      method: "POST",
       headers: {
         "content-type": "Application/json",
-        "method": "POST",
+      
       },
-      body: {
+      body: JSON.stringify( {
         "name": this.state.name,
         "surname": this.state.surname,
         "email": this.state.email,
         "position": this.state.position,
         "password": this.state.password,
-      }
+      })
     });
-    const json = await res.json();
-    return json;
+    const statusCode = await res.status;
+    return statusCode;
   }
 
   render() {
@@ -63,7 +65,7 @@ class Registration extends Component {
       <div className="wrapper">
         <div className="form-wrapper">
           <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
-            <div className="name"> 
+            <div className="name" id="boxes"> 
               <FormLabel>Vardas</FormLabel>
               <FormControl 
                   type="text" 
@@ -76,7 +78,7 @@ class Registration extends Component {
                   <span className="errorMessage">{formErrors.name}</span>
               )}                                 
             </div>
-            <div className="surname"> 
+            <div className="surname" id="boxes"> 
               <FormLabel>Pavardė</FormLabel>
               <FormControl 
                   type="text" 
@@ -89,7 +91,7 @@ class Registration extends Component {
                   <span className="errorMessage">{formErrors.surname}</span>
               )}                                   
             </div>
-            <div className="email"> 
+            <div className="email" id="boxes"> 
               <FormLabel>El. paštas</FormLabel>
               <FormControl 
                   type="email" 
@@ -102,7 +104,7 @@ class Registration extends Component {
                  <span className="errorMessage">{formErrors.email}</span>                        
               )}                                    
             </div>
-            <div className="position">
+            <div className="position" id="boxes">
               <FormLabel>Pareigos</FormLabel>
               {/* <Select 
                   placeholder="Pasirinkite pareigas" 
@@ -127,7 +129,7 @@ class Registration extends Component {
                 <option value="F">Valytoja</option>
               </select>
             </div>            
-            <div className="password">
+            <div className="password" id="boxes">
               <FormLabel>Slaptažodis</FormLabel>
               <FormControl  
                   type="password" 
@@ -140,7 +142,7 @@ class Registration extends Component {
                   <span className="errorMessage">{formErrors.password}</span>
               )}
             </div> 
-            <div className="passwordrep">
+            <div className="passwordrep" id="boxes">
               <FormLabel>Pakartoti slaptažodį</FormLabel>
               <FormControl
                   type="password" 
@@ -153,7 +155,7 @@ class Registration extends Component {
                   <span className="errorMessage">{formErrors.passwordrep}</span>
               )}
             </div> 
-            <div className="register">
+            <div className="register" id="boxes">
               <Button variant="primary" type="submit" onClick={() =>this.nextPath(`/userboard`)}>
                   Registruotis
               </Button>
@@ -217,19 +219,31 @@ class Registration extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { name, surname, password, passwordrep, email, position } = this.state;
-    if (this.formValid(this.state) && 
-        this.passValid(password, 7,50) &&
-        this.allLetter(name, surname) &&
-        this.validEmail(email) &&
-        this.checkPassword(password, passwordrep) &&
-        this.isPositionFilled(position)
-        ) {
-      this.fetchData();
+    if (this.formValidation) {
+      const answerfrombackend = this.fetchData();
+      console.log(answerfrombackend);
+      eval(answerfrombackend);
     }
   }
 
-  formValid = (e) => {
+  formValidation = () => {
+    const { name, surname, password, passwordrep, email, position } = this.state;
+    return (this.formValidEmptyFields(this.state) && 
+            this.passValid(password, 7,50) &&
+            this.allLetter(name, surname) &&
+            this.validEmail(email) &&
+            this.checkPassword(password, passwordrep) &&
+            this.isPositionFilled(position)
+            )
+  }
+
+  // eval(isRegGood){
+  //   isRegGood == 201||200;
+  //   ? alert("Registracija pavyko, prisijunkite") && this.nextPath(`/userboard`)
+  //   : alert("Registracija nepavyko, bandykite vėliau dar kartą")
+  // }
+
+  formValidEmptyFields = (e) => {
     const { name, surname, password, passwordrep, email, position } = this.state;
     if(name.length&&surname.length&&email.length&&password.length&&passwordrep.length !== 0){
       return true;
