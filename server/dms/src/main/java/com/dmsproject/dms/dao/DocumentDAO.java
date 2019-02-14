@@ -15,7 +15,7 @@ public class DocumentDAO {
             PreparedStatement statement = Database.connection.prepareStatement(INSERT_SQL);
             statement.setInt(1, document.getTypeId());
             statement.setString(2, document.getName());
-            statement.setInt( 3, document.getNumber());
+            statement.setString( 3, document.getNumber());
             statement.setString(4, document.getContent());
 
             statement.executeUpdate();
