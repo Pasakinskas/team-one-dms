@@ -8,8 +8,8 @@ class Pagening extends Component {
     
     render() {
         return (
-            <div>
-                <nav className="pagening" sticky="bottom">
+            <div className="pageningCont">
+                <nav className="pagening" >
                 <ul className="pagination">
                     <li className="page-item"><a className="page-link" href="#">Pradinis</a></li>
                     <li className="page-item"><a className="page-link" href="#">1</a></li>

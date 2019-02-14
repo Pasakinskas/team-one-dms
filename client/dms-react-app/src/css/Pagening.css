@@ -1,9 +1,8 @@
 .pagening {
     clear: both;
     width: 290px;
-    float: right;
-    margin-right: 25px;
-    margin-top: 220px;
+    margin-bottom: 90px;
+
 }
 .pagening a{
     color: #17a2b8;
@@ -13,4 +12,9 @@
 ul.pagination {
     margin-right: 0px;
 }
-
+.pageningCont{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 1030;
+}

@@ -156,7 +156,7 @@ class Registration extends Component {
               )}
             </div> 
             <div className="register" id="boxes">
-              <Button variant="primary" type="submit" onClick={() =>this.nextPath(`/userboard`)}>
+              <Button variant="primary" type="submit">
                   Registruotis
               </Button>
             </div> 
@@ -219,7 +219,7 @@ class Registration extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    if (this.formValidation) {
+    if (this.formValidation()) {
       const answerfrombackend = this.fetchData();
       console.log(answerfrombackend);
       eval(answerfrombackend);
@@ -237,11 +237,11 @@ class Registration extends Component {
             )
   }
 
-  // eval(isRegGood){
-  //   isRegGood == 201||200;
-  //   ? alert("Registracija pavyko, prisijunkite") && this.nextPath(`/userboard`)
-  //   : alert("Registracija nepavyko, bandykite vėliau dar kartą")
-  // }
+  eval(isRegGood){
+    isRegGood === 201||200
+    ? alert("Registracija pavyko, prisijunkite") && this.nextPath(`/userboard`)
+    : alert("Registracija nepavyko, bandykite vėliau dar kartą")
+  }
 
   formValidEmptyFields = (e) => {
     const { name, surname, password, passwordrep, email, position } = this.state;
