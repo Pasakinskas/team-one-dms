@@ -14,24 +14,26 @@ import com.dmsproject.dms.dao.UserDAO;
 import com.dmsproject.dms.dto.User;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  *  Don't forget to change the password in Constants.java
  */
 
-@RestController
 @CrossOrigin(origins = Constants.REACT_URL)
+@RestController
 public class Registration {
 	
 	@ResponseBody
     @RequestMapping(
 		value = "/register",
 		method = RequestMethod.POST,
-		produces = "application/json",
-		consumes = "application/json"
+		produces = "Application/json",
+		consumes = "Application/json"
 	)
-
+	@CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> createUser(@RequestBody @Valid User user) {
+		System.out.println(user);
     	boolean isSuccesful = UserDAO.insertUser(user);
     	
     	System.out.println("I have received a post request and the answer was " + isSuccesful);

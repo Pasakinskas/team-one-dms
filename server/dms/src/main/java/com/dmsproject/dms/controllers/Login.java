@@ -19,7 +19,7 @@ import com.dmsproject.dms.dto.User;
 @RestController
 @CrossOrigin(origins = Constants.REACT_URL)
 public class Login {
-	
+	@CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(
 		value = "/login",
 		method = RequestMethod.POST,
@@ -41,6 +41,5 @@ public class Login {
 			System.out.println(e);
 		}
 		return "error";
-
 	}
 }
