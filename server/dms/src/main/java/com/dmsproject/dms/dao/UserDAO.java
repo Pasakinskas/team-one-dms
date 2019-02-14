@@ -19,19 +19,19 @@ public class UserDAO {
 	public static List<User> fetchUserByLoginData(LoginData loginData) {
 		String statementString = "SELECT * FROM users WHERE " +
 				"email" + " = ? && password = ?";
-		
+
 		List<User> users = new ArrayList<User>();
-		
+
 		try {
 		    PreparedStatement statement = Database.connection.prepareStatement(statementString);
 		    statement.setString(1, loginData.getEmail());
 			statement.setString(2, loginData.getPassword());
 		    System.out.println(statement.toString());
 		    ResultSet rs = statement.executeQuery();
-		    
+
 		    while (rs.next()) {
 		    	User user = new User(
-	    			rs.getString("name"), 
+	    			rs.getString("name"),
 	    			rs.getString("surname"),
 	    			rs.getString("email"),
 	    			rs.getString("position"),
@@ -49,7 +49,7 @@ public class UserDAO {
 		
 	public static boolean insertUser(final User user) {
 		final String INSERT_SQL = "INSERT INTO users" +
-	            "(name, surname, email, position_id, password) " +
+	            "(name, surname, email, 'position', password) " +
 	            "values (?, ?, ?, ?, ?)";
 		
 		try {
@@ -57,7 +57,7 @@ public class UserDAO {
 		    statement.setString(1, user.getName());
 		    statement.setString(2, user.getSurname());
 		    statement.setString(3, user.getEmail());
-		    statement.setInt(4, Database.fetchId("positions", "position", user.getPosition()));
+		    statement.setString(4, user.getPosition());
 		    statement.setString(5, user.getPassword());
 		
 		    statement.executeUpdate();
