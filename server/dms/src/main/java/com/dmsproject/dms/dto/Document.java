@@ -1,34 +1,33 @@
 package com.dmsproject.dms.dto;
 
 public class Document {
-    private int id;
-    private int number;
-    private int typeId;
+    private Integer id;
+    private String number;
+    private Integer typeId;
     private String name;
     private String content;
 
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
-    public int getTypeId() {
+    public Integer getTypeId() {
         return typeId;
     }
 
-    public void setTypeId(int typeId) {
+    public void setTypeId(Integer typeId) {
         this.typeId = typeId;
     }
 
@@ -47,5 +46,4 @@ public class Document {
     public void setContent(String content) {
         this.content = content;
     }
-
 }
