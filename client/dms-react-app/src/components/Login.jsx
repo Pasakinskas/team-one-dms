@@ -95,8 +95,8 @@ class Login extends Component {
     
   eval(isRegGood){
     isRegGood === 201||200
-    ? alert("Prisijungimas pavyko, prisijunkite") && this.nextPath(`/userboard`)
-    : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")
+    ? alert("Prisijungimas pavyko, prisijunkite") 
+    : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/userboard`)
   }
 
   handleChange = (e) => {

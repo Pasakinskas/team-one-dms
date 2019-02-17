@@ -104,7 +104,7 @@ class Registration extends Component {
                  <span className="errorMessage">{formErrors.email}</span>                        
               )}                                    
             </div>
-            <div className="position" id="boxes">
+            <div className="position" >
               <FormLabel>Pareigos</FormLabel>
               {/* <Select 
                   placeholder="Pasirinkite pareigas" 

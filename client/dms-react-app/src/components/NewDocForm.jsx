@@ -66,7 +66,7 @@ class NewDocForm extends Component {
                   <DataPicker id="DatePicker"/>                 
                 </div> 
                 <div className="date">
-                  <FormLabel>Data iki</FormLabel>
+                  <FormLabel>Data iki </FormLabel>
                   <DataPicker id="DatePicker"/>                 
                 </div> 
                 <div className="docBtn">

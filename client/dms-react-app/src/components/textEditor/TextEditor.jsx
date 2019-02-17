@@ -245,6 +245,7 @@ export default class TextEditor extends Component {
     }
     render(){
         return (
+            <div className="textEditor">
             <React.Fragment>
                 <FormatToolbar>
                     {this.renderMarkButton('bold', 'format_bold')}
@@ -271,6 +272,7 @@ export default class TextEditor extends Component {
             readOnly={false}
             />
             </React.Fragment>
+            </div>
         )
     }
 }

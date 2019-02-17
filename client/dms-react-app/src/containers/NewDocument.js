@@ -8,10 +8,10 @@ class NewDocument extends Component {
     render() {
         return (
             <div>
+                <NewDocHeader/>
                 <TextEditor/>
-               <NewDocHeader/>
-               <NewDocForm/>
-               <Footer/>
+                <NewDocForm/>
+                <Footer/>
             </div>
         );
     }
