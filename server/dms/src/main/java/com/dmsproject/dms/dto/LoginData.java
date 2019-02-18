@@ -3,7 +3,6 @@ package com.dmsproject.dms.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-
 public class LoginData {
 	
 	@NotNull

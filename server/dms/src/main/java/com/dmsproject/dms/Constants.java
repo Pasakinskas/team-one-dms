@@ -10,7 +10,7 @@ public class Constants {
 	public static final String DB_USER = "root";
 	public static final String DB_PASSWORD = "colorfulHats";
 	
-	public static final String REACT_URL = "http://localhost:3000/";
+	public static final String REACT_URL = "http://localhost:3000";
 
 
 }

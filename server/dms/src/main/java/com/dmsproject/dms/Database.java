@@ -22,20 +22,20 @@ public class Database {
 	
 	public static int fetchId(String table, String field, String value) {
 		String statementString = "SELECT position_id FROM " + table +  " WHERE " + field + " = ?";
+		int id = -1;
+
 		try {
 		    PreparedStatement statement = Database.connection.prepareStatement(statementString);
 		    statement.setString(1, value);
 		    ResultSet rs = statement.executeQuery();
-		    
-		    while (rs.next()) {
-			    return rs.getInt(1);
-		    }
+		    rs.next();
+		    id = rs.getInt(1);
             statement.close();
 		} catch (java.sql.SQLException e) {
 			System.out.println("SQL error!");
 		    System.out.println(e);
 		}
-		return -1;
+		return id;
 	}
 	
 	

@@ -2,6 +2,8 @@ package com.dmsproject.dms.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +18,6 @@ import com.dmsproject.dms.dto.User;
 import javax.validation.Valid;
 import java.util.List;
 
-/**
- *  Don't forget to change the password in Constants.java
- */
-
 @CrossOrigin(origins = Constants.REACT_URL)
 @RestController
 public class Registration {
@@ -31,16 +29,18 @@ public class Registration {
 		produces = "Application/json",
 		consumes = "Application/json"
 	)
-	@CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<?> createUser(@RequestBody @Valid User user) {
-		System.out.println(user);
-    	boolean isSuccesful = UserDAO.insertUser(user);
-    	
-    	System.out.println("I have received a post request and the answer was " + isSuccesful);
-    	return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> createUser(@RequestBody @Validated User user, Errors errors) {
+		if (errors.hasErrors()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+    	boolean userAddSuccessful = UserDAO.insertUser(user);
+    	if (userAddSuccessful) {
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
     }
-    
-    
+
     @RequestMapping(
 		value = "/register",
 		method = RequestMethod.GET

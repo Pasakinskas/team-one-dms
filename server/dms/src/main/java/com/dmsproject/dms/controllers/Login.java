@@ -1,9 +1,10 @@
 package com.dmsproject.dms.controllers;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +17,10 @@ import com.dmsproject.dms.dao.UserDAO;
 import com.dmsproject.dms.dto.LoginData;
 import com.dmsproject.dms.dto.User;
 
-@RestController
 @CrossOrigin(origins = Constants.REACT_URL)
+@RestController
 public class Login {
-	@CrossOrigin(origins = "http://localhost:3000")
+
     @RequestMapping(
 		value = "/login",
 		method = RequestMethod.POST,
@@ -27,19 +28,23 @@ public class Login {
 		consumes = "application/json"
 	)
 
-	/**
-	 * List solution bad. Must throw exception
-	 */
     @ResponseBody
-	public String authorizeUser(@RequestBody @Valid LoginData loginData) {
-
-		try {
-			List<User> users = UserDAO.fetchUserByLoginData(loginData);
-			return "yep, I got the post request: " + users.get(0);
-		} catch (Exception e){
-			System.out.println("Error");
-			System.out.println(e);
+	public ResponseEntity<?> authorizeUser(@RequestBody @Validated LoginData loginData, Errors errors) {
+    	if (errors.hasErrors()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		return "error";
+		try {
+			User user = UserDAO.fetchUserByLoginData(loginData);
+			HttpHeaders httpHeaders = new HttpHeaders();
+			if (user == null) {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			}
+
+			return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
+		} catch (Exception e) {
+			System.err.println("Error");
+			System.err.println(e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 	}
 }
