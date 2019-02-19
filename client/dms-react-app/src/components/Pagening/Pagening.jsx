@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/Pagening.css';
+import './Pagening.css';
 
 class Pagening extends Component {
     constructor(props) {

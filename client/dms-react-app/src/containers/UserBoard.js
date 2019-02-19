@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import UserNavbar from '../components/UserNavbar';
-import Footer from '../components/Footer';
-import NewDocButton from '../components/NewDocButton';
-import GroupView from '../components/GroupView';
-import Pagening from '../components/Pagening';
+import UserNavbar from '../components/UserNavbar/UserNavbar';
+import Footer from '../components/Footer/Footer';
+import NewDocButton from '../components/NewDocButton/NewDocButton';
+import GroupView from '../components/GroupView/GroupView';
+import Pagening from '../components/Pagening/Pagening';
 
 class UserBoard extends Component {
     render() {

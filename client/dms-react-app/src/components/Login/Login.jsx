@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import '../css/Login.css';
+import './Login.css';
 
 class Login extends Component {
     constructor(props) {

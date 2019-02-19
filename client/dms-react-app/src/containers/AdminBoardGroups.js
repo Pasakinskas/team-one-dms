@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import AdminNavBar from '../components/AdminNavBar';
-import Pagening from '../components/Pagening';
-import Footer from '../components/Footer';
+import AdminNavBar from '../components/AdminNavBar/AdminNavBar';
+import Pagening from '../components/Pagening/Pagening';
+import Footer from '../components/Footer/Footer';
 
 class AdminBoardGroups extends Component {
     render() {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Button} from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
-import '../css/NewDocButton.css';
+import './NewDocButton.css';
 
 class NewDocButton extends Component {
 

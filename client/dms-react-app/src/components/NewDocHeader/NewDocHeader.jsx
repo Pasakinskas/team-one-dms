@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faSnowflake} from '@fortawesome/free-solid-svg-icons';
-import '../css/NewDocHeader.css';
+import './NewDocHeader.css';
 library.add(faSnowflake)
 
 class NewDocHeader extends Component {

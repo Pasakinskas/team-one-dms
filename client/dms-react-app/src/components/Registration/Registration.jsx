@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
 import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
-import '../css/Registration.css';
+import './Registration.css';
 import { withRouter } from 'react-router-dom';
 
 class Registration extends Component {

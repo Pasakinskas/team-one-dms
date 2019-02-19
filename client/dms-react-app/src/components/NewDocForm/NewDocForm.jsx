@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
-import '../css/NewDocForm.css';
+import './NewDocForm.css';
 import { withRouter } from 'react-router-dom';
-import DataPicker from './DataPicker'
+import DataPicker from '../DataPicker/DataPicker'
 
 class NewDocForm extends Component {
     constructor(props) {

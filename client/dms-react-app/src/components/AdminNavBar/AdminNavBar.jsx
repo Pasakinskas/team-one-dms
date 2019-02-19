@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Button, Navbar, Nav, Form, FormControl } from 'react-bootstrap';
-import '../css/AdminNavBar.css';
+import './AdminNavBar.css';
 import { withRouter } from 'react-router-dom';
 
 class AdminNavBar extends Component {

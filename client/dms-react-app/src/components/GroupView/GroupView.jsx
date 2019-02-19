@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Card, ListGroup, FormLabel} from 'react-bootstrap';
-import '../css/GroupView.css';
+import './GroupView.css';
 
 
 class GroupView extends Component {
