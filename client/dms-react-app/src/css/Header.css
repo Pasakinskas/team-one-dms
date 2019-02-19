@@ -1,0 +1,15 @@
+.head {
+    background-color: #2e2e2e;
+    min-height: 80px;
+    font-size: calc(20px + 2vmin);
+    color: white;
+    padding: 15px 15px 15px 30px;
+} 
+.one {
+    clear: both;
+    float: left;
+}
+button {
+    float: right;
+    margin-right: 10px; 
+}

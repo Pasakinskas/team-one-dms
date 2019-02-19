@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './App.css';
 import Registration from '../components/Registration';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -9,7 +8,7 @@ class RegistrationPage extends Component {
     return (
       <div className="Registration">
         <Header/>
-        <InputReg/>
+        <Registration/>
         <Footer/>
       </div>
     );

@@ -1,0 +1,112 @@
+.wrapper {
+    height: 81vh; 
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #9aeffa;
+}
+  
+.form-wrapper {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0px 10px 50px #555;
+    background-color: #ffffff;
+}
+select,
+.form-label {
+    text-align: left;
+    font-size: 1em;
+    margin-bottom: 0.25em;
+    color: #222;
+    font-weight: lighter;
+}
+#boxes{
+    margin-bottom: 0px;
+}
+
+select,
+.form-control::placeholder {
+    font-size: 1em;
+    font-weight: lighter;
+    color: #999;
+}
+select {
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin-bottom: 0.25em;
+}
+
+.form-control.error {
+    border: 1px solid red;
+}
+  
+.errorMessage {
+    color: red;
+    font-size: 0.75em;
+    display: relative;
+}
+
+.name,
+.surname,
+.email,
+select,
+.position,
+.password,
+.passwordRep {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+  
+.name,
+.surname,
+.email,
+.position,
+.password,
+.passwordRep {
+    width: 100%;
+}
+ 
+.register {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+ 
+.register button {
+    background-color: #2e2e2e;
+    color: #fff;
+    border: 2px solid #fff;
+    width: 100%;
+    margin-top: 1em;
+    padding: 8px 0px;
+    font-size: 1em;
+    font-weight: lighter;
+    letter-spacing: 1px;
+    margin-bottom: 0.25em;
+    border-radius: 5px;
+}
+
+.register button:hover {
+    color: #05490b;
+    background-color: #fff;
+    border: 2px solid #05490b;
+}
+ 
