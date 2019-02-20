@@ -2,7 +2,7 @@ package com.dmsproject.dms.dto;
 
 public class Document {
     private int id;
-    private int number;
+    private String number;
     private int typeId;
     private String name;
     private String content;
@@ -16,11 +16,11 @@ public class Document {
         this.id = id;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
