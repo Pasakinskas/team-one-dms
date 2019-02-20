@@ -1,8 +1,9 @@
-.AdminDocList {
-    margin: 30px 10px 200px 30px;
-    width: 97%;
+.UserDocList {
+    margin: 30px 30px 200px 30px;
+    width: 72%;
     padding: 20px 20px;
     border-radius: 10px;
     box-shadow: 0px 10px 50px #555;
     background-color: #ffffff;
+    
 }

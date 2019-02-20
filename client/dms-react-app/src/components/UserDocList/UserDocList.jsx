@@ -4,18 +4,16 @@ import filterFactory, { textFilter, selectFilter } from 'react-bootstrap-table2-
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-import './AdminDocList.css';
-import SearchBar from '../SearchBar/SearchBar'
+import './UserDocList.css';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Button } from 'react-bootstrap';
-import '../SearchBar/SearchBar.css'
 
-class DocList extends Component {
-  
+
+class UserDocList extends Component {
+      
     render() {
         const { SearchBar } = Search;
-
 
         const pageButtonRenderer = ({
             page,
@@ -37,154 +35,154 @@ class DocList extends Component {
 
         const options = {
             pageButtonRenderer
-        };      
-      
+        };
+                
         const documents = [{
-            id: "1",
+            id: 1,
             name: "Ana",
             shablon: "opa",
             condition: "dead",
             actions: "do nothing",
         }, {
-            id: "2",
+            id: 2,
             name: "Marius",
             shablon: "opka",
             condition: "very alive",
             actions: "do nothing",
         }, {
-            id: "3",
+            id: 3,
             name: "Birutė",
             shablon: "opapa",
             condition: "not dead",
             actions: "do nothing",
         }, {
-            id: "4",
+            id: 4,
             name: "Šarūnas",
             shablon: "opka",
             condition: "dead",
             actions: "do nothing",
         }, {
-            id: "5",
+            id: 5,
             name: "Dalia",
             shablon: "opka",
             condition: "good kido",
             actions: "do nothing",
         }, {
-            id: "6",
+            id: 6,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         },{
-            id: "7",
+            id: 7,
             name: "Ana",
             shablon: "opa",
             condition: "dead",
             actions: "do nothing",
         }, {
-            id: "8",
+            id: 8,
             name: "Marius",
             shablon: "opka",
             condition: "very alive",
             actions: "do nothing",
         }, {
-            id: "9",
+            id: 9,
             name: "Birutė",
             shablon: "opapa",
             condition: "not dead",
             actions: "do nothing",
         }, {
-            id: "10",
+            id: 10,
             name: "Šarūnas",
             shablon: "opka",
             condition: "dead",
             actions: "do nothing",
         }, {
-            id: "11",
+            id: 11,
             name: "Dalia",
             shablon: "opka",
             condition: "good kido",
             actions: "do nothing",
         }, {
-            id: "12",
+            id: 12,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
-            id: "13",
+            id: 13,
             name: "Ana",
             shablon: "opa",
             condition: "dead",
             actions: "do nothing",
         }, {
-            id: "14",
+            id: 14,
             name: "Marius",
             shablon: "opka",
             condition: "very alive",
             actions: "do nothing",
         }, {
-            id: "15",
+            id: 15,
             name: "Birutė",
             shablon: "opapa",
             condition: "not dead",
             actions: "do nothing",
         }, {
-            id: "16",
+            id: 16,
             name: "Šarūnas",
             shablon: "opka",
             condition: "dead",
             actions: "do nothing",
         }, {
-            id: "17",
+            id: 17,
             name: "Dalia",
             shablon: "opka",
             condition: "good kido",
             actions: "do nothing",
         }, {
-            id: "18",
+            id: 18,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
-            id: "19",
+            id: 19,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
-            id: "20",
+            id: 20,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
-            id: "21",
+            id: 21,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
-            id: "22",
+            id: 22,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
-            id: "23",
+            id: 23,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
-            id: "24",
+            id: 24,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
-            id: "25",
+            id: 25,
             name: "Marius",
             shablon: "opka",
             condition: "not very alive",
@@ -216,10 +214,6 @@ class DocList extends Component {
             text: 'Būsena',
             sort: true,
             headerStyle: bgcolor,
-            // formatter: cell => selectOptions[cell],
-            // filter: selectFilter({
-            //     options: selectOptions
-            // })
         }, {
             dataField: 'actions',
             text: 'Veiksmai',
@@ -227,7 +221,7 @@ class DocList extends Component {
         }]; 
 
         return (
-            <div className="AdminDocList">
+            <div className="UserDocList">
                 <ToolkitProvider
                     keyField="id"
                     data={ documents }
@@ -247,8 +241,6 @@ class DocList extends Component {
                         )
                     }
                 </ToolkitProvider>
-                
-                {/* <SearchBar/> */}
             </div>
         );
     }
@@ -267,4 +259,4 @@ class DocList extends Component {
       }
 }
 
-export default DocList;
+export default UserDocList;

@@ -18,8 +18,6 @@ class AdminNavBar extends Component {
                     <li><a href="/adminboardusers">Vartotojai</a></li>
                 </Nav>
                 <Form inline>
-                    <FormControl type="text" placeholder="Dokumento paieška" className="mr-sm-2" />
-                    <Button variant="outline-info">Ieškoti</Button>
                     <Button className="SignOut" variant="outline-info" onClick={() =>this.nextPath(`/login`)}>Atsijungti</Button>
                 </Form>
                 </Navbar>

@@ -1,4 +1,5 @@
-.card {
+.group {
+    width: 20%;
     clear: both;
     float: right;
     margin-top: 40px;

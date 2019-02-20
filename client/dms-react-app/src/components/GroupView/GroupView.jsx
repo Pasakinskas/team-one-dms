@@ -6,8 +6,8 @@ import './GroupView.css';
 class GroupView extends Component {
     render() {
         return (
-            <div>
-                <Card style={{ width: '18rem' }}>
+            <div className="group">
+                <Card className="card">
                 <FormLabel className="GroupLabel">Mano grupės</FormLabel>
                 <ListGroup variant="flush">
                     <li className="list-group-item">Administracija</li>

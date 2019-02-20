@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Select from 'react-select';
-import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
+import {Button, Form, FormLabel, FormControl, Alert } from 'react-bootstrap';
 import './Registration.css';
 import { withRouter } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ class Registration extends Component {
       position: "",
       password: "",
       passwordrep: "",
+      variant: "danger",
       formErrors: {
         name:"",
         surname:"",
@@ -24,15 +25,6 @@ class Registration extends Component {
         password: "",
         passwordrep: ""
       },
-      // optionsState:"",
-      // jobPositions: [
-      //   { label: 'Generalinis direktorius', value: 1 },
-      //   { label: 'Personalo vadovas', value: 2 },
-      //   { label: 'Administratorius', value: 3 },
-      //   { label: 'Sistemų administratorius', value: 4 },
-      //   { label: 'IT specialistas', value: 5 },
-      //   { label: 'Valytoja', value: 6 },
-      // ]
     };
   }
   nextPath = (path)=>{
@@ -76,7 +68,7 @@ class Registration extends Component {
               />  
               {formErrors.name.length > 0 && (
                   <span className="errorMessage">{formErrors.name}</span>
-              )}                                 
+              )}                         
             </div>
             <div className="surname" id="boxes"> 
               <FormLabel>Pavardė</FormLabel>
@@ -106,15 +98,6 @@ class Registration extends Component {
             </div>
             <div className="position" >
               <FormLabel>Pareigos</FormLabel>
-              {/* <Select 
-                  placeholder="Pasirinkite pareigas" 
-                  name="position"
-                  options = { this.state.jobPositions } 
-                  onChange={opt => console.log(opt.label, opt.value)}
-                  onChange={this.onSelectChanged}
-                  value={this.jobPositions}
-                  //required
-              />  */}
               <select 
                   placeholder="Pasirinkite pareigas" 
                   name="position"
@@ -165,13 +148,6 @@ class Registration extends Component {
       </div>      
     );
   }
-
-  // onSelectChanged = (value) => {
-  //   this.setState({
-  //     jobPositions: value
-  //   });
-  //   console.log(value) 
-  // }
 
   handleChange = (e) => {
     const { name, value } = e.target;
