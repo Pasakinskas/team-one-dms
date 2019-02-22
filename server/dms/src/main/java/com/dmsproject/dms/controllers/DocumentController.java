@@ -1,6 +1,7 @@
 package com.dmsproject.dms.controllers;
 
 
+import com.dmsproject.dms.Constants;
 import com.dmsproject.dms.dao.DocumentDAO;
 import com.dmsproject.dms.dto.Document;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import java.util.List;
 
 
 @RestController()
+@CrossOrigin(origins = Constants.REACT_URL)
 public class DocumentController {
 
     @RequestMapping(value = "/document/get/all", method = RequestMethod.GET, produces = "application/json")
@@ -30,7 +32,9 @@ public class DocumentController {
     @RequestMapping(value = "/document/add", method = RequestMethod.POST, consumes = "application/json")
     public Boolean add(@RequestBody String docContent){
         Document document = new Document();
-        document.setTypeId(1);
+//        document.setTypeId(1);
+//        document.setName("Mrello first doc");
+//        document.setNumber("fiiirst");
         document.setContent(docContent);
         return DocumentDAO.addDocument(document);
     }

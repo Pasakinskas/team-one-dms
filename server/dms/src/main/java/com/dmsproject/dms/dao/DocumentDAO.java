@@ -3,6 +3,7 @@ package com.dmsproject.dms.dao;
 import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.Document;
 
+import java.awt.image.DataBuffer;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class DocumentDAO {
         ArrayList documentsList = new ArrayList<Document>();
 
         try {
-            PreparedStatement statement = Constants.connection.prepareStatement(query);
+            PreparedStatement statement = Database.connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Document document = new Document();
@@ -71,7 +72,7 @@ public class DocumentDAO {
         ArrayList documentsList = new ArrayList<Document>();
 
         try {
-            PreparedStatement statement = Constants.connection.prepareStatement(INSERT_SQL);
+            PreparedStatement statement = Database.connection.prepareStatement(INSERT_SQL);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Document document = new Document();
