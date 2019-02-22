@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import '../css/App.css';
-import Login from '../components/Login';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Login from '../components/Login/Login';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
 
 class LoginPage extends Component {
   render() {

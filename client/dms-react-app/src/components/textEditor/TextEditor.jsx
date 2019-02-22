@@ -150,12 +150,11 @@ export default class TextEditor extends Component {
     handleSubmit = (event,existingValue) =>{
         event.preventDefault();
         const data = existingValue;
-        const API = 'localhost:3000/api';
-        var json = data;
+        const API = 'localhost:8080/document/add';
         console.log(json);
         fetch(API, {
           method: 'POST',
-          body: json,
+          body: JSON.stringify(data),
         }).then(response => {
           console.log(response.status);
           if(response.status === 201){

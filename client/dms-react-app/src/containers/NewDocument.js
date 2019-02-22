@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import NewDocHeader from '../components/NewDocHeader';
-import Footer from '../components/Footer';
-import NewDocForm from '../components/NewDocForm';
+import NewDocHeader from '../components/NewDocHeader/NewDocHeader';
+import Footer from '../components/Footer/Footer';
+import NewDocForm from '../components/NewDocForm/NewDocForm';
 import { TextEditor } from '../components/textEditor';
 
 class NewDocument extends Component {

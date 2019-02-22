@@ -1,0 +1,11 @@
+.groups-table{
+    display: flex;
+    width: 60%;
+}
+.groups-table .table-button{
+    display: inline-flex;
+}
+.user-selector, .user-selector-g{
+    display: inline-flex;
+    width:200px;
+}
