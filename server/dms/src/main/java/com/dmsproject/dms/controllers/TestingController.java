@@ -3,6 +3,8 @@ package com.dmsproject.dms.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,35 +21,24 @@ import com.dmsproject.dms.dto.User;
 
 @CrossOrigin(origins = Constants.REACT_URL)
 @RestController
-public class Registration {
-	@Autowired
-	private UserDAO userDAO;
+public class TestingController {
 
-	@ResponseBody
-    @RequestMapping(
-		value = "/register",
-		method = RequestMethod.POST,
-		produces = "Application/json",
-		consumes = "Application/json"
-	)
-    public ResponseEntity<?> createUser(@RequestBody @Validated User user, Errors errors) {
-		System.out.println("registration has received the req");
-		if (errors.hasErrors()) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-    	boolean userAddSuccessful = userDAO.insertUser(user);
-    	if (userAddSuccessful) {
-			return new ResponseEntity<>(HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @RequestMapping(
-		value = "/register",
-		method = RequestMethod.GET
-	)
+            value = "/testing",
+            method = RequestMethod.GET
+    )
     public String pleasePostHere() {
-    	return "You just made a get request. Please use post here.";
+        String firstDraft = passwordEncoder.encode("this is a test");
+        String secondDraft = passwordEncoder.encode("this is a test");
+        System.out.println(firstDraft);
+        System.out.println(secondDraft);
+        System.out.println(passwordEncoder.matches("this is a test", firstDraft));
+        System.out.println(passwordEncoder.matches("this is a test", secondDraft));
+        System.out.println(firstDraft.equals(secondDraft));
+        return "check the console";
     }
+
 }
