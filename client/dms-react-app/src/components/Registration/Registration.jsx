@@ -16,7 +16,6 @@ class Registration extends Component {
       position: "",
       password: "",
       passwordrep: "",
-      variant: "danger",
       formErrors: {
         name:"",
         surname:"",

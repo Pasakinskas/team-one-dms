@@ -7,15 +7,26 @@ import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css
 import './AdminDocList.css';
 import SearchBar from '../SearchBar/SearchBar'
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
-import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
+import ToolkitProvider, { Search, selectRow } from 'react-bootstrap-table2-toolkit'
 import { Button } from 'react-bootstrap';
-import '../SearchBar/SearchBar.css'
 
-class DocList extends Component {
-  
+
+class AdminDocList extends Component {
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+            document: [{
+                id:"",
+                userName:"",
+                shablon:"",
+                condition:"",
+            }]
+        }
+    }
+
     render() {
         const { SearchBar } = Search;
-
 
         const pageButtonRenderer = ({
             page,
@@ -38,7 +49,18 @@ class DocList extends Component {
         const options = {
             pageButtonRenderer
         };      
-      
+        
+        const selectRow = {
+            mode: 'checkbox',
+            clickToSelect: true,
+            headerStyle: bgcolor,
+            // onSelect: (row, isSelect, rowIndex, e) => {
+            //     if (this.state.document.condition !== "saved") {
+            //         return false;
+            //     }
+            // }
+        };
+
         const documents = [{
             id: "1",
             name: "Ana",
@@ -194,7 +216,7 @@ class DocList extends Component {
         const bgcolor = {backgroundColor: "#9ef7e8"};
 
         const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
-
+    
         const columns = [{
             dataField: 'id',
             text: 'Nr.',
@@ -220,10 +242,6 @@ class DocList extends Component {
             // filter: selectFilter({
             //     options: selectOptions
             // })
-        }, {
-            dataField: 'actions',
-            text: 'Veiksmai',
-            headerStyle: bgcolor,
         }]; 
 
         return (
@@ -236,24 +254,46 @@ class DocList extends Component {
                     >
                     {
                         props => (
-                        <div>
-                            <SearchBar className='searchBar' { ...props.searchProps } placeholder='Paieška...' />
-                            <BootstrapTable
-                            { ...props.baseProps }
-                            filter={ filterFactory()}
-                            pagination = { paginationFactory(options) }    
-                            />
+                        <div className="tableElem">                      
+                            <SearchBar
+                                { ...props.searchProps } 
+                                placeholder='Paieška...' />
+                            <span id="btn">
+                                <Button variant="danger" type="submit" onClick={() =>this.deleteDoc()}>
+                                    Pašalinti
+                                </Button>
+                                <Button variant="secondary" type="submit" onClick={() =>this.showDoc()}>
+                                    Peržiūrėti
+                                </Button>
+                                <Button variant="success" type="submit" onClick={() =>this.send()}>
+                                    Pateikti
+                                </Button>
+                            </span>
+                            <BootstrapTable 
+                                { ...props.baseProps }
+                                filter={ filterFactory()}
+                                pagination = { paginationFactory(options) }
+                                selectRow={ selectRow }    
+                            />                          
                         </div>
-                        )
+                        )                    
                     }
                 </ToolkitProvider>
-                
-                {/* <SearchBar/> */}
             </div>
         );
     }
+    //Rodyti trinti ir pateikti reikia užčekboxintus dokumentus!!!!
+    showDoc =() =>{
 
+    };
+
+    sendDoc =() =>{
+
+    };
     
+    deleteDoc =() =>{
+
+    };
     fetchDataDocList = async (url) => {
         const res = await fetch("http://localhost:8086", {
           
@@ -267,4 +307,4 @@ class DocList extends Component {
       }
 }
 
-export default DocList;
+export default AdminDocList;

@@ -11,7 +11,19 @@ import { Button } from 'react-bootstrap';
 
 
 class UserDocList extends Component {
-      
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+            document: [{
+                id:"",
+                userName:"",
+                shablon:"",
+                condition:"",
+            }]
+        }
+    } 
+
     render() {
         const { SearchBar } = Search;
 
@@ -35,6 +47,17 @@ class UserDocList extends Component {
 
         const options = {
             pageButtonRenderer
+        };
+
+        const selectRow = {
+            mode: 'checkbox',
+            clickToSelect: true,
+            headerStyle: bgcolor,
+            // onSelect: (row, isSelect, rowIndex, e) => {
+            //     if (this.state.document.condition !== "saved") {
+            //         return false;
+            //     }
+            // }
         };
                 
         const documents = [{
@@ -230,13 +253,27 @@ class UserDocList extends Component {
                     >
                     {
                         props => (
-                        <div>
-                            <SearchBar className='searchBar' { ...props.searchProps } placeholder='Paieška...' />
-                            <BootstrapTable
-                            { ...props.baseProps }
-                            filter={ filterFactory()}
-                            pagination = { paginationFactory(options) }    
-                            />
+                            <div className="tableElem">                      
+                            <SearchBar 
+                                { ...props.searchProps } 
+                                placeholder='Paieška...' />
+                            <span id="btn">
+                                <Button variant="danger" type="submit" onClick={() =>this.deleteDoc()}>
+                                    Pašalinti
+                                </Button>
+                                <Button variant="secondary" type="submit" onClick={() =>this.showDoc()}>
+                                    Peržiūrėti
+                                </Button>
+                                <Button variant="success" type="submit" onClick={() =>this.send()}>
+                                    Pateikti
+                                </Button>
+                            </span>
+                            <BootstrapTable 
+                                { ...props.baseProps }
+                                filter={ filterFactory()}
+                                pagination = { paginationFactory(options) }
+                                selectRow={ selectRow }    
+                            />                          
                         </div>
                         )
                     }
@@ -245,7 +282,20 @@ class UserDocList extends Component {
         );
     }
 
+     //Rodyti trinti ir pateikti reikia užčekboxintus dokumentus!!!!
+     showDoc =() =>{
+
+    };
+
+    sendDoc =() =>{
+
+    };
     
+    deleteDoc =() =>{
+
+    };
+
+    //konkretaus usero dokumentai!!!
     fetchDataDocList = async (url) => {
         const res = await fetch("http://localhost:8086", {
           

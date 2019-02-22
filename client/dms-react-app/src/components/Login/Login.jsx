@@ -83,20 +83,18 @@ class Login extends Component {
   }
 
   handleSubmit = (e) => {
-    console.log("fefekaka")
       e.preventDefault();
       if (this.formValid()) {
         console.log(this.formValid())
           const loginanswerfrombackend = this.fetchDataLogin();
-          console.log(loginanswerfrombackend);
           eval(loginanswerfrombackend);
       } 
   };
     
   eval(isRegGood){
     isRegGood === 201||200
-    ? alert("Prisijungimas pavyko, prisijunkite") 
-    : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/userboard`)
+    ? alert("Prisijungimas pavyko, prisijunkite") && this.nextPath(`/userboard`)
+    : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/login`)
   }
 
   handleChange = (e) => {

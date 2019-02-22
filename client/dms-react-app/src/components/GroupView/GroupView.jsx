@@ -8,7 +8,7 @@ class GroupView extends Component {
         return (
             <div className="group">
                 <Card className="card">
-                <FormLabel className="GroupLabel">Mano grupės</FormLabel>
+                <FormLabel className="GroupLabel">Padalinia</FormLabel>
                 <ListGroup variant="flush">
                     <li className="list-group-item">Administracija</li>
                     <li className="list-group-item">Personalo skyrius</li>
