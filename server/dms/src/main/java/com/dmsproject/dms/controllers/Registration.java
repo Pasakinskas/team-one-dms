@@ -1,5 +1,6 @@
 package com.dmsproject.dms.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
@@ -15,13 +16,13 @@ import com.dmsproject.dms.Constants;
 import com.dmsproject.dms.dao.UserDAO;
 import com.dmsproject.dms.dto.User;
 
-import javax.validation.Valid;
-import java.util.List;
 
 @CrossOrigin(origins = Constants.REACT_URL)
 @RestController
 public class Registration {
-	
+	@Autowired
+	private UserDAO userDAO;
+
 	@ResponseBody
     @RequestMapping(
 		value = "/register",
@@ -30,10 +31,11 @@ public class Registration {
 		consumes = "Application/json"
 	)
     public ResponseEntity<?> createUser(@RequestBody @Validated User user, Errors errors) {
+		System.out.println("registration has received the req");
 		if (errors.hasErrors()) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-    	boolean userAddSuccessful = UserDAO.insertUser(user);
+    	boolean userAddSuccessful = userDAO.insertUser(user);
     	if (userAddSuccessful) {
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		} else {
@@ -48,5 +50,4 @@ public class Registration {
     public String pleasePostHere() {
     	return "You just made a get request. Please use post here.";
     }
-
 }

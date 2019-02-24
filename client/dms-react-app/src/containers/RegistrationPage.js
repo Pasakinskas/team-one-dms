@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Registration from '../components/Registration';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Registration from '../components/Registration/Registration';
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
 
 class RegistrationPage extends Component {
   render() {
