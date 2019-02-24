@@ -16,11 +16,6 @@ import java.util.List;
 @CrossOrigin(origins = Constants.REACT_URL)
 public class DocumentController {
 
-    @RequestMapping(value = "/document/get/all", method = RequestMethod.GET, produces = "application/json")
-    public List<Document> getAllDocuments() {
-        return DocumentDAO.getAllDocuments();
-    }
-
 //    @RequestMapping(value = "/document/add", method = RequestMethod.POST)
 //    public Boolean add(@RequestParam("docNum") String docNum,
 //                       @RequestParam("docTypeId") Integer docTypeId,
