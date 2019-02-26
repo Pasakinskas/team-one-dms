@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Select from 'react-select';
-import {Button, Form, FormLabel, FormControl, Alert } from 'react-bootstrap';
+import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
 import './Registration.css';
 import { withRouter } from 'react-router-dom';
 
@@ -98,7 +97,6 @@ class Registration extends Component {
             <div className="position" >
               <FormLabel>Pareigos</FormLabel>
               <select 
-                  placeholder="Pasirinkite pareigas" 
                   name="position"
                   value={position}
                   onChange={this.handleChange}>
@@ -196,8 +194,7 @@ class Registration extends Component {
     e.preventDefault();
     if (this.formValidation()) {
       const answerfrombackend = this.fetchData();
-      console.log(answerfrombackend);
-      eval(answerfrombackend);
+      this.evalRes(answerfrombackend);
     }
   }
 
@@ -212,7 +209,7 @@ class Registration extends Component {
             )
   }
 
-  eval(isRegGood){
+  evalRes(isRegGood){
     isRegGood === 201||200
     ? alert("Registracija pavyko, prisijunkite") && this.nextPath(`/userboard`)
     : alert("Registracija nepavyko, bandykite vėliau dar kartą")
@@ -220,7 +217,8 @@ class Registration extends Component {
 
   formValidEmptyFields = (e) => {
     const { name, surname, password, passwordrep, email, position } = this.state;
-    if(name.length&&surname.length&&email.length&&password.length&&passwordrep.length !== 0){
+    if(name.length&&surname.length&&email.length&&password.length&&
+      passwordrep.length&&position.length !== 0){
       return true;
     }else{
       alert("Visi laukai turi būti užpildyti");

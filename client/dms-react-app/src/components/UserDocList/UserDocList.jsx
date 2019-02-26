@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
-import filterFactory, { textFilter, selectFilter } from 'react-bootstrap-table2-filter';
+import filterFactory from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
@@ -17,16 +17,19 @@ class UserDocList extends Component {
         this.state = {
             document: [{
                 id:"",
-                userName:"",
-                shablon:"",
+                name:"",
+                surname:"",
+                template:"",
                 condition:"",
             }]
         }
     } 
 
     render() {
-        const { SearchBar } = Search;
 
+        const { SearchBar } = Search;
+        const bgcolor = {backgroundColor: "#9ef7e8"};
+        const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
         const pageButtonRenderer = ({
             page,
             active,
@@ -63,159 +66,155 @@ class UserDocList extends Component {
         const documents = [{
             id: 1,
             name: "Ana",
-            shablon: "opa",
+            template: "opa",
             condition: "dead",
             actions: "do nothing",
         }, {
             id: 2,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "very alive",
             actions: "do nothing",
         }, {
             id: 3,
             name: "Birutė",
-            shablon: "opapa",
+            template: "opapa",
             condition: "not dead",
             actions: "do nothing",
         }, {
             id: 4,
             name: "Šarūnas",
-            shablon: "opka",
+            template: "opka",
             condition: "dead",
             actions: "do nothing",
         }, {
             id: 5,
             name: "Dalia",
-            shablon: "opka",
+            template: "opka",
             condition: "good kido",
             actions: "do nothing",
         }, {
             id: 6,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         },{
             id: 7,
             name: "Ana",
-            shablon: "opa",
+            template: "opa",
             condition: "dead",
             actions: "do nothing",
         }, {
             id: 8,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "very alive",
             actions: "do nothing",
         }, {
             id: 9,
             name: "Birutė",
-            shablon: "opapa",
+            template: "opapa",
             condition: "not dead",
             actions: "do nothing",
         }, {
             id: 10,
             name: "Šarūnas",
-            shablon: "opka",
+            template: "opka",
             condition: "dead",
             actions: "do nothing",
         }, {
             id: 11,
             name: "Dalia",
-            shablon: "opka",
+            template: "opka",
             condition: "good kido",
             actions: "do nothing",
         }, {
             id: 12,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
             id: 13,
             name: "Ana",
-            shablon: "opa",
+            template: "opa",
             condition: "dead",
             actions: "do nothing",
         }, {
             id: 14,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "very alive",
             actions: "do nothing",
         }, {
             id: 15,
             name: "Birutė",
-            shablon: "opapa",
+            template: "opapa",
             condition: "not dead",
             actions: "do nothing",
         }, {
             id: 16,
             name: "Šarūnas",
-            shablon: "opka",
+            template: "opka",
             condition: "dead",
             actions: "do nothing",
         }, {
             id: 17,
             name: "Dalia",
-            shablon: "opka",
+            template: "opka",
             condition: "good kido",
             actions: "do nothing",
         }, {
             id: 18,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
             id: 19,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
             id: 20,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
             id: 21,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
             id: 22,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
             id: 23,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
             id: 24,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }, {
             id: 25,
             name: "Marius",
-            shablon: "opka",
+            template: "opka",
             condition: "not very alive",
             actions: "do nothing",
         }];
-        
-        const bgcolor = {backgroundColor: "#9ef7e8"};
-
-        const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
-
+       
         const columns = [{
             dataField: 'id',
             text: 'Nr.',
@@ -224,11 +223,16 @@ class UserDocList extends Component {
             align: "center",
         }, {
             dataField: 'name',
-            text: 'Pateikėjas',
+            text: 'Vardas',
+            sort: true,
+            headerStyle: bgcolor,
+        },{
+            dataField: 'surname',
+            text: 'Pavardė',
             sort: true,
             headerStyle: bgcolor,
         }, {
-            dataField: 'shablon',
+            dataField: 'template',
             text: 'Šablonas',
             sort: true,
             headerStyle: bgcolor,
@@ -236,10 +240,6 @@ class UserDocList extends Component {
             dataField: 'condition',
             text: 'Būsena',
             sort: true,
-            headerStyle: bgcolor,
-        }, {
-            dataField: 'actions',
-            text: 'Veiksmai',
             headerStyle: bgcolor,
         }]; 
 

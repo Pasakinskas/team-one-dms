@@ -35,6 +35,7 @@ class Login extends Component {
       }
     });
     const json = await res.json();
+    
     return json;
   }
 
@@ -85,16 +86,15 @@ class Login extends Component {
   handleSubmit = (e) => {
       e.preventDefault();
       if (this.formValid()) {
-        console.log(this.formValid())
-          const loginanswerfrombackend = this.fetchDataLogin();
-          eval(loginanswerfrombackend);
+        const loginanswerfrombackend = this.fetchDataLogin();
+        this.evalRes(loginanswerfrombackend);
       } 
   };
     
-  eval(isRegGood){
+  evalRes(isRegGood){
     isRegGood === 201||200
-    ? alert("Prisijungimas pavyko, prisijunkite") && this.nextPath(`/userboard`)
-    : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/login`)
+    ? alert("Prisijungimas pavyko, prisijunkite") && this.nextPath(`/login`)
+    : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/`)
   }
 
   handleChange = (e) => {

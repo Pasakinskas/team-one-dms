@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import AdminNavBar from '../components/AdminNavBar/AdminNavBar';
 import Footer from '../components/Footer/Footer';
-import AdminDocList from '../components/AdminDocList/AdminDocList';
 
-class AdminBoardDocs extends Component {
+
+class AdminBoardTemplates extends Component {
     render() {
         return (
             <div>
                 <AdminNavBar/> 
-                <AdminDocList/>
-                <Footer/>  
+                <Footer/> 
             </div>
         );
     }
 }
 
-export default AdminBoardDocs;
+export default AdminBoardTemplates;
