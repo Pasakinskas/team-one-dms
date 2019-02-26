@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AdminNavBar from '../components/AdminNavBar/AdminNavBar';
-import Pagening from '../components/Pagening/Pagening';
+import AdminUsers from '../components/AdminUsers/AdminUsers';
 import Footer from '../components/Footer/Footer';
 
 class AdminBoardUsers extends Component {
@@ -8,7 +8,7 @@ class AdminBoardUsers extends Component {
         return (
             <div>
                 <AdminNavBar/> 
-                <Pagening/>
+                <AdminUsers/>
                 <Footer/>
             </div>
         );

@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import './Pagening.css';
 
-class Pagening extends Component {
-    constructor(props) {
-        super(props);
-    }
-    
+class Pagening extends Component {  
     render() {
         return (
             <div className="pageningCont">

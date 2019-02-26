@@ -147,29 +147,22 @@ export default class TextEditor extends Component {
         }
     }
     //send json to api
-    handleSubmit = async (event,existingValue) =>{
+    handleSubmit = async (event, existingValue) =>{
         event.preventDefault();
         const data = existingValue;
-        const API = 'http://localhost:8086/document/add';
-        const res = await fetch(API, {
+        const API = 'localhost:8080/document/add';
+        fetch(API, {
           method: 'POST',
-          headers: {
-              "content-type": "application/json"
-          },
-          body: JSON.stringify({doc: data}),
-        });
-        const json = await res.json();
-        console.log(res);
-        console.log(json);
-        // }).then(response => {
-        //   console.log(response.status);
-        //   if(response.status === 201){
-        //     console.log(response.status);
-        //   }
-        //   else{
-        //     console.log(response.status);
-        //   }
-        // }).catch(error => console.error(error));
+          body: JSON.stringify({document: data}),
+        }).then(response => {
+          console.log(response.status);
+          if(response.status === 201){
+            console.log(response.status);
+          }
+          else{
+            console.log(response.status);
+          }
+        }).catch(error => console.error(error));
       }
 // render Slate mark
     renderMark = (props, editor, next) => {
