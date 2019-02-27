@@ -1,8 +1,12 @@
 package com.dmsproject.dms.controllers;
 
+import com.dmsproject.dms.security.TokenProvider;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
@@ -20,25 +24,25 @@ import com.dmsproject.dms.dto.User;
 
 
 @CrossOrigin(origins = Constants.REACT_URL)
+@Secured("ROLE_SUPERADMIN")
 @RestController
 public class TestingController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private TokenProvider tokenProvider;
+
     @RequestMapping(
             value = "/testing",
             method = RequestMethod.GET
     )
-    public String pleasePostHere() {
-        String firstDraft = passwordEncoder.encode("this is a test");
-        String secondDraft = passwordEncoder.encode("this is a test");
-        System.out.println(firstDraft);
-        System.out.println(secondDraft);
-        System.out.println(passwordEncoder.matches("this is a test", firstDraft));
-        System.out.println(passwordEncoder.matches("this is a test", secondDraft));
-        System.out.println(firstDraft.equals(secondDraft));
-        return "check the console";
+    public String pleasePostHere() throws AccessDeniedException {
+        String token = "yes yes yes";
+        return token;
+//        String item = tokenProvider.getClaimFromToken(token, "userid");
+//        return "my claim is " + item;
     }
 
 }

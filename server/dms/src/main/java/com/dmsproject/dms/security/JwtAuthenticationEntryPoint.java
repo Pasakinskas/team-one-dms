@@ -16,11 +16,11 @@ import java.nio.file.AccessDeniedException;
  */
 
 @Component
-public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint  {
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
             throws IOException, ServletException {
-        System.out.println("i got here");
+        System.out.println("i got to the entry point");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
     }
 }

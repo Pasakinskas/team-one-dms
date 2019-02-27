@@ -26,13 +26,14 @@ public class User {
 	@NotNull
 	private String password;
 	
-	public User(String name, String surname, String email,
+	public User(int id, String name, String surname, String email,
 			String position, String password) {
 		this.setName(name);
 		this.setSurname(surname);
 		this.setEmail(email);
 		this.setPosition(position);
 		this.setPassword(password);
+		this.setId(id);
 	}
 
 	public void setPosition(String position) {

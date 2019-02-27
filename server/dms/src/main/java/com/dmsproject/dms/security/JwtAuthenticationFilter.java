@@ -1,6 +1,13 @@
 package com.dmsproject.dms.security;
 
+import com.dmsproject.dms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -15,27 +22,42 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private TokenProvider tokenProvider;
     private JwtAuthenticationEntryPoint entryPoint;
 
+    @Autowired
+    UserService userService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+            throws ServletException, IOException, AccessDeniedException {
 
         /*
-         *  This code executes if the request is not disabled with the entryPoint.
-         *  All requests go through here. This should run
-         *  code for all documents and all routes. This
-         *  place should not give you a token.
+         * userService.loadById() should run with the user id from the jwt token
          */
-        System.out.println("i have encountered a request" + request.getMethod() + request.getRequestURI());
-        if (request.getRequestURI().equals("/loginsation")) {
+
+        System.out.println("Filter encountered a request " + request.getMethod() + " " + request.getRequestURI());
+
+
+        UserDetails userDetails = userService.loadUserById(1);
+
+
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Authentication as = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("authentication " + as);
+
+        if (request.getRequestURI().equals("/testingdeny")) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Test deny of entry");
         }
+
         try {
-            System.out.println(request);
             filterChain.doFilter(request, response);
         } catch (ServletException e) {
-            System.out.println("I fail at the filter");
+            System.out.println("I fail at the authFilter");
             System.out.println(e);
         }
     }
-
 }

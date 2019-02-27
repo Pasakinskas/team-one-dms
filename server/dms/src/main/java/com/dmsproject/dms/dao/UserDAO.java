@@ -16,31 +16,40 @@ public class UserDAO {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public static User getUserByEmail(String email) {
+	private User getUserByField(String field, String value) {
 		String statementString = "SELECT * FROM users WHERE " +
-				"email" + " = ?";
+				field + " = ?";
 
 		try {
-		    PreparedStatement statement = Database.connection.prepareStatement(statementString);
-		    statement.setString(1, email);
-		    ResultSet rs = statement.executeQuery();
-		   	if (rs.next()) {
-		   		User user = new User(
-					rs.getString("name"),
-					rs.getString("surname"),
-					rs.getString("email"),
-					rs.getString("position"),
-					rs.getString("password")
+			PreparedStatement statement = Database.connection.prepareStatement(statementString);
+			statement.setString(1, value);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				User user = new User(
+						rs.getInt("id"),
+						rs.getString("name"),
+						rs.getString("surname"),
+						rs.getString("email"),
+						rs.getString("position"),
+						rs.getString("password")
 				);
 				statement.close();
 				return user;
 			}
-		   	return null;
+			return null;
 		} catch (java.sql.SQLException e) {
 			System.out.println("SQL error!");
-		    System.out.println(e);
-		    return null;
+			System.out.println(e);
+			return null;
 		}
+	}
+
+	public User getUserByEmail(String email) {
+		return getUserByField("email", email);
+	}
+
+	public User getUserById(int id) {
+		return getUserByField("id", Integer.toString(id));
 	}
 
 	public boolean insertUser(final User user) {
