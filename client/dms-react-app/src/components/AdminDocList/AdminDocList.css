@@ -22,3 +22,13 @@ th {
     width: 30%;
     border-color:  #17a2b8;
 }
+h4{
+    float: left;
+    width: 50%;
+}
+
+.textEditor{
+    float: left;
+    width: 100%;
+    margin: 5px;
+}

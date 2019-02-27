@@ -134,7 +134,7 @@ class NewDocForm extends Component {
             method: "GET",
             headers: {
               "content-type": "Application/json",
-          },
+            },
           });
           const json = await res.json();
           return json;

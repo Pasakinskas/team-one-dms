@@ -8,6 +8,10 @@ import './UserDocList.css';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Button } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
+import Modal from 'react-modal';
+import {TextEditor} from '../textEditor/index';
+import ModalHeader from '../ModalHeader/ModalHeader';
 
 
 class UserDocList extends Component {
@@ -30,6 +34,7 @@ class UserDocList extends Component {
         const { SearchBar } = Search;
         const bgcolor = {backgroundColor: "#9ef7e8"};
         const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
+
         const pageButtonRenderer = ({
             page,
             active,
@@ -243,6 +248,19 @@ class UserDocList extends Component {
             headerStyle: bgcolor,
         }]; 
 
+        const customStyles = {
+            content : {
+              top          : '47%',
+              left         : '50%',
+              right        : 'auto',
+              bottom       : 'auto',
+              height       : '82%',
+              width        : '80%',
+              marginRight  : '-50%',
+              transform    : 'translate(-50%, -50%)'
+            }
+        };
+
         return (
             <div className="UserDocList">
                 <ToolkitProvider
@@ -261,7 +279,7 @@ class UserDocList extends Component {
                                 <Button variant="danger" type="submit" onClick={() =>this.deleteDoc()}>
                                     Pašalinti
                                 </Button>
-                                <Button variant="secondary" type="submit" onClick={() =>this.showDoc()}>
+                                <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
                                     Peržiūrėti
                                 </Button>
                                 <Button variant="success" type="submit" onClick={() =>this.send()}>
@@ -273,7 +291,17 @@ class UserDocList extends Component {
                                 filter={ filterFactory()}
                                 pagination = { paginationFactory(options) }
                                 selectRow={ selectRow }    
-                            />                          
+                            />
+                            <Modal id='modal'
+                                isOpen={this.state.modalIsOpen}
+                                onAfterOpen={this.afterOpenModal}
+                                onRequestClose={this.closeModal}
+                                style={customStyles}
+                                contentLabel="Dokumento peržiūra"
+                                >  
+                                <ModalHeader modalIsOpen = {this.closeModal}/>                                            
+                                <TextEditor className="textEditor"/>                      
+                            </Modal>                          
                         </div>
                         )
                     }
@@ -282,8 +310,23 @@ class UserDocList extends Component {
         );
     }
 
-     //Rodyti trinti ir pateikti reikia užčekboxintus dokumentus!!!!
-     showDoc =() =>{
+    nextPath = (path)=>{
+        this.props.history.push(path);
+    }
+
+    openModal = () => {
+        this.setState({modalIsOpen: true});
+    }
+    
+    afterOpenModal = () => {
+        // references are now sync'd and can be accessed.
+    }
+    closeModal = () => {
+        this.setState({modalIsOpen: false});
+    }
+     
+    //Rodyti trinti ir pateikti reikia užčekboxintus dokumentus!!!!
+    showDoc =() =>{
 
     };
 
@@ -309,4 +352,4 @@ class UserDocList extends Component {
       }
 }
 
-export default UserDocList;
+export default withRouter(UserDocList);

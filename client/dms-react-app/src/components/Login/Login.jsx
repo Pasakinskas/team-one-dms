@@ -35,7 +35,6 @@ class Login extends Component {
       }
     });
     const json = await res.json();
-    
     return json;
   }
 

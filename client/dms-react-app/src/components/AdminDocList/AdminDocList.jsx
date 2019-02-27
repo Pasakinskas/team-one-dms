@@ -7,9 +7,13 @@ import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css
 import './AdminDocList.css';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
-import { Button, Row } from 'react-bootstrap';
-import { withRouter, Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
+import Modal from 'react-modal';
+import {TextEditor} from '../textEditor/index';
+import ModalHeader from '../ModalHeader/ModalHeader';
 
+// Modal.setAppElement('#root')
 
 class AdminDocList extends Component {
     constructor(props) {
@@ -88,7 +92,8 @@ class AdminDocList extends Component {
                 template: "opka",
                 condition: "dead",
                 isChecked: true,
-            }]
+            }],
+            modalIsOpen: false,
         }
     }
 
@@ -165,6 +170,19 @@ class AdminDocList extends Component {
             // })
         }]; 
 
+        const customStyles = {
+            content : {
+              top          : '47%',
+              left         : '50%',
+              right        : 'auto',
+              bottom       : 'auto',
+              height       : '82%',
+              width        : '80%',
+              marginRight  : '-50%',
+              transform    : 'translate(-50%, -50%)'
+            }
+        };
+
         return (
             <div className="AdminDocList">
                 <ToolkitProvider
@@ -183,11 +201,9 @@ class AdminDocList extends Component {
                                 <Button variant="danger" type="submit" onClick={() =>this.deleteDoc()}>
                                     Pašalinti
                                 </Button>
-                            <Link to="/newdoc" target="_blank" >
-                                <Button variant="secondary" type="submit" onClick={() =>this.showDoc()}>
+                                <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
                                     Peržiūrėti
                                 </Button>
-                            </Link> 
                                 <Button variant="success" type="submit" onClick={() =>this.send()}>
                                     Pateikti
                                 </Button>
@@ -197,7 +213,17 @@ class AdminDocList extends Component {
                                 filter={ filterFactory()}
                                 pagination = { paginationFactory(options) }
                                 selectRow={ selectRow }    
-                            />                          
+                            />
+                            <Modal id='modal'
+                                isOpen={this.state.modalIsOpen}
+                                onAfterOpen={this.afterOpenModal}
+                                onRequestClose={this.closeModal}
+                                style={customStyles}
+                                contentLabel="Dokumento peržiūra"
+                                >  
+                                <ModalHeader modalIsOpen = {this.closeModal} />                                            
+                                <TextEditor className="textEditor"/>                      
+                            </Modal>                          
                         </div>
                         )                    
                     }
@@ -206,8 +232,16 @@ class AdminDocList extends Component {
         );
     }
 
-    nextPath = (path)=>{
-        this.props.history.push(path);
+    openModal = () => {
+        this.setState({modalIsOpen: true});
+    }
+    
+    afterOpenModal = () => {
+        // references are now sync'd and can be accessed.
+    }
+    
+    closeModal = () => {
+        this.setState({modalIsOpen: false});
     }
 
     changeSelectStatus = (rowIndex)=>{
@@ -274,7 +308,7 @@ class AdminDocList extends Component {
           method: "GET",
           headers: {
             "content-type": "Application/json",
-        },
+          },
         });
         const json = await res.json();
         return json;
