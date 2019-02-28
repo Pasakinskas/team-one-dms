@@ -39,8 +39,12 @@ class UserSelector extends Component{
         }
         return (
             data.map(data =>
-               <option key={data.id}>
+               <option 
+               key={data.id}
+                 value={data.id}
+                 >
                  {data.first_name}
+                 &nbsp;
                  {data.last_name}
                  </option>
             )
