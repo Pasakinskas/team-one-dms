@@ -150,9 +150,12 @@ export default class TextEditor extends Component {
     handleSubmit = async (event, existingValue) =>{
         event.preventDefault();
         const data = existingValue;
-        const API = 'localhost:8080/document/add';
+        const API = 'http://localhost:8086/document/add';
         fetch(API, {
           method: 'POST',
+          headers: {
+              "content-type": "Application/json" 
+          },
           body: JSON.stringify({document: data}),
         }).then(response => {
           console.log(response.status);

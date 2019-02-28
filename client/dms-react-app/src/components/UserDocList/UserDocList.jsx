@@ -19,7 +19,8 @@ class UserDocList extends Component {
         super(props);
     
         this.state = {
-            document: [{
+            userDocuments:[{}],
+            userDocument: [{
                 id:"",
                 name:"",
                 surname:"",
@@ -60,6 +61,7 @@ class UserDocList extends Component {
         const selectRow = {
             mode: 'checkbox',
             clickToSelect: true,
+            bgColor: "#edeeeebe",
             headerStyle: bgcolor,
             // onSelect: (row, isSelect, rowIndex, e) => {
             //     if (this.state.document.condition !== "saved") {
@@ -68,7 +70,7 @@ class UserDocList extends Component {
             // }
         };
                 
-        const documents = [{
+        const userDocuments = [{
             id: 1,
             name: "Ana",
             template: "opa",
@@ -104,7 +106,7 @@ class UserDocList extends Component {
             template: "opka",
             condition: "not very alive",
             actions: "do nothing",
-        },{
+        }, {
             id: 7,
             name: "Ana",
             template: "opa",
@@ -231,7 +233,7 @@ class UserDocList extends Component {
             text: 'Vardas',
             sort: true,
             headerStyle: bgcolor,
-        },{
+        }, {
             dataField: 'surname',
             text: 'Pavardė',
             sort: true,
@@ -265,7 +267,7 @@ class UserDocList extends Component {
             <div className="UserDocList">
                 <ToolkitProvider
                     keyField="id"
-                    data={ documents }
+                    data={ this.state.userDocuments }
                     columns={ columns }
                     search
                     >
@@ -337,17 +339,23 @@ class UserDocList extends Component {
     deleteDoc =() =>{
 
     };
-
     //konkretaus usero dokumentai!!!
-    fetchDataDocList = async (url) => {
-        const res = await fetch("http://localhost:8086", {
+    componentDidMount(){
+        this. fetchDataDocListUser()
+    }
+
+    fetchDataDocListUser = async (url) => {
+        const res = await fetch("http://localhost:8086/document/user/" + this.props.user.id, {
           
           method: "GET",
           headers: {
             "content-type": "Application/json",
         },
         });
-        const json = await res.json();
+        const json = await res.json();      
+        this.setState({ 
+            userDocuments: json
+        });             
         return json;
       }
 }
