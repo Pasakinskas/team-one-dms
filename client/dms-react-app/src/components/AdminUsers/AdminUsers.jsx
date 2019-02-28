@@ -16,7 +16,8 @@ class AdminUsers extends Component {
         super(props);
     
         this.state = {
-            users:[{
+            users: [{}],
+            user:[{
                 id: 1,
                 name: "Ana",
                 surname: "Taurienė",
@@ -174,6 +175,10 @@ class AdminUsers extends Component {
 
     }; 
 
+    componentDidMount(){
+        this.fetchDataUserList()
+    };
+
     fetchDataUserList = async (url) => {
         const res = await fetch("http://localhost:8086/users/get/all", {
           
@@ -183,6 +188,9 @@ class AdminUsers extends Component {
         },
         });
         const json = await res.json();
+        this.setState({ 
+            users: json
+        });
         return json;
     };
 }

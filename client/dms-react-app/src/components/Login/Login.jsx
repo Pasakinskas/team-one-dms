@@ -13,30 +13,10 @@ class Login extends Component {
           formErrors: {
             email: "",
             password: ""
-          }
+          },
+          user:{},
         };
     }
-
-  nextPath = (path)=>{
-    this.props.history.push(path);
-  }
-
-  fetchDataLogin = async (url) => {
-    const res = await fetch("http://localhost:8086", {
-      
-      method: "POST",
-      headers: {
-        "content-type": "Application/json",
-      
-      },
-      body: {
-        "email": this.state.email,
-        "password": this.state.password,
-      }
-    });
-    const json = await res.json();
-    return json;
-  }
 
   render() {
       const { password, email, formErrors } = this.state;
@@ -82,6 +62,28 @@ class Login extends Component {
       );
   }
 
+  nextPath = (path)=>{
+    this.props.history.push(path);
+  }
+
+  fetchDataLogin = async (url) => {
+    const res = await fetch("http://localhost:8086/login", {
+      
+      method: "POST",
+      headers: {
+        "content-type": "Application/json",
+      
+      },
+      body: {
+        "email": this.state.email,
+        "password": this.state.password,
+      }
+    });
+    const json = await res.json();
+    this.setState({user: json})
+    return json.response.status;
+  }
+
   handleSubmit = (e) => {
       e.preventDefault();
       if (this.formValid()) {
@@ -92,7 +94,7 @@ class Login extends Component {
     
   evalRes(isRegGood){
     isRegGood === 201||200
-    ? alert("Prisijungimas pavyko, prisijunkite") && this.nextPath(`/login`)
+    ? this.nextPath(`/userboard`)
     : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/`)
   }
 

@@ -20,6 +20,7 @@ class AdminDocList extends Component {
         super(props);
     
         this.state = {
+            documents: [],
             document: [{
                 id: 1,
                 name: "Ana",
@@ -64,7 +65,7 @@ class AdminDocList extends Component {
                 template: "opka",
                 condition: "not very alive",
                 isChecked: false,
-            },{
+            }, {
                 id: 7,
                 name: "Ana",
                 surname: "Kaka",
@@ -127,6 +128,7 @@ class AdminDocList extends Component {
         const selectRow = {
             mode: 'checkbox',
             clickToSelect: true,
+            bgColor: "#edeeeebe",
             headerStyle: bgcolor,
             onSelect: (row, isSelect, rowIndex, e) => {
                 this.changeSelectStatus(rowIndex);
@@ -168,7 +170,7 @@ class AdminDocList extends Component {
             // filter: selectFilter({
             //     options: selectOptions
             // })
-        }]; 
+        }];
 
         const customStyles = {
             content : {
@@ -187,7 +189,7 @@ class AdminDocList extends Component {
             <div className="AdminDocList">
                 <ToolkitProvider
                     keyField="id"
-                    data={ this.state.document }
+                    data={ this.state.documents }
                     columns={ columns }
                     search
                     >
@@ -247,11 +249,11 @@ class AdminDocList extends Component {
     changeSelectStatus = (rowIndex)=>{
        const newDoc = this.state.document.map(row => {
            if(row.id -1 === rowIndex){
-               console.log(rowIndex)
-           row.isChecked = !row.isChecked;
+                console.log(rowIndex)
+                row.isChecked = !row.isChecked;
            }
            return row;
-       })
+        })
         this.setState({
             document: newDoc
         })
@@ -285,11 +287,11 @@ class AdminDocList extends Component {
         }).catch(error => console.error(error));
     };
     
-    deleteDoc =(e) => {
+    deleteDoc = (e) => {
         //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
         e.preventDefault();
         const text = this.document.text;
-        const API = 'localhost:8080/document/add';
+        const API = 'localhost:8086/document/add';
         fetch(API, {
             method: 'POST',
             body: JSON.stringify({document: text}),
@@ -301,7 +303,12 @@ class AdminDocList extends Component {
             }
         }).catch(error => console.error(error));
     };
-    
+
+    componentDidMount(){
+        console.log("mountina")
+        this.fetchDataDocList()
+    }
+
     fetchDataDocList = async (url) => {
         const res = await fetch("http://localhost:8086/document/get/all", {
           
@@ -311,6 +318,10 @@ class AdminDocList extends Component {
           },
         });
         const json = await res.json();
+        console.log(json)
+        this.setState({ 
+            documents: json
+        });
         return json;
     }
 }
