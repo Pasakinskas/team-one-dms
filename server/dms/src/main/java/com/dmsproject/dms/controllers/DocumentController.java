@@ -7,6 +7,7 @@ import com.dmsproject.dms.dto.DocSelection;
 import com.dmsproject.dms.dto.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,9 +40,10 @@ public class DocumentController {
         return DocumentDAO.getAllDocuments();
     }
 
-//    @RequestMapping (value = "/document/get/byId", method = RequestMethod.GET, produces = "application/json")
-//    public List<DocSelection> getAll(HttpServletRequest httpServletRequest) {
-//        return DocumentDAO.getAllDocuments();
+//    @RequestMapping (value = "/document/get/byUserId", method = RequestMethod.GET, produces = "application/json")
+//    public List<DocSelection> getByUserId() {
+//         Integer userId = (Integer) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+//        return DocumentDAO.searchByUser(userId);
 //    }
 
 }
