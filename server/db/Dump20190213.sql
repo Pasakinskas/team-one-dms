@@ -58,6 +58,7 @@ DROP TABLE IF EXISTS `document_types`;
 CREATE TABLE `document_types` (
   `doc_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `doc_type_descr` varchar(45) NOT NULL,
+ `doc_template` longtext NOT NULL,
   PRIMARY KEY (`doc_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
