@@ -41,8 +41,6 @@ public class TestingController {
     public String pleasePostHere() throws AccessDeniedException {
         String token = "yes yes yes";
         return token;
-//        String item = tokenProvider.getClaimFromToken(token, "userid");
-//        return "my claim is " + item;
     }
 
 }

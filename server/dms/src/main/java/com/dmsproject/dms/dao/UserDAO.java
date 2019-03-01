@@ -26,7 +26,7 @@ public class UserDAO {
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				User user = new User(
-						rs.getInt("user_id"),
+						rs.getInt("id"),
 						rs.getString("name"),
 						rs.getString("surname"),
 						rs.getString("email"),
@@ -49,7 +49,7 @@ public class UserDAO {
 	}
 
 	public User getUserById(int id) {
-		return getUserByField("user_id", Integer.toString(id));
+		return getUserByField("id", Integer.toString(id));
 	}
 
 	public boolean insertUser(final User user) {

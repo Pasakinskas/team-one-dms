@@ -29,29 +29,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException, AccessDeniedException {
 
+        System.out.println("Filter encountered a request " + request.getMethod() + " " + request.getRequestURI());
         /*
          * userService.loadById() should run with the user id from the jwt token
          */
 
-        System.out.println("Filter encountered a request " + request.getMethod() + " " + request.getRequestURI());
-
-
         UserDetails userDetails = userService.loadUserById(1);
-
-
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Authentication as = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("authentication " + as);
+//        Authentication as = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println("authentication " + as);
 
-        if (request.getRequestURI().equals("/testingdeny")) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Test deny of entry");
-        }
+//        if (request.getRequestURI().equals("/testingdeny")) {
+//            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Test deny of entry");
+//        }
 
         try {
             filterChain.doFilter(request, response);
@@ -60,4 +54,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println(e);
         }
     }
+
 }

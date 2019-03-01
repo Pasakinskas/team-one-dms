@@ -51,6 +51,7 @@ public class UserService implements UserDetails, UserDetailsService {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        final String ROLE_PREFIX = "ROLE_";
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
 
         list.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
