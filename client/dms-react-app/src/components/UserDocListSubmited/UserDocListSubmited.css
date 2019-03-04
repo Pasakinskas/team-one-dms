@@ -2,6 +2,10 @@ th {
     background-color:#9ef7e8;
 }
 
+.tableElem#searchBar{
+    margin-bottom: 20px;
+}
+
 #btn {  
     margin-bottom: 20px;
     float: right;   
@@ -17,13 +21,13 @@ input#searchBar{
     width: 30%;
     border-color:  #17a2b8;
 }
-.toolkit1{
+
+.toolkit2{
     width: 70%;
-    float: left;
-    margin: 20px 0 0 20px;
+    float: right;
+    margin: 20px 20px 0 10px;
     padding: 20px 20px;
     border-radius: 10px;
     box-shadow: 0px 10px 50px #555;
     background-color: #ffffff;
 }
-

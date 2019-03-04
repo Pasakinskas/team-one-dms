@@ -3,14 +3,16 @@ import UserNavbar from '../components/UserNavbar/UserNavbar';
 import Footer from '../components/Footer/Footer';
 import NewDocButton from '../components/NewDocButton/NewDocButton';
 import GroupView from '../components/GroupView/GroupView';
+import Pagening from '../components/Pagening/Pagening';
+import UserDocListSubmited from '../components/UserDocListSubmited/UserDocListSubmited';  
 
-
-class UserBoardGetedDoc extends Component {
+class UserBoardSubmitedDoc extends Component {
     render() {
         return (
             <div className="UserBoardGetedDoc">
                 <UserNavbar/>
                 <NewDocButton/>
+                <UserDocListSubmited/>
                 <GroupView/>
                 <Footer/>
             </div>
@@ -18,4 +20,4 @@ class UserBoardGetedDoc extends Component {
     }
 }
 
-export default UserBoardGetedDoc;
+export default UserBoardSubmitedDoc;

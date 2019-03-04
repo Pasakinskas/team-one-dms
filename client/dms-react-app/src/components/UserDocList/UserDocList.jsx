@@ -69,160 +69,8 @@ class UserDocList extends Component {
             //         return false;
             //     }
             // }
-        };
-                
-        const userDocuments = [{
-            id: 1,
-            name: "Ana",
-            template: "opa",
-            condition: "dead",
-            actions: "do nothing",
-        }, {
-            id: 2,
-            name: "Marius",
-            template: "opka",
-            condition: "very alive",
-            actions: "do nothing",
-        }, {
-            id: 3,
-            name: "Birutė",
-            template: "opapa",
-            condition: "not dead",
-            actions: "do nothing",
-        }, {
-            id: 4,
-            name: "Šarūnas",
-            template: "opka",
-            condition: "dead",
-            actions: "do nothing",
-        }, {
-            id: 5,
-            name: "Dalia",
-            template: "opka",
-            condition: "good kido",
-            actions: "do nothing",
-        }, {
-            id: 6,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 7,
-            name: "Ana",
-            template: "opa",
-            condition: "dead",
-            actions: "do nothing",
-        }, {
-            id: 8,
-            name: "Marius",
-            template: "opka",
-            condition: "very alive",
-            actions: "do nothing",
-        }, {
-            id: 9,
-            name: "Birutė",
-            template: "opapa",
-            condition: "not dead",
-            actions: "do nothing",
-        }, {
-            id: 10,
-            name: "Šarūnas",
-            template: "opka",
-            condition: "dead",
-            actions: "do nothing",
-        }, {
-            id: 11,
-            name: "Dalia",
-            template: "opka",
-            condition: "good kido",
-            actions: "do nothing",
-        }, {
-            id: 12,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 13,
-            name: "Ana",
-            template: "opa",
-            condition: "dead",
-            actions: "do nothing",
-        }, {
-            id: 14,
-            name: "Marius",
-            template: "opka",
-            condition: "very alive",
-            actions: "do nothing",
-        }, {
-            id: 15,
-            name: "Birutė",
-            template: "opapa",
-            condition: "not dead",
-            actions: "do nothing",
-        }, {
-            id: 16,
-            name: "Šarūnas",
-            template: "opka",
-            condition: "dead",
-            actions: "do nothing",
-        }, {
-            id: 17,
-            name: "Dalia",
-            template: "opka",
-            condition: "good kido",
-            actions: "do nothing",
-        }, {
-            id: 18,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 19,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 20,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 21,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 22,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 23,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 24,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }, {
-            id: 25,
-            name: "Marius",
-            template: "opka",
-            condition: "not very alive",
-            actions: "do nothing",
-        }];
-       
+        };                
+     
         const columns = [{
             dataField: 'id',
             text: 'Nr.',
@@ -265,11 +113,11 @@ class UserDocList extends Component {
         };
 
         return (
-            <div className="UserDocList">
             <div className="toolkit1">
                 <ToolkitProvider
                     keyField="id"
-                    data= { this.state.userDocumentsSaved }
+                    data=  { this.state.userDocuments }
+                    // { this.state.userDocuments.filter((document)=>{document.status==true} return document) }
                     columns= { columns }
                     search
                     >
@@ -310,39 +158,7 @@ class UserDocList extends Component {
                         )
                     }
                 </ToolkitProvider>
-            </div>
-            <div className="toolkit2">
-                <ToolkitProvider
-                    keyField="id"
-                    data= { this.state.userDocumentsSaved }
-                    columns= { columns }
-                    search
-                    >
-                    {
-                        props => (
-                            <div className="tableElem">                      
-                            <BootstrapTable 
-                                { ...props.baseProps }
-                                filter={ filterFactory()}
-                                pagination = { paginationFactory(options) }
-                                selectRow={ selectRow }    
-                            />
-                            <Modal id='modal'
-                                isOpen={this.state.modalIsOpen}
-                                onAfterOpen={this.afterOpenModal}
-                                onRequestClose={this.closeModal}
-                                style={customStyles}
-                                contentLabel="Dokumento peržiūra"
-                                >  
-                                <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="textEditor"/>                      
-                            </Modal>                                               
-                        </div>
-                        )
-                    }
-                </ToolkitProvider>
-            </div>
-            </div>
+            </div>            
         );
     }
 
@@ -380,14 +196,13 @@ class UserDocList extends Component {
         const localDoc = this.state.document;
         for(const row of localDoc){
             if (row.isChecked === true){
-                    this.nextPath(`/newdoc`) 
-                    //&& {/* row.text show in editor */}
+                //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
             }
         }
     };
  
     sendDoc =(e) => {
-        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
+        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
         e.preventDefault();
         const text = this.document.text;
         const API = 'localhost:8086/document/add';
@@ -404,7 +219,7 @@ class UserDocList extends Component {
     };
      
     deleteDoc = (e) => {
-        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
+        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
         e.preventDefault();
         const text = this.document.text;
         const API = 'localhost:8086/document/add';
@@ -422,25 +237,7 @@ class UserDocList extends Component {
      
     //konkretaus usero dokumentai!!!
     componentDidMount(){
-        this. fetchDataDocListUserSaved()
-    }
-
-    fetchDataDocListUserSaved = async (url) => {
-        //this.props.user.id ateina iš app.js
-        const res = await fetch("http://localhost:8086/document/user/saved" 
-        // + this.props.user.id
-        , {
-          
-          method: "GET",
-          headers: {
-            "content-type": "Application/json",
-        },
-        });
-        const json = await res.json();      
-        this.setState({ 
-            userDocumentsSaved: json
-        });             
-        return json;
+        this. fetchDataDocListUser()
     }
 
     fetchDataDocListUser = async (url) => {
@@ -451,6 +248,7 @@ class UserDocList extends Component {
           
           method: "GET",
           headers: {
+            //  tokken: 
             "content-type": "Application/json",
         },
         });

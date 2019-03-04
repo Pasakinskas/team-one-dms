@@ -9,6 +9,7 @@ import AdminBoardUsers from './containers/AdminBoardUsers';
 import AdminBoardGroups from './containers/AdminBoardGroups';
 import AdminBoardDocs from './containers/AdminBoardDocs';
 import AdminBoardTemplates from './containers/AdminBoardTemplates';
+import UserBoardSubmitedDoc from './containers/UserBoardSubmitedDoc';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { hasRole } from './containers/Auth';
 
@@ -42,6 +43,7 @@ class App extends Component {
           {/* roles reiktų perduoti taip? 
           {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />} */}
           {hasRole(user, ['user']) && <Route exact path="/userboard" component={UserBoard} />}
+          {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} />}
           {hasRole(user, ['user']) && <Route exact path="/newdoc" component={NewDocument} />}
           {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
