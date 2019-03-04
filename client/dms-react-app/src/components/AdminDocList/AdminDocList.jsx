@@ -13,7 +13,6 @@ import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
 import ModalHeader from '../ModalHeader/ModalHeader';
 
-// Modal.setAppElement('#root')
 
 class AdminDocList extends Component {
     constructor(props) {
@@ -200,13 +199,13 @@ class AdminDocList extends Component {
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />
                             <span id="btn">
-                                <Button variant="danger" type="submit" onClick={() =>this.deleteDoc()}>
+                                <Button variant="danger" type="submit" onClick={() => { this.deleteDoc() }}>
                                     Pašalinti
                                 </Button>
                                 <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
                                     Peržiūrėti
                                 </Button>
-                                <Button variant="success" type="submit" onClick={() =>this.send()}>
+                                <Button variant="success" type="submit" onClick={() => { this.send() }}>
                                     Pateikti
                                 </Button>
                             </span>

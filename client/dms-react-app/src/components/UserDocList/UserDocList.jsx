@@ -19,6 +19,7 @@ class UserDocList extends Component {
         super(props);
     
         this.state = {
+            userDocumentsSaved:[{}],
             userDocuments:[{}],
             userDocument: [{
                 id:"",
@@ -265,10 +266,11 @@ class UserDocList extends Component {
 
         return (
             <div className="UserDocList">
+            <div className="toolkit1">
                 <ToolkitProvider
                     keyField="id"
-                    data={ this.state.userDocuments }
-                    columns={ columns }
+                    data= { this.state.userDocumentsSaved }
+                    columns= { columns }
                     search
                     >
                     {
@@ -278,13 +280,13 @@ class UserDocList extends Component {
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />
                             <span id="btn">
-                                <Button variant="danger" type="submit" onClick={() =>this.deleteDoc()}>
+                                <Button variant="danger" type="submit" onClick={() => { this.deleteDoc()}}>
                                     Pašalinti
                                 </Button>
                                 <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
                                     Peržiūrėti
                                 </Button>
-                                <Button variant="success" type="submit" onClick={() =>this.send()}>
+                                <Button variant="success" type="submit" onClick={() => {this.send()}}>
                                     Pateikti
                                 </Button>
                             </span>
@@ -303,11 +305,43 @@ class UserDocList extends Component {
                                 >  
                                 <ModalHeader modalIsOpen = {this.closeModal}/>                                            
                                 <TextEditor className="textEditor"/>                      
-                            </Modal>                          
+                            </Modal>                                               
                         </div>
                         )
                     }
                 </ToolkitProvider>
+            </div>
+            <div className="toolkit2">
+                <ToolkitProvider
+                    keyField="id"
+                    data= { this.state.userDocumentsSaved }
+                    columns= { columns }
+                    search
+                    >
+                    {
+                        props => (
+                            <div className="tableElem">                      
+                            <BootstrapTable 
+                                { ...props.baseProps }
+                                filter={ filterFactory()}
+                                pagination = { paginationFactory(options) }
+                                selectRow={ selectRow }    
+                            />
+                            <Modal id='modal'
+                                isOpen={this.state.modalIsOpen}
+                                onAfterOpen={this.afterOpenModal}
+                                onRequestClose={this.closeModal}
+                                style={customStyles}
+                                contentLabel="Dokumento peržiūra"
+                                >  
+                                <ModalHeader modalIsOpen = {this.closeModal}/>                                            
+                                <TextEditor className="textEditor"/>                      
+                            </Modal>                                               
+                        </div>
+                        )
+                    }
+                </ToolkitProvider>
+            </div>
             </div>
         );
     }
@@ -323,29 +357,97 @@ class UserDocList extends Component {
     afterOpenModal = () => {
         // references are now sync'd and can be accessed.
     }
+
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
      
-    //Rodyti trinti ir pateikti reikia užčekboxintus dokumentus!!!!
-    showDoc =() =>{
-
+    changeSelectStatus = (rowIndex)=>{
+        const newDoc = this.state.document.map(row => {
+            if(row.id -1 === rowIndex){
+                 console.log(rowIndex)
+                 row.isChecked = !row.isChecked;
+            }
+            return row;
+         })
+         this.setState({
+             document: newDoc
+         })
+     }
+ 
+     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
+    showDoc =() => {
+        const localDoc = this.state.document;
+        for(const row of localDoc){
+            if (row.isChecked === true){
+                    this.nextPath(`/newdoc`) 
+                    //&& {/* row.text show in editor */}
+            }
+        }
     };
-
-    sendDoc =() =>{
-
+ 
+    sendDoc =(e) => {
+        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
+        e.preventDefault();
+        const text = this.document.text;
+        const API = 'localhost:8086/document/add';
+        fetch(API, {
+            method: 'POST',
+            body: JSON.stringify({document: text}),
+        }).then(response => {
+            if(response.status === 201){
+                this.nextPath(`/adminboarddocs`);
+            }else{
+                alert("Pateikti nepavyko");
+            }
+        }).catch(error => console.error(error));
     };
-    
-    deleteDoc =() =>{
-
+     
+    deleteDoc = (e) => {
+        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
+        e.preventDefault();
+        const text = this.document.text;
+        const API = 'localhost:8086/document/add';
+        fetch(API, {
+            method: 'POST',
+            body: JSON.stringify({document: text}),
+        }).then(response => {
+            if(response.status === 201){
+                //do not show document in the list;
+            }else{
+                alert("Pašalinti nepavyko");
+            }
+        }).catch(error => console.error(error));
     };
+     
     //konkretaus usero dokumentai!!!
     componentDidMount(){
-        this. fetchDataDocListUser()
+        this. fetchDataDocListUserSaved()
+    }
+
+    fetchDataDocListUserSaved = async (url) => {
+        //this.props.user.id ateina iš app.js
+        const res = await fetch("http://localhost:8086/document/user/saved" 
+        // + this.props.user.id
+        , {
+          
+          method: "GET",
+          headers: {
+            "content-type": "Application/json",
+        },
+        });
+        const json = await res.json();      
+        this.setState({ 
+            userDocumentsSaved: json
+        });             
+        return json;
     }
 
     fetchDataDocListUser = async (url) => {
-        const res = await fetch("http://localhost:8086/document/user/" + this.props.user.id, {
+        //this.props.user.id ateina iš app.js
+        const res = await fetch("http://localhost:8086/document/user/all" 
+        // + this.props.user.id
+        , {
           
           method: "GET",
           headers: {
@@ -357,7 +459,7 @@ class UserDocList extends Component {
             userDocuments: json
         });             
         return json;
-      }
+    }
 }
 
 export default withRouter(UserDocList);

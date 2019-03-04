@@ -180,7 +180,7 @@ class AdminUsers extends Component {
     };
 
     fetchDataUserList = async (url) => {
-        const res = await fetch("http://localhost:8086/users/get/all", {
+        const res = await fetch("http://localhost:8086/users" , {
           
           method: "GET",
           headers: {

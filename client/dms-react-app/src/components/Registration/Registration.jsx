@@ -25,30 +25,7 @@ class Registration extends Component {
       },
     };
   }
-  nextPath = (path)=>{
-    this.props.history.push(path);
-  }
-
-  fetchData = async (url) => {
-    const res = await fetch("http://localhost:8086", {
-      
-      method: "POST",
-      headers: {
-        "content-type": "Application/json",
-      
-      },
-      body: JSON.stringify( {
-        "name": this.state.name,
-        "surname": this.state.surname,
-        "email": this.state.email,
-        "position": this.state.position,
-        "password": this.state.password,
-      })
-    });
-    const statusCode = await res.status;
-    return statusCode;
-  }
-
+  
   render() {
     const { name, surname, position, password, passwordrep, email, formErrors } = this.state;
     return (
@@ -144,6 +121,29 @@ class Registration extends Component {
         </div>
       </div>      
     );
+  }
+  nextPath = (path)=>{
+    this.props.history.push(path);
+  }
+
+  fetchData = async (url) => {
+    const res = await fetch("http://localhost:8086", {
+      
+      method: "POST",
+      headers: {
+        "content-type": "Application/json",
+      
+      },
+      body: JSON.stringify( {
+        "name": this.state.name,
+        "surname": this.state.surname,
+        "email": this.state.email,
+        "position": this.state.position,
+        "password": this.state.password,
+      })
+    });
+    const statusCode = await res.status;
+    return statusCode;
   }
 
   handleChange = (e) => {
