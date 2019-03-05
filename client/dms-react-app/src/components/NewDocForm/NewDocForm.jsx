@@ -30,6 +30,8 @@ class NewDocForm extends Component {
    
     render() {
         const {template, name, recipient } = this.state;
+        // const listTemplates = this.state.template.map((label) =>
+        // <option>{label}</option> );
         return (
             <div className="form-wrapper" id="form">
              <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
@@ -40,6 +42,7 @@ class NewDocForm extends Component {
                     value={template}
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite šabloną</option>
+                        {/* <option>{listTemplates}</option> */}
                         <option value="A">Prašymas išleisti atostogų</option>
                         <option value="B">Prašymas priimti į darbą</option>
                         <option value="C">Prašymas atleisti iš darbo</option>
@@ -80,6 +83,35 @@ class NewDocForm extends Component {
               </Form>
             </div>
         );
+    }
+    componentDidMount(){
+        this.fetchDataDocTemplates()
+        this.fetchDataRecipients()
+    }
+
+    //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
+    fetchDataDocTemplates = async (url) => {
+      const res = await fetch("http://localhost:8086/document/templates", {
+        
+        method: "GET",
+        headers: {
+          "content-type": "Application/json",
+        },
+      });
+      const json = await res.json();
+      return json;
+    }
+    //kokiu API kreiptis
+    fetchDataRecipients = async (url) => {
+      const res = await fetch("http://localhost:8086/", {
+        
+        method: "GET",
+        headers: {
+          "content-type": "Application/json",
+        },
+      });
+      const json = await res.json();
+      return json;
     }
 
     handleChange = (e) => {
@@ -125,20 +157,7 @@ class NewDocForm extends Component {
               alert("Išsaugoti nepavyko");
             }
           }).catch(error => console.error(error));
-        }
-
-        //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
-        fetchDataDocTemplates = async (url) => {
-          const res = await fetch("http://localhost:8086/document/templates", {
-            
-            method: "GET",
-            headers: {
-              "content-type": "Application/json",
-            },
-          });
-          const json = await res.json();
-          return json;
-        }
+      }
  }
 
 export default withRouter(NewDocForm);

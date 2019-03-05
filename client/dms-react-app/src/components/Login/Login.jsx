@@ -66,28 +66,10 @@ class Login extends Component {
     this.props.history.push(path);
   }
 
-  fetchDataLogin = async (url) => {
-    const res = await fetch("http://localhost:8086/login", {
-      
-      method: "POST",
-      headers: {
-        "content-type": "Application/json",
-      
-      },
-      body: {
-        "email": this.state.email,
-        "password": this.state.password,
-      }
-    });
-    const json = await res.json();
-    this.setState({user: json})
-    return json.response.status;
-  }
-
   handleSubmit = (e) => {
       e.preventDefault();
       if (this.formValid()) {
-        const loginanswerfrombackend = this.fetchDataLogin();
+        const loginanswerfrombackend = this.props.fetchUserData();
         this.evalRes(loginanswerfrombackend);
       } 
   };

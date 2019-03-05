@@ -9,6 +9,7 @@ import AdminBoardUsers from './containers/AdminBoardUsers';
 import AdminBoardGroups from './containers/AdminBoardGroups';
 import AdminBoardDocs from './containers/AdminBoardDocs';
 import AdminBoardTemplates from './containers/AdminBoardTemplates';
+import UserBoardSubmitedDoc from './containers/UserBoardSubmitedDoc';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { hasRole } from './containers/Auth';
 
@@ -22,17 +23,11 @@ const user = {
 };
 
 class App extends Component {
-
   constructor(props) {
     super(props);
-
+// čia steitinam userį, kad galima būtų jį čia setinti
     this.state = {
-        user: [{
-            id: '',
-            name: '',
-            surname: '',
-            position: '',
-        }]
+        user: {},
     }
 }
   render() {
@@ -40,9 +35,15 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
+          {/* į login.jsx reikia paduoti fetch f-ją kažkaip taip:
+          <Route exact path="/login" component={LoginPage} handler={ (props,state) => <Login fetchUserData = {this.fetchUserData} />}/>
+          tik bėda, kad LoginPage yra ne componentas o page */}
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/registration" component={RegistrationPage} />
+          {/* roles reiktų perduoti taip? 
+          {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />} */}
           {hasRole(user, ['user']) && <Route exact path="/userboard" component={UserBoard} />}
+          {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} />}
           {hasRole(user, ['user']) && <Route exact path="/newdoc" component={NewDocument} />}
           {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
@@ -52,6 +53,26 @@ class App extends Component {
         </Switch>
       </Router>
     );
+  }
+//userio duomenų gavimui ir setinimui
+  fetchUserData = async (url) => {
+    const res = await fetch("http://localhost:8086/login", {
+      
+      method: "POST",
+      headers: {
+        "content-type": "Application/json",
+      
+      },
+      body: {
+        "email": this.state.email,
+        "password": this.state.password,
+      }
+    });
+    const json = await res.json();
+    this.setState({
+      user: json
+    })
+    return json.response.status;
   }
 }
 

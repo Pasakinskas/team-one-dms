@@ -12,14 +12,6 @@ class AdminNavBar extends Component {
         }
       }
     
-    
-    // changeBgColor(){
-    //     const bgColor = this.isClicked = true ? "#ec5f27": "#4167b8";
-    //     this.setState({
-    //         bgColor
-    //     })
-    // }
-
     nextPath = (path)=>{
         this.props.history.push(path);
     }

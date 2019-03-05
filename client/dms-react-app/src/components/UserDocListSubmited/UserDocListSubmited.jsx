@@ -4,17 +4,16 @@ import filterFactory from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-import './UserDocList.css';
+import '../UserDocList/UserDocList.css';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
-import ModalHeader from '../ModalHeader/ModalHeader';
+import ModalHeaderSubmited from '../ModalHeader/ModalHeaderSubmited';
 
-
-class UserDocList extends Component {
+class UserDocListSubmited extends Component {
     constructor(props) {
         super(props);
     
@@ -25,7 +24,6 @@ class UserDocList extends Component {
     } 
 
     render() {
-
         const { SearchBar } = Search;
         const bgcolor = {backgroundColor: "#9ef7e8"};
         const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
@@ -94,7 +92,7 @@ class UserDocList extends Component {
 
         const customStyles = {
             content : {
-              top:'47%',
+              top: '47%',
               left: '50%',
               right: 'auto',
               bottom: 'auto',
@@ -105,32 +103,23 @@ class UserDocList extends Component {
             }
         };
 
-        return (
-            <div className="toolkit">
+          return (
+              <div className="toolkit">
                 <ToolkitProvider
                     keyField="id"
-                    data=  { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{document.status==true} return document) }
+                    data= { this.state.userDocuments }
                     columns= { columns }
                     search
                     >
                     {
-                        props => (
-                            <div className="tableElem">                      
-                            <SearchBar 
+                    props => (
+                        <div className="tableElem">
+                            <SearchBar id="searchBar"
                                 { ...props.searchProps } 
-                                placeholder='Paieška...' />
-                            <span id="btn">
-                                <Button variant="danger" type="submit" onClick={() => { this.deleteDoc()}}>
-                                    Pašalinti
-                                </Button>
-                                <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
-                                    Peržiūrėti
-                                </Button>
-                                <Button variant="success" type="submit" onClick={() => {this.send()}}>
-                                    Pateikti
-                                </Button>
-                            </span>
+                                placeholder='Paieška...' />                                             
+                            <Button id="btn" variant="secondary" type="submit" onClick={() => {this.openModal()}}>
+                                Peržiūrėti
+                            </Button>
                             <BootstrapTable 
                                 { ...props.baseProps }
                                 filter={ filterFactory()}
@@ -144,14 +133,14 @@ class UserDocList extends Component {
                                 style={customStyles}
                                 contentLabel="Dokumento peržiūra"
                                 >  
-                                <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="modalTextEditor"/>                      
+                                <ModalHeaderSubmited modalIsOpen = {this.closeModal}/>                                          
+                                <TextEditor style={{"width" : "95%"}}/>                  
                             </Modal>                                               
                         </div>
                         )
                     }
                 </ToolkitProvider>
-            </div>            
+            </div>
         );
     }
 
@@ -163,14 +152,10 @@ class UserDocList extends Component {
         this.setState({modalIsOpen: true});
     }
     
-    afterOpenModal = () => {
-        // references are now sync'd and can be accessed.
-    }
-
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
-     
+
     changeSelectStatus = (rowIndex)=>{
         const newDoc = this.state.document.map(row => {
             if(row.id -1 === rowIndex){
@@ -193,42 +178,7 @@ class UserDocList extends Component {
             }
         }
     };
- 
-    sendDoc =(e) => {
-        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
-        e.preventDefault();
-        const text = this.document.text;
-        const API = 'localhost:8086/document/add';
-        fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
-        }).then(response => {
-            if(response.status === 201){
-                this.nextPath(`/adminboarddocs`);
-            }else{
-                alert("Pateikti nepavyko");
-            }
-        }).catch(error => console.error(error));
-    };
-     
-    deleteDoc = (e) => {
-        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
-        e.preventDefault();
-        const text = this.document.text;
-        const API = 'localhost:8086/document/add';
-        fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
-        }).then(response => {
-            if(response.status === 201){
-                //do not show document in the list;
-            }else{
-                alert("Pašalinti nepavyko");
-            }
-        }).catch(error => console.error(error));
-    };
-     
-    //konkretaus usero dokumentai!!!
+
     componentDidMount(){
         this. fetchDataDocListUser()
     }
@@ -236,7 +186,7 @@ class UserDocList extends Component {
     fetchDataDocListUser = async (url) => {
         //this.props.user.id ateina iš app.js
         const res = await fetch("http://localhost:8086/document/user/all" 
-        // + this.props.user.id
+        // + this.props.user.id + pateikti/atmesti
         , {
           
           method: "GET",
@@ -251,6 +201,7 @@ class UserDocList extends Component {
         });             
         return json;
     }
-}
-
-export default withRouter(UserDocList);
+  
+  }
+  
+  export default withRouter(UserDocListSubmited );

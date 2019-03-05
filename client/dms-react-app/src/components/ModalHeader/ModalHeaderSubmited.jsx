@@ -12,12 +12,6 @@ class ModalHeader extends Component {
                 <Button variant="danger" type="submit" onClick={this.props.modalIsOpen}>
                      X
                 </Button>
-                <Button variant="primary" type="submit" onClick={() =>this.sendDoc()}>
-                    Pateikti
-                </Button>
-                <Button variant="success" type="submit" onClick={() =>this.saveDoc()}>
-                    Saugoti
-                </Button>
             </span>    
             </div>
         );
