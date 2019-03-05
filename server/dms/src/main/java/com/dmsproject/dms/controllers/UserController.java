@@ -25,7 +25,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(
-            value = "/user",
+            value = "/users",
             method = RequestMethod.POST,
             produces = "Application/json",
             consumes = "Application/json"
@@ -44,7 +44,7 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @RequestMapping(
-            value = "/user",
+            value = "/users",
             method = RequestMethod.GET,
             produces = "Application/json"
     )
@@ -52,9 +52,15 @@ public class UserController {
         return "Getting all users";
     }
 
+    /**
+     * TODO: Handle string input. Return error
+     * @param id
+     * @return
+     */
+
     @Secured("ROLE_ADMIN")
     @RequestMapping(
-            value = "/user/{id}",
+            value = "/users/{id}",
             method = RequestMethod.GET,
             produces = "Application/json"
     )

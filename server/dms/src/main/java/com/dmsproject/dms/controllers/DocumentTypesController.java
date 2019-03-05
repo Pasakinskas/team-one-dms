@@ -2,20 +2,22 @@ package com.dmsproject.dms.controllers;
 
 import com.dmsproject.dms.Constants;
 import com.dmsproject.dms.dao.DocTypesDAO;
-import com.dmsproject.dms.dao.DocumentDAO;
 import com.dmsproject.dms.dto.DocTypes;
-import com.dmsproject.dms.dto.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController()
 @CrossOrigin(origins = Constants.REACT_URL)
 public class DocumentTypesController {
+
+    @Autowired
+    private DocTypesDAO docTypesDAO;
+
     @RequestMapping(value = "/documentTypes/get", method = RequestMethod.GET, produces = "application/json")
     public List<DocTypes> getDocTypes() {
-        return DocTypesDAO.getDocTypes();
+        return docTypesDAO.getDocTypes();
     }
 
 
@@ -26,7 +28,7 @@ public class DocumentTypesController {
         docTypes.setDescription(description);
         docTypes.setTemplate(template);
 
-        return DocTypesDAO.addDocTemplate(docTypes);
+        return docTypesDAO.addDocTemplate(docTypes);
     }
 
     @RequestMapping(value = "/documentTemplate/edit", method = RequestMethod.POST)
@@ -38,12 +40,12 @@ public class DocumentTypesController {
         docTypes.setDescription(description);
         docTypes.setTemplate(template);
 
-        DocTypesDAO.editDocTemplate(docTypes);
+        docTypesDAO.editDocTemplate(docTypes);
     }
 
     @RequestMapping(value = "/documentTemplate/delete", method = RequestMethod.DELETE)
     public void delete(@RequestParam(name = "docTypeId") Integer docTypeId) {
-        DocTypesDAO.deleteTemplate(docTypeId);
+        docTypesDAO.deleteTemplate(docTypeId);
     }
 }
 

@@ -5,6 +5,7 @@ import com.dmsproject.dms.Constants;
 import com.dmsproject.dms.dao.DocumentDAO;
 import com.dmsproject.dms.dto.DocSelection;
 import com.dmsproject.dms.dto.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +17,8 @@ import java.util.List;
 @RestController()
 @CrossOrigin(origins = Constants.REACT_URL)
 public class DocumentController {
+    @Autowired
+    private DocumentDAO documentDAO;
 
 //    @RequestMapping(value = "/document/add", method = RequestMethod.POST)
 //    public Boolean add(@RequestParam("docNum") String docNum,
@@ -31,13 +34,13 @@ public class DocumentController {
         Document document = new Document();
         document.setTypeId(1);
         document.setContent(docContent);
-        return DocumentDAO.addDocument(document);
+        return documentDAO.addDocument(document);
     }
 
 
     @RequestMapping (value = "/document/get/all", method = RequestMethod.GET, produces = "application/json")
     public List<DocSelection> getAll() {
-        return DocumentDAO.getAllDocuments();
+        return documentDAO.getAllDocuments();
     }
 
 //    @RequestMapping (value = "/document/get/byUserId", method = RequestMethod.GET, produces = "application/json")

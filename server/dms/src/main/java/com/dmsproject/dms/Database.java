@@ -5,10 +5,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.dmsproject.dms.Constants;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Database {
-	public static final Connection connection = getConnection();
+	public Connection connection = getConnection();
 	
 	private static Connection getConnection() {
 		try  {
@@ -20,12 +21,12 @@ public class Database {
 		}
 	}
 	
-	public static int fetchId(String table, String field, String value) {
+	public int fetchId(String table, String field, String value) {
 		String statementString = "SELECT position_id FROM " + table +  " WHERE " + field + " = ?";
 		int id = -1;
 
 		try {
-		    PreparedStatement statement = Database.connection.prepareStatement(statementString);
+		    PreparedStatement statement = connection.prepareStatement(statementString);
 		    statement.setString(1, value);
 		    ResultSet rs = statement.executeQuery();
 		    rs.next();

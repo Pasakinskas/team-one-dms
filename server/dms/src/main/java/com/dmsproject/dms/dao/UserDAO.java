@@ -16,12 +16,15 @@ public class UserDAO {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private Database database;
+
 	private User getUserByField(String field, String value) {
 		String statementString = "SELECT * FROM users WHERE " +
 				field + " = ?";
 
 		try {
-			PreparedStatement statement = Database.connection.prepareStatement(statementString);
+			PreparedStatement statement = database.connection.prepareStatement(statementString);
 			statement.setString(1, value);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
@@ -58,7 +61,7 @@ public class UserDAO {
 	            "values (?, ?, ?, ?, ?)";
 		
 		try {
-		    PreparedStatement statement = Database.connection.prepareStatement(INSERT_SQL);
+		    PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
 		    statement.setString(1, user.getName());
 		    statement.setString(2, user.getSurname());
 		    statement.setString(3, user.getEmail());

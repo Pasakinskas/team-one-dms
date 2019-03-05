@@ -4,20 +4,27 @@ import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.DocSelection;
 import com.dmsproject.dms.dto.Document;
 import com.dmsproject.dms.dto.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+@Component
 public class DocumentDAO {
+
+    @Autowired
+    private Database database;
+
     private static final String INSERT_SQL = "INSERT INTO documents" +
             "(doc_type_id, doc_name, doc_number, doc_content) " +
             "values (?, ?, ?, ?)";
 
-    public static boolean addDocument(final Document document) {
+    public boolean addDocument(final Document document) {
         try {
-            PreparedStatement statement = Database.connection.prepareStatement(INSERT_SQL);
+            PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
             statement.setInt(1, document.getTypeId());
             statement.setString(2, document.getName());
             statement.setString(3, document.getNumber());
@@ -34,7 +41,7 @@ public class DocumentDAO {
     }
 
 
-    public static ArrayList<DocSelection> getAllDocuments() {
+    public ArrayList<DocSelection> getAllDocuments() {
 
         String query1 = "SELECT documents.doc_number, users.name, users.surname, document_types.doc_type_descr, documents.doc_name, status.status_descr, document_status.date, document_status.doc_status_descr " +
                 "FROM document_status " +
@@ -46,7 +53,7 @@ public class DocumentDAO {
         ArrayList documentsList = new ArrayList<DocSelection>();
 
         try {
-            PreparedStatement statement = Database.connection.prepareStatement(query1);
+            PreparedStatement statement = database.connection.prepareStatement(query1);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 DocSelection docSelection = new DocSelection();
@@ -74,7 +81,7 @@ public class DocumentDAO {
     }
 
 
-    public static ArrayList<Document> searchByUser(int id) {
+    public ArrayList<Document> searchByUser(int id) {
 
         String query2 = "SELECT documents.doc_number, users.name, users.surname, document_types.doc_type_descr, documents.doc_name, status.status_descr, document_status.date, document_status.doc_status_descr " +
                 "FROM document_status " +
@@ -87,7 +94,7 @@ public class DocumentDAO {
         ArrayList documentsList = new ArrayList<Document>();
 
         try {
-            PreparedStatement statement = Database.connection.prepareStatement(query2);
+            PreparedStatement statement = database.connection.prepareStatement(query2);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {

@@ -8,7 +8,8 @@ public class LoginData {
 	@NotNull
 	@NotEmpty
 	private String email;
-	
+
+	@NotEmpty
 	@NotNull
 	private String password;
 	
