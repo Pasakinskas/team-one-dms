@@ -4,8 +4,8 @@ import Button from 'react-bootstrap/Button';
 import './Header.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faSnowflake} from '@fortawesome/free-solid-svg-icons';
-library.add(faSnowflake)
+import {faHome} from '@fortawesome/free-solid-svg-icons';
+library.add(faHome)
 
 class Header extends Component {
 
@@ -17,7 +17,7 @@ class Header extends Component {
       return (
         <div className="head">
           <div>
-            <FontAwesomeIcon className="one" icon="snowflake" onClick={() =>this.nextPath(`/`)}/>
+            <FontAwesomeIcon className="one" icon="home" onClick={() =>this.nextPath(`/`)}/>
           </div>
           <div>
             <Button variant="success" onClick={() =>this.nextPath(`/registration`)}>Registruotis</Button>

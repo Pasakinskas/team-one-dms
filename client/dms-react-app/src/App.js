@@ -12,7 +12,7 @@ import AdminBoardTemplates from './containers/AdminBoardTemplates';
 import UserBoardSubmitedDoc from './containers/UserBoardSubmitedDoc';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { hasRole } from './containers/Auth';
-
+import Login from "./components/Login/Login";
 // kai turėsiu json iš BE tai pas mane bus tik const user = json ir iš vidaus matysis
 // kokias roles jis turi ir ką gali daryti. kol kas tai yra statiška, nežinau kaip padryti kad JIS ŽINOTŲ kas aš. 
 
@@ -25,7 +25,6 @@ const user = {
 class App extends Component {
   constructor(props) {
     super(props);
-// čia steitinam userį, kad galima būtų jį čia setinti
     this.state = {
         user: {},
     }
@@ -35,9 +34,8 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          {/* į login.jsx reikia paduoti fetch f-ją kažkaip taip:
+          {/* į login.jsx reikia paduoti fetch f-ją kažkaip taip:*//*tik bėda, kad LoginPage yra ne componentas o page */}
           <Route exact path="/login" component={LoginPage} handler={ (props,state) => <Login fetchUserData = {this.fetchUserData} />}/>
-          tik bėda, kad LoginPage yra ne componentas o page */}
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/registration" component={RegistrationPage} />
           {/* roles reiktų perduoti taip? 
@@ -63,10 +61,10 @@ class App extends Component {
         "content-type": "Application/json",
       
       },
-      body: {
+      body: JSON.stringify({
         "email": this.state.email,
         "password": this.state.password,
-      }
+      })
     });
     const json = await res.json();
     this.setState({
