@@ -4,27 +4,24 @@ import filterFactory from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-import './UserDocListSubmited.css';
+import '../UserDocList/UserDocList.css';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
-import ModalHeader from '../ModalHeader/ModalHeader';
+import ModalHeaderSubmited from '../ModalHeader/ModalHeaderSubmited';
 
 class UserDocListSubmited extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
-            userDocumentsSaved:[{}],
+            userDocuments:[{}],
+            modalIsOpen: false,
         }
     } 
-
-    nextPath = (path)=>{
-      this.props.history.push(path);
-    }
 
     render() {
         const { SearchBar } = Search;
@@ -107,10 +104,10 @@ class UserDocListSubmited extends Component {
         };
 
           return (
-              <div className="toolkit2">
+              <div className="toolkit">
                 <ToolkitProvider
                     keyField="id"
-                    data= { this.state.userDocumentsSaved }
+                    data= { this.state.userDocuments }
                     columns= { columns }
                     search
                     >
@@ -120,6 +117,9 @@ class UserDocListSubmited extends Component {
                             <SearchBar id="searchBar"
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />                                             
+                            <Button id="btn" variant="secondary" type="submit" onClick={() => {this.openModal()}}>
+                                Peržiūrėti
+                            </Button>
                             <BootstrapTable 
                                 { ...props.baseProps }
                                 filter={ filterFactory()}
@@ -133,16 +133,75 @@ class UserDocListSubmited extends Component {
                                 style={customStyles}
                                 contentLabel="Dokumento peržiūra"
                                 >  
-                                <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="textEditor"/>                      
+                                <ModalHeaderSubmited modalIsOpen = {this.closeModal}/>                                          
+                                <TextEditor style={{"width" : "95%"}}/>                  
                             </Modal>                                               
                         </div>
                         )
                     }
                 </ToolkitProvider>
             </div>
-          );
-      }
+        );
+    }
+
+    nextPath = (path)=>{
+        this.props.history.push(path);
+    }
+
+    openModal = () => {
+        this.setState({modalIsOpen: true});
+    }
+    
+    closeModal = () => {
+        this.setState({modalIsOpen: false});
+    }
+
+    changeSelectStatus = (rowIndex)=>{
+        const newDoc = this.state.document.map(row => {
+            if(row.id -1 === rowIndex){
+                 console.log(rowIndex)
+                 row.isChecked = !row.isChecked;
+            }
+            return row;
+         })
+         this.setState({
+             document: newDoc
+         })
+     }
+ 
+     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
+    showDoc =() => {
+        const localDoc = this.state.document;
+        for(const row of localDoc){
+            if (row.isChecked === true){
+                //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
+            }
+        }
+    };
+
+    componentDidMount(){
+        this. fetchDataDocListUser()
+    }
+
+    fetchDataDocListUser = async (url) => {
+        //this.props.user.id ateina iš app.js
+        const res = await fetch("http://localhost:8086/document/user/all" 
+        // + this.props.user.id + pateikti/atmesti
+        , {
+          
+          method: "GET",
+          headers: {
+            //  tokken: 
+            "content-type": "Application/json",
+        },
+        });
+        const json = await res.json();      
+        this.setState({ 
+            userDocuments: json
+        });             
+        return json;
+    }
+  
   }
   
   export default withRouter(UserDocListSubmited );

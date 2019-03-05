@@ -173,14 +173,14 @@ class AdminDocList extends Component {
 
         const customStyles = {
             content : {
-              top          : '47%',
-              left         : '50%',
-              right        : 'auto',
-              bottom       : 'auto',
-              height       : '82%',
-              width        : '80%',
-              marginRight  : '-50%',
-              transform    : 'translate(-50%, -50%)'
+                top: '47%',
+                left: '50%',
+                right: 'auto',
+                bottom: 'auto',
+                height: '82%',
+                width: '80%',
+                marginRight: '-50%',
+                transform: 'translate(-50%, -50%)'
             }
         };
 

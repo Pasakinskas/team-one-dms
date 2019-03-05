@@ -19,15 +19,8 @@ class UserDocList extends Component {
         super(props);
     
         this.state = {
-            userDocumentsSaved:[{}],
             userDocuments:[{}],
-            userDocument: [{
-                id:"",
-                name:"",
-                surname:"",
-                template:"",
-                condition:"",
-            }]
+            modalIsOpen: false,
         }
     } 
 
@@ -101,19 +94,19 @@ class UserDocList extends Component {
 
         const customStyles = {
             content : {
-              top          : '47%',
-              left         : '50%',
-              right        : 'auto',
-              bottom       : 'auto',
-              height       : '82%',
-              width        : '80%',
-              marginRight  : '-50%',
-              transform    : 'translate(-50%, -50%)'
+              top:'47%',
+              left: '50%',
+              right: 'auto',
+              bottom: 'auto',
+              height: '82%',
+              width: '80%',
+              marginRight: '-50%',
+              transform: 'translate(-50%, -50%)'
             }
         };
 
         return (
-            <div className="toolkit1">
+            <div className="toolkit">
                 <ToolkitProvider
                     keyField="id"
                     data=  { this.state.userDocuments }
@@ -152,7 +145,7 @@ class UserDocList extends Component {
                                 contentLabel="Dokumento peržiūra"
                                 >  
                                 <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="textEditor"/>                      
+                                <TextEditor className="modalTextEditor"/>                      
                             </Modal>                                               
                         </div>
                         )
