@@ -13,7 +13,7 @@ import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
 import ModalHeaderSubmited from '../ModalHeader/ModalHeaderSubmited';
 
-class UserDocListSubmited extends Component {
+class UserDocListGeted extends Component {
     constructor(props) {
         super(props);
     
@@ -108,7 +108,7 @@ class UserDocListSubmited extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data= { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return document.status=="saved"}) }
+                    // { this.state.userDocuments.filter((document)=>{return document.status=="geted"}) }
                     columns= { columns }
                     search
                     >
@@ -118,9 +118,17 @@ class UserDocListSubmited extends Component {
                             <SearchBar id="searchBar"
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />                                             
-                            <Button id="btn" variant="secondary" type="submit" onClick={() => {this.openModal()}}>
-                                Peržiūrėti
-                            </Button>
+                             <span id="btn">
+                                <Button variant="danger" type="submit" onClick={() => { this.rejectDoc()}}>
+                                    Atmesti
+                                </Button>
+                                <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
+                                    Peržiūrėti
+                                </Button>
+                                <Button variant="success" type="submit" onClick={() => {this.acceptDoc()}}>
+                                    Priimti
+                                </Button>
+                            </span>
                             <BootstrapTable 
                                 { ...props.baseProps }
                                 filter={ filterFactory()}
@@ -180,11 +188,45 @@ class UserDocListSubmited extends Component {
         }
     };
 
+    acceptDoc =(e) => {
+        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
+        e.preventDefault();
+        const text = this.document.text;
+        const API = 'localhost:8086/document/add';
+        fetch(API, {
+            method: 'POST',
+            body: JSON.stringify({document: text}),
+        }).then(response => {
+            if(response.status === 201){
+                this.nextPath(`/adminboarddocs`);
+            }else{
+                alert("Pateikti nepavyko");
+            }
+        }).catch(error => console.error(error));
+    };
+     
+    rejectDoc = (e) => {
+        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
+        e.preventDefault();
+        const text = this.document.text;
+        const API = 'localhost:8086/document/add';
+        fetch(API, {
+            method: 'POST',
+            body: JSON.stringify({document: text}),
+        }).then(response => {
+            if(response.status === 201){
+                //do not show document in the list;
+            }else{
+                alert("Pašalinti nepavyko");
+            }
+        }).catch(error => console.error(error));
+    };
+
     componentDidMount(){
-        this. fetchDataDocListUser()
+        this. fetchDataDocListGeted()
     }
 
-    fetchDataDocListUser = async (url) => {
+    fetchDataDocListGeted = async (url) => {
         //this.props.user.id ateina iš app.js
         const res = await fetch("http://localhost:8086/document/user/all" 
         // + this.props.user.id
@@ -205,4 +247,4 @@ class UserDocListSubmited extends Component {
   
   }
   
-  export default withRouter(UserDocListSubmited );
+  export default withRouter(UserDocListGeted);

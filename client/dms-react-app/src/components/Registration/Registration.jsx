@@ -78,12 +78,12 @@ class Registration extends Component {
                   value={position}
                   onChange={this.handleChange}>
                 <option value="" disabled> Pasirinkite pareigas</option>
-                <option value="A">Generalinis direktorius</option>
-                <option value="B">Personalo vadovas</option>
-                <option value="C">Administratorius</option>
-                <option value="D">Sistemų administratorius</option>
-                <option value="E">IT specialistas</option>
-                <option value="F">Valytoja</option>
+                <option value="Generalinis direktorius">Generalinis direktorius</option>
+                <option value="Personalo vadovas">Personalo vadovas</option>
+                <option value="Administratoriu">Administratorius</option>
+                <option value="Sistemų administratorius">Sistemų administratorius</option>
+                <option value="IT specialistas">IT specialistas</option>
+                <option value="Valytoja">Valytoja</option>
               </select>
             </div>            
             <div className="password" id="boxes">
@@ -127,22 +127,23 @@ class Registration extends Component {
   }
 
   fetchData = async (url) => {
-    const res = await fetch("http://localhost:8086", {
+    const res = await fetch("http://localhost:8086/users", {
       
       method: "POST",
       headers: {
         "content-type": "Application/json",
       
       },
-      body: JSON.stringify( {
-        "name": this.state.name,
-        "surname": this.state.surname,
-        "email": this.state.email,
-        "position": this.state.position,
-        "password": this.state.password,
+      body: JSON.stringify({
+        name: this.state.name,
+        surname: this.state.surname,
+        email: this.state.email,
+        position: this.state.position,
+        password: this.state.password,
       })
     });
     const statusCode = await res.status;
+    console.log(statusCode)
     return statusCode;
   }
 
@@ -166,7 +167,7 @@ class Registration extends Component {
           : "Galima naudoti tik raides";
       break;
       case "email":
-      formErrors.email = /^[a-zA-Z0-9ąčęėįšųūžĄČĘĖĮŠŲŪŽ]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(value)
+      formErrors.email = /^[a-zA-Z0-9ąčęėįšųūžĄČĘĖĮŠŲŪŽ.]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(value)
           ? ""
           : "Nepilnas el. paštas";
       break;
@@ -209,8 +210,8 @@ class Registration extends Component {
             )
   }
 
-  evalRes(isRegGood){
-    isRegGood === 201||200
+  evalRes(statusCode){
+    statusCode ===  201
     ? alert("Registracija pavyko, prisijunkite") && this.nextPath(`/userboard`)
     : alert("Registracija nepavyko, bandykite vėliau dar kartą")
   }
@@ -235,7 +236,7 @@ class Registration extends Component {
   }
 
   allLetter = (name, surname) => { 
-    if ((/^[A-Za-z]+$/.test(name)) && (/^[A-Za-z]+$/.test(surname))) {
+    if ((/^[A-Za-ząčęėįšųūžĄČĘĖĮŠŲŪŽ]+$/.test(name)) && (/^[A-Za-z]+$/.test(surname))) {
       return true;
     } else {
       alert('Galima naudoti tik raides');
