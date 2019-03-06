@@ -5,18 +5,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-/**
- * Every bad request is treated as a 401
- * Should be 404 if no such route. TO DO
- */
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, AccessDeniedHandler {

@@ -11,6 +11,8 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @CrossOrigin(origins = Constants.REACT_URL)
 @RestController
 public class UserController {
@@ -20,9 +22,6 @@ public class UserController {
 
     /**
      * I need to return an error: email already registered
-     * @param user
-     * @param errors
-     * @return
      */
     @RequestMapping(
             value = "/users",
@@ -48,12 +47,13 @@ public class UserController {
             method = RequestMethod.GET,
             produces = "Application/json"
     )
-    public String getAllUsers() {
-        return "Getting all users";
+    public ArrayList<User> getAllUsers() {
+        return userDAO.getAllUsers(false);
     }
 
     /**
      * TODO: Handle string input. Return error
+     * TODO: if user is null by id I must return an error
      * @param id
      * @return
      */
@@ -65,6 +65,20 @@ public class UserController {
             produces = "Application/json"
     )
     public User getUser(@PathVariable("id") int id) {
-        return userDAO.getUserById(id);
+        return userDAO.getUserById(id, false);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(
+            value = "/users/{id}",
+            method = RequestMethod.DELETE
+    )
+    public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
+        boolean deleteSuccessful = userDAO.deleteUser(id);
+        if (deleteSuccessful) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

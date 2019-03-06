@@ -29,7 +29,7 @@ public class UserService implements UserDetails, UserDetailsService {
      * @return I set the password hash to null and return the user object
      */
     public User getUserWithAuth(LoginData loginData) {
-        User user = userDAO.getUserByEmail(loginData.getEmail());
+        User user = userDAO.getUserByEmail(loginData.getEmail(), true);
         if (passwordEncoder.matches(loginData.getPassword(), user.getPassword())) {
             user.setPassword(null);
             return user;
@@ -39,13 +39,13 @@ public class UserService implements UserDetails, UserDetailsService {
     }
 
     public UserDetails loadUserById(int id) throws UsernameNotFoundException {
-        User user = userDAO.getUserById(id);
+        User user = userDAO.getUserById(id, true);
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities());
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userDAO.getUserByEmail(email);
+        User user = userDAO.getUserByEmail(email, true);
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities());
     }
 
