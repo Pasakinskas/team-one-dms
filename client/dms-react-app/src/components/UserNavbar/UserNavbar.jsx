@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Button, Navbar, Nav, Form, FormControl } from 'react-bootstrap';
+import {Button, Navbar, Nav, Form } from 'react-bootstrap';
 import './UserNavbar.css';
 import { withRouter } from 'react-router-dom';
 
@@ -14,7 +14,8 @@ class UserNavbar extends Component {
             <div>
               <Navbar variant="dark">
                 <Nav className="mr-auto">
-                  <li><a href="/userboard">Mano dokumentai</a></li>
+                  <li><a href="/userboard">Išsaugoti dokumentai</a></li>
+                  <li><a href="/usersubmited">Pateikti dokumentai</a></li>
                   <li><a href="/usergetdoc">Gauti dokumentai</a></li>
                 </Nav>
                 <Form inline>

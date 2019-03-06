@@ -3,7 +3,8 @@ import UserNavbar from '../components/UserNavbar/UserNavbar';
 import Footer from '../components/Footer/Footer';
 import NewDocButton from '../components/NewDocButton/NewDocButton';
 import GroupView from '../components/GroupView/GroupView';
-import Pagening from '../components/Pagening/Pagening';
+import UserDocListGeted from '../components/UserDocListGeted/UserDocListGeted';
+
 
 class UserBoardGetedDoc extends Component {
     render() {
@@ -12,7 +13,7 @@ class UserBoardGetedDoc extends Component {
                 <UserNavbar/>
                 <NewDocButton/>
                 <GroupView/>
-                <Pagening/>
+                <UserDocListGeted/>
                 <Footer/>
             </div>
         );

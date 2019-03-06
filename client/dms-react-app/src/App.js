@@ -8,41 +8,69 @@ import NewDocument from './containers/NewDocument';
 import AdminBoardUsers from './containers/AdminBoardUsers';
 import AdminBoardGroups from './containers/AdminBoardGroups';
 import AdminBoardDocs from './containers/AdminBoardDocs';
+import AdminBoardTemplates from './containers/AdminBoardTemplates';
+import UserBoardSubmitedDoc from './containers/UserBoardSubmitedDoc';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
-//import { hasRole, isAllowed } from './containers/Auth';
+import { hasRole } from './containers/Auth';
+import Login from "./components/Login/Login";
+// kai turėsiu json iš BE tai pas mane bus tik const user = json ir iš vidaus matysis
+// kokias roles jis turi ir ką gali daryti. kol kas tai yra statiška, nežinau kaip padryti kad JIS ŽINOTŲ kas aš. 
 
 
-// const user = {
-//   roles: ['user'],
-//   rights: ['can_view_articles']
-// };
-
-// const admin = {
-//   roles: ['user', 'admin'],
-//   rights: ['can_view_articles', 'can_view_users']
-// };
+const user = {
+  roles: ['advancedUser', 'user', 'admin'],
+  rights: ['can_view_articles']
+};
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        user: {},
+    }
+}
   render() {
     return (
       <Router>
         <Switch>
-          {/* {hasRole(user, ['user']) && <p>Is User</p>}
-          {hasRole(user, ['admin']) && <p>Is Admin</p>}
-          {isAllowed(user, ['can_view_articles']) && <p>Can view Articles</p>}
-          {isAllowed(user, ['can_view_users']) && <p>Can view Users</p>} */}
           <Route exact path="/" component={HomePage} />
+          {/* į login.jsx reikia paduoti fetch f-ją kažkaip taip:*//*tik bėda, kad LoginPage yra ne componentas o page */}
+          <Route exact path="/login" component={LoginPage} handler={ (props,state) => <Login fetchUserData = {this.fetchUserData} />}/>
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/registration" component={RegistrationPage} />
-          <Route exact path="/userboard" component={UserBoard} />
-          <Route exact path="/usergetdoc" component={UserBoardGetedDoc} />
-          <Route exact path="/newdoc" component={NewDocument} />
-          <Route exact path="/adminboardusers" component={AdminBoardUsers} />
-          <Route exact path="/adminboardgroups" component={AdminBoardGroups} />
-          <Route exact path="/adminboarddocs" component={AdminBoardDocs} />
+          {/* roles reiktų perduoti taip? 
+          {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />} */}
+          {hasRole(user, ['user']) && <Route exact path="/userboard" component={UserBoard} />}
+          {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} />}
+          {hasRole(user, ['user']) && <Route exact path="/newdoc" component={NewDocument} />}
+          {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} />}
+          {hasRole(user, ['admin']) &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
+          {hasRole(user, ['admin']) &&<Route exact path="/adminboardgroups" component={AdminBoardGroups} />}
+          {hasRole(user, ['admin']) &&<Route exact path="/adminboarddocs" component={AdminBoardDocs} />}
+          {hasRole(user, ['admin']) &&<Route exact path="/adminboardtemplates" component={AdminBoardTemplates} />}
         </Switch>
       </Router>
     );
+  }
+//userio duomenų gavimui ir setinimui
+  fetchUserData = async (url) => {
+    const res = await fetch("http://localhost:8086/login", {
+      
+      method: "POST",
+      headers: {
+        "content-type": "Application/json",
+      
+      },
+      body: JSON.stringify({
+        "email": this.state.email,
+        "password": this.state.password,
+      })
+    });
+    const json = await res.json();
+    this.setState({
+      user: json
+    })
+    return json.response.status;
   }
 }
 

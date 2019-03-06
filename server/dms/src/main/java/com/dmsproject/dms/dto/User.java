@@ -10,7 +10,7 @@ public class User {
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
 	@NotNull
 	private String name;
 	
@@ -20,10 +20,28 @@ public class User {
 	@NotNull
 	private String email;
 	
-	public User(String name, String surname, String email) {
+	@NotNull
+	private String position;
+	
+	@NotNull
+	private String password;
+	
+	public User(int id, String name, String surname, String email,
+			String position, String password) {
 		this.setName(name);
 		this.setSurname(surname);
 		this.setEmail(email);
+		this.setPosition(position);
+		this.setPassword(password);
+		this.setId(id);
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getName() {
@@ -56,5 +74,21 @@ public class User {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public String getPosition() {
+		return position;
+	}
+
+	public String toString() {
+		return "{ name: "+ getName() +
+				" surname: " + getSurname() +
+				" email: " + getEmail() +
+				" position: " + getPosition() +
+				" pass: " + getPassword() + " }";
 	}
 }

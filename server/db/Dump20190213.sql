@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `DVS` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `DVS`;
 -- MySQL dump 10.13  Distrib 8.0.13, for macos10.14 (x86_64)
 --
--- Host: localhost    Database: DVS
+-- Host: 127.0.0.1    Database: dvs
 -- ------------------------------------------------------
--- Server version	8.0.13
+-- Server version	8.0.15
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -26,8 +24,18 @@ DROP TABLE IF EXISTS `document_status`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `document_status` (
   `doc_status_id` int(11) NOT NULL AUTO_INCREMENT,
-  `doc_status` varchar(50) NOT NULL,
-  PRIMARY KEY (`doc_status_id`)
+  `document_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `doc_status_descr` varchar(50) DEFAULT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`doc_status_id`),
+  KEY `document_status_documents_FK_idx` (`document_id`),
+  KEY `document_status_status_FK_idx` (`status_id`),
+  KEY `document_status_user_FK_idx` (`user_id`),
+  CONSTRAINT `document_status_documents_FK` FOREIGN KEY (`document_id`) REFERENCES `documents` (`doc_id`),
+  CONSTRAINT `document_status_status_FK` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`),
+  CONSTRAINT `document_status_user_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,6 +58,7 @@ DROP TABLE IF EXISTS `document_types`;
 CREATE TABLE `document_types` (
   `doc_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `doc_type_descr` varchar(45) NOT NULL,
+ `doc_template` longtext NOT NULL,
   PRIMARY KEY (`doc_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -75,16 +84,10 @@ CREATE TABLE `documents` (
   `doc_type_id` int(11) NOT NULL,
   `doc_name` varchar(150) DEFAULT NULL,
   `doc_number` varchar(50) NOT NULL,
-  `user_id` int(11) NOT NULL,
   `doc_content` longtext NOT NULL,
-  `doc_satus_id` int(11) NOT NULL,
   PRIMARY KEY (`doc_id`),
   KEY `documents_doc_type_FK_idx` (`doc_type_id`),
-  KEY `documents_user_FK_idx` (`user_id`),
-  KEY `documents_doc_status_FK_idx` (`doc_satus_id`),
-  CONSTRAINT `documents_doc_status_FK` FOREIGN KEY (`doc_satus_id`) REFERENCES `document_status` (`doc_status_id`),
-  CONSTRAINT `documents_doc_type_FK` FOREIGN KEY (`doc_type_id`) REFERENCES `document_types` (`doc_type_id`),
-  CONSTRAINT `documents_user_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+  CONSTRAINT `documents_doc_type_FK` FOREIGN KEY (`doc_type_id`) REFERENCES `document_types` (`doc_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -227,26 +230,26 @@ LOCK TABLES `permissions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `positions`
+-- Table structure for table `status`
 --
 
-DROP TABLE IF EXISTS `positions`;
+DROP TABLE IF EXISTS `status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `positions` (
-  `position_id` int(11) NOT NULL AUTO_INCREMENT,
-  `position` varchar(50) NOT NULL,
-  PRIMARY KEY (`position_id`)
+CREATE TABLE `status` (
+  `status_id` int(11) NOT NULL AUTO_INCREMENT,
+  `status_descr` varchar(50) NOT NULL,
+  PRIMARY KEY (`status_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `positions`
+-- Dumping data for table `status`
 --
 
-LOCK TABLES `positions` WRITE;
-/*!40000 ALTER TABLE `positions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `positions` ENABLE KEYS */;
+LOCK TABLES `status` WRITE;
+/*!40000 ALTER TABLE `status` DISABLE KEYS */;
+/*!40000 ALTER TABLE `status` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -288,17 +291,12 @@ CREATE TABLE `users` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
-  `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `position_id` int(11) NOT NULL,
+  `position` varchar(50) NOT NULL,
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `username_UNIQUE` (`username`),
-  UNIQUE KEY `password_UNIQUE` (`password`),
-  KEY `position_FK_idx` (`position_id`),
-  CONSTRAINT `users_position_FK` FOREIGN KEY (`position_id`) REFERENCES `positions` (`position_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -307,6 +305,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'Test-user4','marius-test','wow','best@emails.com','driver'),(2,'boi','bestboi','asd','izi@email.com','pointer');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -319,4 +318,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-05  9:17:34
+-- Dump completed on 2019-02-14  0:00:11

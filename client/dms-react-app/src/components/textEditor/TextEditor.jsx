@@ -84,12 +84,12 @@ export default class TextEditor extends Component {
             case 'l':{
                 e.preventDefault();
                 editor.toggleMark('list')
-                return true; 
+                return true;
             }
             case 'u':{
                 e.preventDefault();
                 editor.toggleMark('underline')
-                return true; 
+                return true;
             }
             default:{
                 return next();
@@ -147,14 +147,16 @@ export default class TextEditor extends Component {
         }
     }
     //send json to api
-    handleSubmit = (event,existingValue) =>{
+    handleSubmit = async (event, existingValue) =>{
         event.preventDefault();
         const data = existingValue;
-        const API = 'localhost:8080/document/add';
-        console.log(json);
+        const API = 'http://localhost:8086/document/add';
         fetch(API, {
           method: 'POST',
-          body: JSON.stringify(data),
+          headers: {
+              "content-type": "Application/json" 
+          },
+          body: JSON.stringify({document: data}),
         }).then(response => {
           console.log(response.status);
           if(response.status === 201){
@@ -204,7 +206,7 @@ export default class TextEditor extends Component {
 
         if(['numbered-list','bulleted-list'].includes(type)){
             const { value: {document, blocks } } = this.state;
-        
+
         if(blocks.size>0 ){
             const parent = document.getParent(blocks.first().key)
             isActive = this.hasBlock('list-item') && parent && parent.type === type
@@ -239,7 +241,7 @@ export default class TextEditor extends Component {
             case 'numbered-list':
                 return <ol {...attributes}>{children}</ol>
             default:
-                return next() 
+                return next()
         }
     }
     render(){
@@ -260,11 +262,11 @@ export default class TextEditor extends Component {
                     <Icon>{'save'}</Icon>
                     </button>
                 </FormatToolbar>
-            <Editor 
+            <Editor
             ref={this.ref}
             plugins={plugins} // implement plugins later
-            value={this.state.value} 
-            onChange={this.onChange} 
+            value={this.state.value}
+            onChange={this.onChange}
             onKeyDown={this.onKeyDown}
             renderMark={this.renderMark}
             renderNode={this.renderNode}
