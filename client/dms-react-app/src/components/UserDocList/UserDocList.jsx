@@ -19,7 +19,15 @@ class UserDocList extends Component {
         super(props);
     
         this.state = {
-            userDocuments:[{}],
+            userDocuments:[{
+                id: 1,
+                date: "2019.12.12",
+                name: "Ana",
+                surname: "Taurienė",
+                recipient: "Good",
+                template: "dead",
+                condition: "lalala",
+            }],
             modalIsOpen: false,
         }
     } 
@@ -43,7 +51,7 @@ class UserDocList extends Component {
             };
             return (
                 <li className="page-item">
-                  <a href="#" onClick={ handleClick }>{ page }</a>
+                  <a href="#" style={{color: "#2e2e2e"}} onClick={ handleClick }>{ page }</a>
                 </li>
             );
         };
@@ -57,11 +65,7 @@ class UserDocList extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            // onSelect: (row, isSelect, rowIndex, e) => {
-            //     if (this.state.document.condition !== "saved") {
-            //         return false;
-            //     }
-            // }
+            onSelect: (row, isSelect, rowIndex, e) => {this.changeSelectStatus()}
         };                
      
         const columns = [{
@@ -69,6 +73,11 @@ class UserDocList extends Component {
             text: 'Nr.',
             sort: true,
             headerStyle: idStyle,
+            align: "center",
+        }, {
+            dataField: 'date',
+            text: 'Data',
+            sort: true,
             align: "center",
         }, {
             dataField: 'name',
@@ -81,6 +90,11 @@ class UserDocList extends Component {
             sort: true,
             headerStyle: bgcolor,
         }, {
+            dataField: 'recipient',
+            text: 'Gavėjas',
+            sort: true,
+            align: "center",
+        },{
             dataField: 'template',
             text: 'Šablonas',
             sort: true,
@@ -110,7 +124,7 @@ class UserDocList extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data=  { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{document.status==true} return document) }
+                    // { this.state.userDocuments.filter((document)=>{return document.status=="saved"}) }
                     columns= { columns }
                     search
                     >
@@ -121,7 +135,7 @@ class UserDocList extends Component {
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />
                             <span id="btn">
-                                <Button variant="danger" type="submit" onClick={() => { this.deleteDoc()}}>
+                                <Button variant="danger" type="submit" onClick={() => {this.deleteDoc()}}>
                                     Pašalinti
                                 </Button>
                                 <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
@@ -162,17 +176,13 @@ class UserDocList extends Component {
     openModal = () => {
         this.setState({modalIsOpen: true});
     }
-    
-    afterOpenModal = () => {
-        // references are now sync'd and can be accessed.
-    }
 
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
      
     changeSelectStatus = (rowIndex)=>{
-        const newDoc = this.state.document.map(row => {
+        const newDoc = this.state.userDocument.map(row => {
             if(row.id -1 === rowIndex){
                  console.log(rowIndex)
                  row.isChecked = !row.isChecked;
@@ -180,7 +190,7 @@ class UserDocList extends Component {
             return row;
          })
          this.setState({
-             document: newDoc
+             userDocuments: newDoc
          })
      }
  
@@ -212,16 +222,15 @@ class UserDocList extends Component {
     };
      
     deleteDoc = (e) => {
-        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
         e.preventDefault();
-        const text = this.document.text;
+        const doc = this.state.userDocuments;
         const API = 'localhost:8086/document/add';
         fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
+            method: 'Patch',
+            body: this.state.userDocuments,
         }).then(response => {
-            if(response.status === 201){
-                //do not show document in the list;
+            if(response.status === 200){
+                //change document status to deleted
             }else{
                 alert("Pašalinti nepavyko");
             }

@@ -3,6 +3,7 @@ import UserNavbar from '../components/UserNavbar/UserNavbar';
 import Footer from '../components/Footer/Footer';
 import NewDocButton from '../components/NewDocButton/NewDocButton';
 import GroupView from '../components/GroupView/GroupView';
+import UserDocListGeted from '../components/UserDocListGeted/UserDocListGeted';
 
 
 class UserBoardGetedDoc extends Component {
@@ -12,6 +13,7 @@ class UserBoardGetedDoc extends Component {
                 <UserNavbar/>
                 <NewDocButton/>
                 <GroupView/>
+                <UserDocListGeted/>
                 <Footer/>
             </div>
         );
