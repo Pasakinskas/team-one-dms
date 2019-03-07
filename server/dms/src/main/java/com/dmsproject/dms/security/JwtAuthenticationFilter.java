@@ -20,6 +20,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenProvider tokenProvider;
+
+    @Autowired
     private JwtAuthenticationEntryPoint entryPoint;
 
     @Autowired
@@ -27,25 +29,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException, AccessDeniedException {
+            throws ServletException, IOException {
 
         System.out.println("Filter encountered a request " + request.getMethod() + " " + request.getRequestURI());
-        /*
-         * userService.loadById() should run with the user id from the jwt token
-         */
+        String header = request.getHeader("token");
 
-        UserDetails userDetails = userService.loadUserById(1);
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (header != null) {
+            int userIdFromToken;
+            try {
+                String id = tokenProvider.getClaimFromToken(header, "id");
+                userIdFromToken = Integer.parseInt(id);
 
-//        Authentication as = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println("authentication " + as);
+                UserDetails userDetails = userService.loadUserById(userIdFromToken);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-//        if (request.getRequestURI().equals("/testingdeny")) {
-//            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Test deny of entry");
-//        }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error parsing the token:");
+                System.err.println(e);
+            }
+        } else {
+            System.out.println("Request was without authentication");
+        }
 
         try {
             filterChain.doFilter(request, response);
@@ -54,5 +61,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println(e);
         }
     }
-
 }
