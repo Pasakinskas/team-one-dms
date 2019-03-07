@@ -28,8 +28,8 @@ input::placeholder{
 } 
 
 .template,
-.name,
+.sender,
 .recipient,
 select {
-    margin-bottom: 0.15em;
+    margin-bottom: 10px;
 }

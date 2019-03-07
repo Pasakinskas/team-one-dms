@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AdminNavBar from '../components/AdminNavBar/AdminNavBar';
 import Footer from '../components/Footer/Footer';
 import { TextEditor } from '../components/textEditor';
+import NewDocFormAdmin from '../components/NewDocForm/NewDocFormAdmin';
 
 class AdminBoardTemplates extends Component {
     render() {
@@ -9,6 +10,7 @@ class AdminBoardTemplates extends Component {
             <div>
                 <AdminNavBar/> 
                 <TextEditor/>
+                <NewDocFormAdmin/>
                 <Footer/> 
             </div>
         );
