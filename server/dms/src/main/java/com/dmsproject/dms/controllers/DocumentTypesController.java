@@ -15,6 +15,11 @@ public class DocumentTypesController {
     @Autowired
     private DocTypesDAO docTypesDAO;
 
+    @RequestMapping(value = "/documentTypes/getTemplate", method = RequestMethod.GET, produces = "application/json")
+    public DocTypes getDocTemplate(@RequestParam(name = "id") Integer id) {
+        return docTypesDAO.getDocTemplateByType(id);
+    }
+
     @RequestMapping(value = "/documentTypes/get", method = RequestMethod.GET, produces = "application/json")
     public List<DocTypes> getDocTypes() {
         return docTypesDAO.getDocTypes();

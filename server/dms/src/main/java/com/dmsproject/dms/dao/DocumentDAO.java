@@ -2,6 +2,7 @@ package com.dmsproject.dms.dao;
 
 import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.DocSelection;
+import com.dmsproject.dms.dto.DocTypes;
 import com.dmsproject.dms.dto.Document;
 import com.dmsproject.dms.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,31 @@ public class DocumentDAO {
         }
         return true;
     }
+
+    public void editDocument(Document document) {
+        String query = " UPDATE documents"
+                + " SET doc_type_id = ?, "
+                + " doc_name = ?, "
+                + " doc_number = ?, "
+                + " doc_content = ? "
+                + " WHERE doc_id = ? ";
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setInt(1, document.getTypeId());
+            statement.setString(2, document.getName());
+            statement.setString(3, document.getNumber());
+            statement.setString(4, document.getContent());
+            statement.setInt(5, document.getId());
+
+            statement.executeUpdate();
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     public ArrayList<DocSelection> getAllDocuments() {
