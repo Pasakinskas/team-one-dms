@@ -60,7 +60,8 @@ class UserDocList extends Component {
             pageButtonRenderer
         };
 
-        const selectRow = {
+        const selectRow = 
+        {
             mode: 'checkbox',
             clickToSelect: true,
             bgColor: "#edeeeebe",
@@ -68,7 +69,8 @@ class UserDocList extends Component {
             onSelect: (row, isSelect, rowIndex, e) => {this.changeSelectStatus()}
         };                
      
-        const columns = [{
+        const columns = [
+        {
             dataField: 'id',
             text: 'Nr.',
             sort: true,
@@ -192,29 +194,31 @@ class UserDocList extends Component {
          this.setState({
              userDocuments: newDoc
          })
-     }
- 
-     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
+    }
+
     showDoc =() => {
-        const localDoc = this.state.document;
-        for(const row of localDoc){
-            if (row.isChecked === true){
-                //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
+    const localDoc = this.state.userDocument;
+    for(const row of localDoc){
+        if (row.isChecked === true){
+            //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
             }
         }
     };
- 
+  
     sendDoc =(e) => {
-        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
         e.preventDefault();
-        const text = this.document.text;
+        const doc = this.state.userDocuments;
         const API = 'localhost:8086/document/add';
-        fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
+         fetch(API, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({doc}),
+            // body: JSON.stringify({
+            //     "condition": "sent",
+            // }),
         }).then(response => {
             if(response.status === 201){
-                this.nextPath(`/adminboarddocs`);
+                this.nextPath(`/userboard`);
             }else{
                 alert("Pateikti nepavyko");
             }
@@ -225,39 +229,45 @@ class UserDocList extends Component {
         e.preventDefault();
         const doc = this.state.userDocuments;
         const API = 'localhost:8086/document/add';
-        fetch(API, {
-            method: 'Patch',
-            body: this.state.userDocuments,
+          fetch(API, {
+            method: 'PUT',
+            body: {doc},
+            // body: JSON.stringify({
+            //     "condition": "deleted",
+            // })
         }).then(response => {
-            if(response.status === 200){
-                //change document status to deleted
-            }else{
+            if(response.status === 201){
+                this.nextPath(`/userboard`); 
+                // REFRESH PAGE???
+            } else {
                 alert("Pašalinti nepavyko");
             }
         }).catch(error => console.error(error));
     };
      
-    //konkretaus usero dokumentai!!!
     componentDidMount(){
         this. fetchDataDocListUser()
     }
 
     fetchDataDocListUser = async (url) => {
-        //this.props.user.id ateina iš app.js
         const res = await fetch("http://localhost:8086/document/user/all" 
         // + this.props.user.id
         , {
-          
           method: "GET",
-          headers: {
-            //  tokken: 
+          headers: { 
             "content-type": "Application/json",
-        },
-        });
+          },
+        }).then(response => {
+            if (response.status === 401) {
+              // try getting the new access token and repeat the same request
+            }
+            // otherwise carry on
+        })
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
-        });             
+        });   
+                  
         return json;
     }
 }

@@ -139,7 +139,8 @@ class AdminDocList extends Component {
             },    
         };
 
-        const columns = [{
+        const columns = [
+        {
             dataField: 'id',
             text: 'Nr.',
             sort: true,
@@ -189,6 +190,7 @@ class AdminDocList extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data={ this.state.documents }
+                    // { this.state.documents.filter((document)=>{return document.status !== "saved"}) }                  
                     columns={ columns }
                     search
                     >
