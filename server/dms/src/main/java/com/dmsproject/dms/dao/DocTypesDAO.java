@@ -4,6 +4,7 @@ import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.DocSelection;
 import com.dmsproject.dms.dto.DocTypes;
 import com.dmsproject.dms.dto.Document;
+import com.dmsproject.dms.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,11 +71,36 @@ public class DocTypesDAO {
             e.printStackTrace();
         }
     }
-//
+
+
+    public DocTypes getDocTemplateByType(int id) {
+
+        String query = "SELECT * FROM document_types WHERE doc_type_Id = ?";
+
+        DocTypes docTypes = new DocTypes();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                docTypes.setId(rs.getInt("doc_type_Id"));
+                docTypes.setDescription(rs.getString("doc_type_descr"));
+                docTypes.setTemplate(rs.getString("doc_template"));
+                }
+
+                statement.close();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return docTypes;
+        }
 
     public ArrayList<DocTypes> getDocTypes() {
 
-        String query = "SELECT * FROM document_types";
+        String query = "SELECT doc_type_Id, doc_type_descr FROM document_types";
 
         ArrayList docTypesList = new ArrayList<DocTypes>();
 
@@ -86,7 +112,6 @@ public class DocTypesDAO {
 
                 docTypes.setId(rs.getInt("doc_type_Id"));
                 docTypes.setDescription(rs.getString("doc_type_descr"));
-                docTypes.setTemplate(rs.getString("doc_template"));
 
                 docTypesList.add(docTypes);
             }
