@@ -36,6 +36,10 @@ public class User {
 		this.setId(id);
 	}
 
+	public User() {
+
+	}
+
 	public void setPosition(String position) {
 		this.position = position;
 	}
