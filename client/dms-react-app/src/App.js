@@ -27,6 +27,9 @@ class App extends Component {
     super(props);
     this.state = {
         user: {},
+        token: {},
+        text:'kažkas'
+
     }
 }
   render() {
@@ -34,15 +37,15 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/login" component={LoginPage} handler={ (props,state) => <Login fetchUserData = {this.fetchUserData} />}/>
-          <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/login" component={LoginPage} hanfler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/>
+          {/* <Login fetchUserData ={this.fetchUserData} text={this.state.text} /> */}
           <Route exact path="/registration" component={RegistrationPage} />
           {/* roles reiktų perduoti taip? 
           {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />} */}
           {hasRole(user, ['user']) && <Route exact path="/userboard" component={UserBoard} handler={ (props,state) => <UserBoard id = {this.state.user.id} token = {this.state.user.token} />}/>}
-          {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} handler={ (props,state) => <UserBoardSubmitedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
+          {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} handler={ (props, state) => <UserBoardSubmitedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/newdoc" component={NewDocument} />}
-          {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} handler={ (props,state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
+          {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} handler={ (props, state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardgroups" component={AdminBoardGroups} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboarddocs" component={AdminBoardDocs} />}
@@ -53,13 +56,12 @@ class App extends Component {
   }
 
 //userio duomenų gavimui ir setinimui
-  fetchUserData = async (url) => {
+  fetchUserData = async () => {
     const res = await fetch("http://localhost:8086/login", {
       
       method: "POST",
       headers: {
-        "token": this.getToken(),
-        "content-type": "Application/json",
+        "content-type": "Application/json"
       
       },
       body: JSON.stringify({
@@ -68,10 +70,11 @@ class App extends Component {
       })
     });
     const json = await res.json();
+    console.log(json)
     this.setState({
       user: json
     })
-    return json.response.status;
+    return json;
   }
 
   getToken = () =>{

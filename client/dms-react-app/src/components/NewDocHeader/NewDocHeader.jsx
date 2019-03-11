@@ -35,9 +35,9 @@ class NewDocHeader extends Component {
       const {text} = this.state;
         return (
           <div className="newDocHead">
-            <FontAwesomeIcon className="one" icon="address-card" onClick={() =>this.nextPath(`/userboard`)}  onMouseOver = {this.onMouseover} onMouseOut = {this.onMouseout}/>
+            <FontAwesomeIcon className="one" icon="address-card" onClick={() =>this.nextPath(`/userboard`)} data-toggle="tooltip" title="Tooltip on right"  onMouseOver = {this.onMouseover} onMouseOut = {this.onMouseout}/>
             <Button className="SignOut" variant="outline-info" onClick={() =>this.nextPath(`/login`)}>Atsijungti</Button>
-            <p>  {this.state.text}</p>
+            <p>{this.state.text}</p>
           </div> 
         );
     }

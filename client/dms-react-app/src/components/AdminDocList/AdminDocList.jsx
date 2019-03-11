@@ -20,7 +20,8 @@ class AdminDocList extends Component {
     
         this.state = {
             documents: [],
-            document: [{
+            document: [
+            {
                 id: 1,
                 name: "Ana",
                 surname: "Kaka",
@@ -92,6 +93,48 @@ class AdminDocList extends Component {
                 template: "opka",
                 condition: "dead",
                 isChecked: true,
+            }, {
+                id: 5,
+                name: "Dalia",
+                surname: "Kaka",
+                template: "opka",
+                condition: "good kido",
+                isChecked: false,
+            }, {
+                id: 6,
+                name: "Marius",
+                surname: "Kaka",
+                template: "opka",
+                condition: "not very alive",
+                isChecked: false,
+            }, {
+                id: 7,
+                name: "Ana",
+                surname: "Kaka",
+                template: "opa",
+                condition: "dead",
+                isChecked: false,
+            }, {
+                id: 8,
+                name: "Marius",
+                surname: "Kakaliukas",
+                template: "opka",
+                condition: "very alive",
+                isChecked: false,
+            }, {
+                id: 9,
+                name: "Birutė",
+                surname: "Kakaliukas",
+                template: "opapa",
+                condition: "not dead",
+                isChecked: false,
+            }, {
+                id: 10,
+                name: "Šarūnas",
+                surname: "Kakaliukas",
+                template: "opka",
+                condition: "dead",
+                isChecked: true,
             }],
             modalIsOpen: false,
         }
@@ -115,7 +158,7 @@ class AdminDocList extends Component {
             };
             return (
                 <li className="page-item">
-                  <a href="" onClick={ handleClick }>{ page }</a>
+                  <p onClick={ handleClick }>{ page }</p>
                 </li>
             );
         };
@@ -189,7 +232,7 @@ class AdminDocList extends Component {
             <div className="AdminDocList">
                 <ToolkitProvider
                     keyField="id"
-                    data={ this.state.documents }
+                    data={ this.state.document }
                     // { this.state.documents.filter((document)=>{return document.status !== "saved"}) }                  
                     columns={ columns }
                     search

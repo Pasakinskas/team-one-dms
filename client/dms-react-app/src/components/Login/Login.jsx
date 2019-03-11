@@ -8,13 +8,13 @@ class Login extends Component {
         super(props);
     
         this.state = {
+          user: {},
           email: "",
           password: "",
           formErrors: {
             email: "",
             password: ""
           },
-          user:{},
         };
     }
 
@@ -66,13 +66,14 @@ class Login extends Component {
     this.props.history.push(path);
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
       e.preventDefault();
       if (this.formValid()) {
-        console.log("handle submit")
-        const loginanswerfrombackend = this.props;
-        console.log(loginanswerfrombackend);
-        this.evalRes(loginanswerfrombackend);
+        const fetchUserData = await this.props.fetchUserData;
+        const text = this.props.text;
+        console.log("state elementas " + text)
+        console.log("turėtų būti userio jsonas "+fetchUserData);
+        this.evalRes();
       } 
   };
     
@@ -111,6 +112,7 @@ class Login extends Component {
   formValid = (e) => {
       const { password, email } = this.state;
       if(email.length&&password.length !== 0){
+        console.log("viskas gerai")
         return true;
       }else{
         alert("Visi laukai turi būti užpildyti");

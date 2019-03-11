@@ -126,7 +126,7 @@ class Registration extends Component {
     this.props.history.push(path);
   }
 
-  fetchData = async (url) => {
+  fetchData = async () => {
     const res = await fetch("http://localhost:8086/users", {
       
       method: "POST",
@@ -139,7 +139,7 @@ class Registration extends Component {
         surname: this.state.surname,
         email: this.state.email,
         position: this.state.position,
-        password: this.state.password,
+        password: this.state.password
       })
     });
     const statusCode = await res.status;
@@ -191,10 +191,10 @@ class Registration extends Component {
     }
   }; 
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     if (this.formValidation()) {
-      const answerfrombackend = this.fetchData();
+      const answerfrombackend = await this.fetchData();
       this.evalRes(answerfrombackend);
     }
   }

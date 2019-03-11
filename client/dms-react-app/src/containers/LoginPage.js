@@ -4,7 +4,8 @@ import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 
 class LoginPage extends Component {
-  render() {
+  
+render() {
     return (
       <div className="Login">
         <Header/>

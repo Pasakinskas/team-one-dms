@@ -66,6 +66,7 @@ class NewDocForm extends Component {
                     value={recipient}
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite gavėją</option>
+                        {/* <option>{listRecipients}</option> */}
                         <option value="A">Jonas</option>
                         <option value="B">Paulius</option>
                         <option value="C">Petras</option>
@@ -91,7 +92,7 @@ class NewDocForm extends Component {
 
     //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
     fetchDataDocTemplates = async (url) => {
-      const res = await fetch("http://localhost:8086/document/templates", {
+      const res = await fetch("http://localhost:8086/documentTypes/get", {
         
         method: "GET",
         headers: {

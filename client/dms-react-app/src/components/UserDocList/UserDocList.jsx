@@ -19,15 +19,8 @@ class UserDocList extends Component {
         super(props);
     
         this.state = {
-            userDocuments:[{
-                id: 1,
-                date: "2019.12.12",
-                name: "Ana",
-                surname: "Taurienė",
-                recipient: "Good",
-                template: "dead",
-                condition: "lalala",
-            }],
+            userDocuments:[{}],
+            selectedDocuments: [],
             modalIsOpen: false,
         }
     } 
@@ -126,7 +119,7 @@ class UserDocList extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data=  { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return document.status=="saved"}) }
+                    // { this.state.userDocuments.filter((document)=>{return document.condition == "saved"}) }
                     columns= { columns }
                     search
                     >
@@ -192,7 +185,7 @@ class UserDocList extends Component {
             return row;
          })
          this.setState({
-             userDocuments: newDoc
+            selectedDocuments: newDoc
          })
     }
 
@@ -207,15 +200,14 @@ class UserDocList extends Component {
   
     sendDoc =(e) => {
         e.preventDefault();
-        const doc = this.state.userDocuments;
+        const sentDocList = this.getDocToSend();
         const API = 'localhost:8086/document/add';
          fetch(API, {
             method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({doc}),
-            // body: JSON.stringify({
-            //     "condition": "sent",
-            // }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({sentDocList}),
         }).then(response => {
             if(response.status === 201){
                 this.nextPath(`/userboard`);
@@ -224,7 +216,15 @@ class UserDocList extends Component {
             }
         }).catch(error => console.error(error));
     };
-     
+
+    getDocToSend = () => {
+        let docList = this.state.selectedDocuments;
+        for(let doc of docList){
+            doc.condition = 'saved';
+        }
+        return docList;
+    }
+    
     deleteDoc = (e) => {
         e.preventDefault();
         const doc = this.state.userDocuments;
@@ -250,19 +250,19 @@ class UserDocList extends Component {
     }
 
     fetchDataDocListUser = async (url) => {
-        const res = await fetch("http://localhost:8086/document/user/all" 
+        const res = await fetch("http://localhost:8086/documents" 
         // + this.props.user.id
         , {
           method: "GET",
           headers: { 
+            "token": this.props.token,
             "content-type": "Application/json",
           },
-        }).then(response => {
-            if (response.status === 401) {
-              // try getting the new access token and repeat the same request
-            }
-            // otherwise carry on
         })
+
+        if (res.status > 300) {
+            alert("Fail")
+        }
         const json = await res.json();      
         this.setState({ 
             userDocuments: json

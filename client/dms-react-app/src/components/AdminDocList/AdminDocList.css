@@ -37,3 +37,7 @@ h4{
     width: 100%;
     margin: 5px;
 }
+.page-item p {
+    font-size: 1em;
+    color:#2e2e2e;
+}
