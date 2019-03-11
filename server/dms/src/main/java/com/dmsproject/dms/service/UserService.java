@@ -18,6 +18,7 @@ import java.util.List;
 
 @Component
 public class UserService implements UserDetails, UserDetailsService {
+
     @Autowired
     UserDAO userDAO;
 
@@ -66,7 +67,7 @@ public class UserService implements UserDetails, UserDetailsService {
 
     @Override
     public String getUsername() {
-        return null;
+        return "bbooob";
     }
 
     @Override

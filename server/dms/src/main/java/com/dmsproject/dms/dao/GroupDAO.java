@@ -64,6 +64,22 @@ public class GroupDAO {
         }
     }
 
+    public boolean addMemberToGroup(int groupid, int userid) {
+        String statementString = "INSERT INTO user_assignments (group_id, user_id) VALUES (?, ?)";
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(statementString);
+            statement.setInt(1, groupid);
+            statement.setInt(2, userid);
+            statement.executeUpdate();
+            return true;
+        } catch (java.sql.SQLException e) {
+            System.err.println("SQL error getting all groups!");
+            System.out.println(e);
+            return false;
+        }
+    }
+
     public ArrayList<GroupDTO> getAllGroups() {
         String statementString = "SELECT * FROM groups WHERE groups.deleted = 0";
 
