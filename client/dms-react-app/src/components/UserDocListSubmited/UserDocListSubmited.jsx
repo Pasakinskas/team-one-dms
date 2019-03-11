@@ -181,10 +181,10 @@ class UserDocListSubmited extends Component {
     };
 
     componentDidMount(){
-        this. fetchDataDocListUser()
+        this.fetchDataDocListUser()
     }
 
-    fetchDataDocListUser = async (url) => {
+    fetchDataDocListUser = async() => {
         //this.props.user.id ateina iš app.js
         const res = await fetch("http://localhost:8086/document/user/all" 
         // + this.props.user.id

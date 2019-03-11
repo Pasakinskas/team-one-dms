@@ -72,7 +72,7 @@ class Login extends Component {
         const fetchUserData = await this.props.fetchUserData;
         const text = this.props.text;
         console.log("state elementas " + text)
-        console.log("turėtų būti userio jsonas "+fetchUserData);
+        console.log("turėtų būti userio jsonas "+ fetchUserData());
         this.evalRes();
       } 
   };

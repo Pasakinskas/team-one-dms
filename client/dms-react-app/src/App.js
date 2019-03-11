@@ -37,8 +37,8 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/login" component={LoginPage} hanfler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/>
-          {/* <Login fetchUserData ={this.fetchUserData} text={this.state.text} /> */}
+          {/* <Route exact path="/login" component={LoginPage} hanfler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/> */}
+          <Login fetchUserData ={this.fetchUserData} text={this.state.text} />
           <Route exact path="/registration" component={RegistrationPage} />
           {/* roles reiktų perduoti taip? 
           {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />} */}
@@ -61,12 +61,12 @@ class App extends Component {
       
       method: "POST",
       headers: {
-        "content-type": "Application/json"
+        "content-type": "application/json"
       
       },
       body: JSON.stringify({
         "email": this.state.email,
-        "password": this.state.password,
+        "password": this.state.password
       })
     });
     const json = await res.json();

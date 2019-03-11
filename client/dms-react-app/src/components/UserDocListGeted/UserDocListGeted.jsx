@@ -223,7 +223,7 @@ class UserDocListGeted extends Component {
     };
 
     componentDidMount(){
-        this. fetchDataDocListGeted()
+        this.fetchDataDocListGeted()
     }
 
     fetchDataDocListGeted = async (url) => {
@@ -231,7 +231,6 @@ class UserDocListGeted extends Component {
         const res = await fetch("http://localhost:8086/document/user/all" 
         // + this.props.user.id
         , {
-          
           method: "GET",
           headers: {
             //  tokken: 

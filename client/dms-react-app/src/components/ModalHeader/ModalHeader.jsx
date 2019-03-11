@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Row } from 'react-bootstrap';
-import { withRouter, Link } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
 import '../ModalHeader/ModalHeader.css'
 
 class ModalHeader extends Component {
