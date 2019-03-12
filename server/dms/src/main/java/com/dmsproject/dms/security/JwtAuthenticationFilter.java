@@ -1,6 +1,13 @@
 package com.dmsproject.dms.security;
 
+import com.dmsproject.dms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -13,29 +20,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenProvider tokenProvider;
+
+    @Autowired
     private JwtAuthenticationEntryPoint entryPoint;
+
+    @Autowired
+    UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        /*
-         *  This code executes if the request is not disabled with the entryPoint.
-         *  All requests go through here. This should run
-         *  code for all documents and all routes. This
-         *  place should not give you a token.
-         */
-        System.out.println("i have encountered a request" + request.getMethod() + request.getRequestURI());
-        if (request.getRequestURI().equals("/loginsation")) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Test deny of entry");
+        System.out.println("Filter encountered a request " + request.getMethod() + " " + request.getRequestURI());
+        String header = request.getHeader("token");
+
+        if (header != null) {
+            int userIdFromToken;
+            try {
+                String id = tokenProvider.getClaimFromToken(header, "id");
+                userIdFromToken = Integer.parseInt(id);
+
+                UserDetails userDetails = userService.loadUserById(userIdFromToken);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error parsing the token:");
+                System.err.println(e);
+            }
+        } else {
+            System.out.println("Request was without authentication");
         }
+
         try {
-            System.out.println(request);
             filterChain.doFilter(request, response);
         } catch (ServletException e) {
-            System.out.println("I fail at the filter");
+            System.out.println("I fail at the authFilter");
             System.out.println(e);
         }
     }
-
 }

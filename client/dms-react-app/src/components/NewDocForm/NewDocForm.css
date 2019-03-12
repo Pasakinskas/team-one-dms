@@ -16,7 +16,6 @@ input {
 }
 
 select,
-#DatePicker,
 input::placeholder{
     font-size: 1em;
     font-weight: lighter;
@@ -24,23 +23,13 @@ input::placeholder{
 }
 .docBtn button {
     width: 100%;
-    margin: 0 0.2em 0.15em 0.2em;
-}
-#DatePicker {
-    display: inline-block;
-    width: 100%;
-    padding: 0.175rem 0.75rem;
-    color: #495057;
-    background-color: #fff;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-}
-.react-datepicker-wrapper {
-}    
+    margin: 15px 0 0 5px;
 
-.shablon,
-.name,
+} 
+
+.template,
+.sender,
 .recipient,
 select {
-    margin-bottom: 0.15em;
+    margin-bottom: 10px;
 }

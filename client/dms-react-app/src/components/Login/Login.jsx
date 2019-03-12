@@ -8,35 +8,15 @@ class Login extends Component {
         super(props);
     
         this.state = {
+          user: {},
           email: "",
           password: "",
           formErrors: {
             email: "",
             password: ""
-          }
+          },
         };
     }
-
-  nextPath = (path)=>{
-    this.props.history.push(path);
-  }
-
-  fetchDataLogin = async (url) => {
-    const res = await fetch("http://localhost:8086", {
-      
-      method: "POST",
-      headers: {
-        "content-type": "Application/json",
-      
-      },
-      body: {
-        "email": this.state.email,
-        "password": this.state.password,
-      }
-    });
-    const json = await res.json();
-    return json;
-  }
 
   render() {
       const { password, email, formErrors } = this.state;
@@ -82,19 +62,25 @@ class Login extends Component {
       );
   }
 
-  handleSubmit = (e) => {
+  nextPath = (path)=>{
+    this.props.history.push(path);
+  }
+
+  handleSubmit = async (e) => {
       e.preventDefault();
       if (this.formValid()) {
-        console.log(this.formValid())
-          const loginanswerfrombackend = this.fetchDataLogin();
-          eval(loginanswerfrombackend);
+        const fetchUserData = await this.props.fetchUserData;
+        const res = await fetchUserData();
+        const status = this.props.response;
+        console.log(status);
+        this.evalRes(status);
       } 
   };
     
-  eval(isRegGood){
-    isRegGood === 201||200
-    ? alert("Prisijungimas pavyko, prisijunkite") && this.nextPath(`/userboard`)
-    : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/login`)
+  evalRes = (isRegGood)=>{
+    isRegGood === 200
+    ? this.nextPath(`/userboard`)
+    : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/`)
   }
 
   handleChange = (e) => {
@@ -108,16 +94,15 @@ class Login extends Component {
       });
       switch (name){
           case "email":
-          const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+          const emailPattern = /^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
           formErrors.email = emailPattern.test(value)
               ? ""
               : "Nepilnas el. paštas";
           break;
           case "password":
-          formErrors.password = value.length < 7
-              ? "mažiausias simbolių skaičius 7" 
-              : "";
-              console.log("paswordo reikšmė "+value);
+          formErrors.password = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{7,50}/.test(value) 
+              ? "" 
+              : "Neteisingas slaptažodis";
           break;
           default:
           break;
@@ -127,10 +112,8 @@ class Login extends Component {
   formValid = (e) => {
       const { password, email } = this.state;
       if(email.length&&password.length !== 0){
-        console.log("pasword ilgis "+password.length)
         return true;
       }else{
-        console.log(password.length, email.length)
         alert("Visi laukai turi būti užpildyti");
         return false;
       }

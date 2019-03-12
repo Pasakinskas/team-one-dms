@@ -1,34 +1,32 @@
 package com.dmsproject.dms.security;
 
+import com.dmsproject.dms.Constants;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 public class TokenProvider {
-    /**
-     * Life is good. Just put Id on to the jwt. Andrius approves
-     * @return
-     */
-    public String generateToken() {
+
+    public String generateToken(int id) {
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setSubject("what")
-                .claim("bananas", "niceties")
-                .signWith(SignatureAlgorithm.HS256, "mybunnies90SD")
+                .setSubject("userid")
+                .claim("id", id)
+                .signWith(SignatureAlgorithm.HS256, Constants.JWT_SIGN_KEY)
                 .compact();
     }
 
-    public String getUsernameFromToken(String token) {
+    public String getSubjectFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
+    }
+
+    public String getClaimFromToken(String token, String claimName) {
+        return getAllClaimsFromToken(token).get(claimName).toString();
     }
 
     public Date getExpirationDateFromToken(String token) {
@@ -41,9 +39,9 @@ public class TokenProvider {
     }
 
     // add signing key
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser()
-                .setSigningKey("thiswillbesigningkey")
+                .setSigningKey(Constants.JWT_SIGN_KEY)
                 .parseClaimsJws(token)
                 .getBody();
     }

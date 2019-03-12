@@ -9,3 +9,8 @@
     clear: both;
     float: left;
 }
+
+p {
+    font-size: 0.4em;
+    margin: 5px 0 0 50px;
+}

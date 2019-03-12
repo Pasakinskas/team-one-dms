@@ -194,7 +194,11 @@ export default class TextEditor extends Component {
             }
         }
     }
+<<<<<<< HEAD
     //send json to api ot of date/ remove
+=======
+    //send json to api
+>>>>>>> 421e9ba60834e2b8bfb8f6c7201165f407d05f62
     handleSubmit = async (event, existingValue) =>{
         event.preventDefault();
         const data = existingValue;

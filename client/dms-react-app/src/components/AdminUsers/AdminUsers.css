@@ -1,4 +1,4 @@
-.AdminDocList {
+.AdminUsers {
     margin: 30px 10px 200px 30px;
     width: 97%;
     padding: 20px 20px;
@@ -6,38 +6,19 @@
     box-shadow: 0px 10px 50px #555;
     background-color: #ffffff;
 }
-
 th {
     background-color:#9ef7e8;
 }
-
 #btn {  
     margin-bottom: 20px;
     float: right;   
 }
-
 #btn button{
     width: 90px;
 }
-
 .tableElem input.form-control {
     margin: 0;
     float: left;
     width: 30%;
     border-color:  #17a2b8;
-}
-
-h4{
-    float: left;
-    width: 50%;
-}
-
-#modal.textEditor{
-    float: left;
-    width: 100%;
-    margin: 5px;
-}
-.page-item p {
-    font-size: 1em;
-    color:#2e2e2e;
 }

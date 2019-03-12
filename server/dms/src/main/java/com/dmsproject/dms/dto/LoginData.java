@@ -8,7 +8,8 @@ public class LoginData {
 	@NotNull
 	@NotEmpty
 	private String email;
-	
+
+	@NotEmpty
 	@NotNull
 	private String password;
 	
@@ -16,6 +17,8 @@ public class LoginData {
 		this.email = email;
 		this.password = password;
 	}
+
+	public LoginData() {}
 	
 	public String getPassword() {
 		return password;
