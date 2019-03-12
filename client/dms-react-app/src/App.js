@@ -39,8 +39,8 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={HomePage} />
           {/* <Route exact path="/login" component={LoginPage} hanfler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/> */}
-          <Login fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response}/>
-          <Route exact path="/registration" component={RegistrationPage} />
+         {//} <Login fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response}/>
+         } <Route exact path="/registration" component={RegistrationPage} />
           {/* roles reiktų perduoti taip? 
           {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />} */}
           {hasRole(user, ['user']) && <Route exact path="/userboard" component={UserBoard} handler={ (props,state) => <UserBoard id = {this.state.user.id} token = {this.state.user.token} />}/>}

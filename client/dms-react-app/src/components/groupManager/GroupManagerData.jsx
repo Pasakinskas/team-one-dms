@@ -2,20 +2,12 @@ import React, { Component } from 'react';
 
 import UserSelector from './UsersSelector';
 // api - group list
-<<<<<<< HEAD
 const API_TEST = 'https://reqres.in/api/users?page=2';
 const API = 'https://localhost:8086/groups'
 // api_add_user adress to add user to group
 const API_ADD_USER = 'https://localhost:8086/groups';
 const API_REMOVE_USER = 'https://localhost:8086/groups';
 const API_REMOVE_GROUP = 'https://localhost:8086/group';
-=======
-const API = 'https://reqres.in/api/users?page=2';
-// api_add_user adress to add user to group
-const API_ADD_USER = 'https://localhost:8086/group/user/add';
-const API_REMOVE_USER = 'https://localhost:8086/group/user/remove';
-const API_REMOVE_GROUP = 'https://localhost:8086/group/remove';
->>>>>>> 421e9ba60834e2b8bfb8f6c7201165f407d05f62
 const DEFAULT_QUERY ='';
 
 export default class GroupManagerData extends Component {
@@ -30,23 +22,16 @@ export default class GroupManagerData extends Component {
             isLoading: false,
             error: null,
             selectedOption: null,
-<<<<<<< HEAD
             optionValue:"",
-=======
->>>>>>> 421e9ba60834e2b8bfb8f6c7201165f407d05f62
             show: false,
             isRemove: false,
         };
     };
-<<<<<<< HEAD
     handleInputChange = (newValue) => {
         const optionValue = newValue.replace(/\W/g, '');
         this.setState({optionValue});
         return optionValue;
     };
-=======
-  
->>>>>>> 421e9ba60834e2b8bfb8f6c7201165f407d05f62
     handleChange = (event,groupId) =>{
         this.setState({
             userId: event.target.value,
@@ -74,7 +59,6 @@ export default class GroupManagerData extends Component {
         }))
           .catch(error => this.setState({ error, isLoading: false }));
 
-<<<<<<< HEAD
           // whats here?
     }
 
@@ -134,59 +118,6 @@ export default class GroupManagerData extends Component {
                 /*body: JSON.stringify({
                     "groupId":groupId,
                 }),*/
-=======
-// adding user from selector
-    addUsers = async (event) =>{
-        event.preventDefault();
-        try{
-            const res = await fetch(API_ADD_USER, {
-            method: 'POST',
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({
-                "userId":this.state.userId,
-                "groupId":this.state.groupId,
-            }),
-            })
-            const statusCode = await res.status;
-            return statusCode;
-        }catch(err){console.log(err)};
-      }
-
-    removeUsers = async (event) =>{
-        event.preventDefault();
-        try{
-            const res = await fetch(API_REMOVE_USER, {
-            method: 'PATCH',
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({
-                "userId":this.state.userId,
-                "groupId":this.state.groupId,
-            }),
-            })
-            const statusCode = await res.status;
-            return statusCode;
-        }catch(err){console.log(err)};
-      }
-
-    removeGroup = async (event, groupId) =>{
-        event.preventDefault();
-        const {isRemove} = this.state;
-//placeholder for modal aditional confirmation state
-        if(true){
-            try{
-            const res = await fetch(API_REMOVE_GROUP, {
-                method: 'PATCH',
-                headers: {
-                    "content-type": "application/json"
-                },
-                body: JSON.stringify({
-                    "groupId":groupId,
-                }),
->>>>>>> 421e9ba60834e2b8bfb8f6c7201165f407d05f62
               })
       //remove console.log for testing
               console.log("You want to remove group with id: ",groupId);
@@ -198,11 +129,7 @@ export default class GroupManagerData extends Component {
       }
 
     render(){
-<<<<<<< HEAD
         const { data, isLoading, error } = this.state;
-=======
-        const { data, isLoading, error, isRemove } = this.state;
->>>>>>> 421e9ba60834e2b8bfb8f6c7201165f407d05f62
         let i =1;
         function row(){
         return i++;
@@ -224,11 +151,7 @@ export default class GroupManagerData extends Component {
                     <th scope='row'>{row()}</th>
                     <td>{data.first_name}</td>
                     <td><form className="table-form" onSubmit={this.addUsers}>
-<<<<<<< HEAD
                         <select
-=======
-                        <select 
->>>>>>> 421e9ba60834e2b8bfb8f6c7201165f407d05f62
                         name="user"
                         className="selectpicker" 
                         onChange={(e) => this.handleChange(e, data.id)}
