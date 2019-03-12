@@ -13,6 +13,11 @@ import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
 import ModalHeaderSubmited from '../ModalHeader/ModalHeaderSubmited';
 
+//API adresai - patikslinti
+//showDoc = () => pabaigti
+//110 
+
+
 class UserDocListGeted extends Component {
     constructor(props) {
         super(props);
@@ -55,11 +60,6 @@ class UserDocListGeted extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            // onSelect: (row, isSelect, rowIndex, e) => {
-            //     if (this.state.document.condition !== "saved") {
-            //         return false;
-            //     }
-            // }
         };                
      
         const columns = [{
@@ -108,7 +108,7 @@ class UserDocListGeted extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data= { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return document.status=="geted"}) }
+                    // { this.state.userDocuments.filter((document)=>{return document.condition == "submited"}) }
                     columns= { columns }
                     search
                     >
@@ -188,33 +188,47 @@ class UserDocListGeted extends Component {
         }
     };
 
+    getDocToSubmit = () => {
+        let docList = this.state.selectedDocuments;
+        for(let doc of docList){
+            doc.condition = 'submited';
+        }
+        return docList;
+    }
+    
     acceptDoc =(e) => {
-        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
         e.preventDefault();
-        const text = this.document.text;
-        const API = 'localhost:8086/document/add';
+        const acceptDocList = this.getDocToSubmit();
+        const API = 'http://localhost:8086/document/add';
         fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
+            method: 'PUT',
+            headers: {
+                'token': this.props.token,
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({acceptDocList}),
         }).then(response => {
-            if(response.status === 201){
+            if(response.status === 200){
                 this.nextPath(`/adminboarddocs`);
             }else{
-                alert("Pateikti nepavyko");
+                alert("Patvirtinti dokumento nepavyko");
             }
         }).catch(error => console.error(error));
     };
      
     rejectDoc = (e) => {
-        //kvieti dar vieną f-ją kuri patchina pateikto dok būseną?
         e.preventDefault();
-        const text = this.document.text;
-        const API = 'localhost:8086/document/add';
+        const rejectDocList = this.getDocToSubmit();
+        const API = 'http://localhost:8086/document/add';
         fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
+            method: 'DELETE',
+            headers: {
+                'token': this.props.token,
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({rejectDocList}),
         }).then(response => {
-            if(response.status === 201){
+            if(response.status === 200){
                 //do not show document in the list;
             }else{
                 alert("Pašalinti nepavyko");
@@ -226,17 +240,19 @@ class UserDocListGeted extends Component {
         this.fetchDataDocListGeted()
     }
 
-    fetchDataDocListGeted = async (url) => {
-        //this.props.user.id ateina iš app.js
-        const res = await fetch("http://localhost:8086/document/user/all" 
-        // + this.props.user.id
-        , {
+    fetchDataDocListGeted = async () => {
+        const res = await fetch("http://localhost:8086/document/user/all", 
+        // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
+        {
           method: "GET",
           headers: {
-            //  tokken: 
-            "content-type": "Application/json",
+            "token": this.props.token,
+            "content-type": "application/json",
         },
         });
+        if (res.status > 300) {
+            alert("Fail")
+        }
         const json = await res.json();      
         this.setState({ 
             userDocuments: json

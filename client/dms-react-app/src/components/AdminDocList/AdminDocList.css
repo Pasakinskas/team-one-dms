@@ -19,6 +19,10 @@ th {
 #btn button{
     width: 90px;
 }
+#btn.repeat {
+    width: 130px;
+}
+
 
 .tableElem input.form-control {
     margin: 0;

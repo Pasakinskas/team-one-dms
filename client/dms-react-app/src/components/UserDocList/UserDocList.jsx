@@ -13,7 +13,15 @@ import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
 import ModalHeader from '../ModalHeader/ModalHeader';
 
+//255, 205,233 eil. API adresas - patikslinti
+//showDoc = () => pabaigti
+//document types: Saved(išsaugoti) - shown just to user,
+//                Submited(pateikti) - shown tu user and users who can accept or reject
+//                Accepted(priimti) - documents accepted by group or other users
+//                Rejected(atmesti) - documents rejected by group or other users
+//                Deleted(panaikinti) - can be deleted by user or admin only. After that don't shown in any list.
 
+ 
 class UserDocList extends Component {
     constructor(props) {
         super(props);
@@ -189,8 +197,16 @@ class UserDocList extends Component {
          })
     }
 
+    getDocToSend = () => {
+        let docList = this.state.selectedDocuments;
+        for(let doc of docList){
+            doc.condition = 'saved';
+        }
+        return docList;
+    }
+    
     showDoc =() => {
-    const localDoc = this.state.userDocument;
+    const localDoc = this.state.userDocuments;
     for(const row of localDoc){
         if (row.isChecked === true){
             //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
@@ -201,15 +217,16 @@ class UserDocList extends Component {
     sendDoc =(e) => {
         e.preventDefault();
         const sentDocList = this.getDocToSend();
-        const API = 'localhost:8086/document/add';
+        const API = 'http://localhost:8086/document/add';
          fetch(API, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'token': this.props.token,
+                'content-Type': 'application/json'
             },
             body: JSON.stringify({sentDocList}),
         }).then(response => {
-            if(response.status === 201){
+            if(response.status === 200){
                 this.nextPath(`/userboard`);
             }else{
                 alert("Pateikti nepavyko");
@@ -217,30 +234,22 @@ class UserDocList extends Component {
         }).catch(error => console.error(error));
     };
 
-    getDocToSend = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition = 'saved';
-        }
-        return docList;
-    }
-    
     deleteDoc = (e) => {
         e.preventDefault();
-        const doc = this.state.userDocuments;
-        const API = 'localhost:8086/document/add';
+        const deleteDocList = this.getDocToSend();
+        const API = 'http://localhost:8086/document/add';
           fetch(API, {
-            method: 'PUT',
-            body: {doc},
-            // body: JSON.stringify({
-            //     "condition": "deleted",
-            // })
+            method: 'DELETE',
+            headers: {
+                'token': this.props.token,
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({deleteDocList}),
         }).then(response => {
-            if(response.status === 201){
-                this.nextPath(`/userboard`); 
-                // REFRESH PAGE???
-            } else {
-                alert("Pašalinti nepavyko");
+            if(response.status === 200){
+                this.nextPath(`/userboard`);
+            }else{
+                alert("Pateikti nepavyko");
             }
         }).catch(error => console.error(error));
     };
@@ -249,17 +258,16 @@ class UserDocList extends Component {
         this. fetchDataDocListUser()
     }
 
-    fetchDataDocListUser = async (url) => {
-        const res = await fetch("http://localhost:8086/documents" 
-        // + this.props.user.id
-        , {
+    fetchDataDocListUser = async () => {
+        const res = await fetch("http://localhost:8086/documents",
+        // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
+        {
           method: "GET",
           headers: { 
             "token": this.props.token,
-            "content-type": "Application/json",
+            "content-type": "application/json"
           },
         })
-
         if (res.status > 300) {
             alert("Fail")
         }

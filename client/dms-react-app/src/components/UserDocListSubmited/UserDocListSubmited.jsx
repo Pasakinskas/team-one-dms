@@ -55,11 +55,6 @@ class UserDocListSubmited extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            // onSelect: (row, isSelect, rowIndex, e) => {
-            //     if (this.state.document.condition !== "saved") {
-            //         return false;
-            //     }
-            // }
         };                
      
         const columns = [{
@@ -108,7 +103,7 @@ class UserDocListSubmited extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data= { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return document.status=="saved"}) }
+                    // { this.state.userDocuments.filter((document)=>{return (document.condition !=="saved") && (document.condition !== "Deleted")} ) }
                     columns= { columns }
                     search
                     >
@@ -172,7 +167,7 @@ class UserDocListSubmited extends Component {
  
      //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
     showDoc =() => {
-        const localDoc = this.state.document;
+        const localDoc = this.state.userDocuments;
         for(const row of localDoc){
             if (row.isChecked === true){
                 //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
@@ -185,17 +180,18 @@ class UserDocListSubmited extends Component {
     }
 
     fetchDataDocListUser = async() => {
-        //this.props.user.id ateina iš app.js
-        const res = await fetch("http://localhost:8086/document/user/all" 
+        const res = await fetch("http://localhost:8086/document/user/all", 
         // + this.props.user.id
-        , {
-          
+        {
           method: "GET",
           headers: {
-            //  tokken: 
+            "token": this.props.token,
             "content-type": "Application/json",
         },
-        });
+        })
+        if (res.status > 300) {
+            alert("Fail")
+        }
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
