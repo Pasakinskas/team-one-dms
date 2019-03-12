@@ -11,10 +11,11 @@ const plugins = [
 //define the default node type
 const DEFAULT_NODE = 'paragraph'
 
-const existingValue = JSON.parse(localStorage.getItem('content'));
+const existingValue = JSON.parse(sessionStorage.getItem('content'));
 // editors data storage
 const initialValue = Value.fromJSON(
-    existingValue ||{
+    //existingValue ||
+    {
     document:{
         nodes:[
             {
@@ -36,22 +37,69 @@ const initialValue = Value.fromJSON(
 })
 
 export default class TextEditor extends Component {
-
-    state = {
-        value: initialValue,
-        value2 : existingValue,
+    constructor(props){
+        super(props);
+        this.state = {
+            value: initialValue,
+            //value2 : existingValue,
+        }
     }
 
+    onNewVal = async () =>{
+        console.log("In editor new value: " + this.props.newEditorVar);
+        let newVal 
+        if(typeof this.props.newEditorVar === 'undefined'){return}
+        if(JSON.stringify(newVal) !== '{}'){
+            try{
+                newVal= JSON.parse(this.props.newEditorVar);
+            }catch(err){console.log(err)};
+             let deserializedVal
+            //create value from json object
+            deserializedVal = Value.fromJSON(newVal || 
+            {
+                document:{
+                    nodes:[
+                        {
+                            object:'block',
+                            type:'paragraph',
+                            nodes:[
+                                {
+                                    object:'text',
+                                    leaves: [
+                                        {
+                                            text:'',
+                                        }
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            })
+            
+            if(typeof newVal == "undefined"){
+                console.log("NULL")
+            }else{
+                console.log("This is what i get: " + deserializedVal + " This is what it should look like: " + this.state.value)
+
+                   await this.setState({"value":deserializedVal})
+            }
+        }
+    }
     //On change, update the app react state with new editor value
     onChange = ({value}) => {
-        /* save the value to local storage ( for now.. )
-        also check if its the same, to not make too many requests    */
-        if(value.document !== this.state.value.document){
+        
+        /* save the value to session storage ( for now.. )
+        need compare or something to have it work with load    */
+        /*if(value.document !== this.state.value.document){
             const content = JSON.stringify(value.toJSON());
-            localStorage.setItem('content', content);
-        };
-
-        this.setState({ value })
+            sessionStorage.setItem('content', content);
+        }*/
+       /* if(newVal !== null){
+            this.setState({newVal})
+            initialValue=newVal;
+        }*/
+        this.setState({ "value":value })
     }
     // reference to editor
     ref = editor => {
@@ -146,30 +194,26 @@ export default class TextEditor extends Component {
             }
         }
     }
-    //send json to api
-    handleSubmit = async (event,existingValue) =>{
+    //send json to api ot of date/ remove
+    handleSubmit = async (event, existingValue) =>{
         event.preventDefault();
         const data = existingValue;
         const API = 'http://localhost:8086/document/add';
-        const res = await fetch(API, {
+        fetch(API, {
           method: 'POST',
           headers: {
-              "content-type": "application/json"
+              "content-type": "Application/json" 
           },
-          body: JSON.stringify({doc: data}),
-        });
-        const json = await res.json();
-        console.log(res);
-        console.log(json);
-        // }).then(response => {
-        //   console.log(response.status);
-        //   if(response.status === 201){
-        //     console.log(response.status);
-        //   }
-        //   else{
-        //     console.log(response.status);
-        //   }
-        // }).catch(error => console.error(error));
+          body: JSON.stringify({document: data}),
+        }).then(response => {
+          console.log(response.status);
+          if(response.status === 201){
+            console.log(response.status);
+          }
+          else{
+            console.log(response.status);
+          }
+        }).catch(error => console.error(error));
       }
 // render Slate mark
     renderMark = (props, editor, next) => {
@@ -195,7 +239,7 @@ export default class TextEditor extends Component {
 
             return(
                 <button
-                    active = { isActive }
+                    active = { isActive.toString() }
                     onPointerDown= { event => this.onClickMark(event,type)}
                     >
                    <Icon>{icon}</Icon>
@@ -256,15 +300,15 @@ export default class TextEditor extends Component {
                     {this.renderMarkButton('bold', 'format_bold')}
                     {this.renderMarkButton('italic', 'format_italic')}
                     {this.renderMarkButton('underlined', 'format_underlined')}
-                    {this.renderMarkButton('code', 'code')}
+                    {/*this.renderMarkButton('code', 'code')*/}
                     {this.renderBlockButton('heading-one', 'looks_one')}
                     {this.renderBlockButton('heading-two', 'looks_two')}
-                    {this.renderBlockButton('block-quote', 'format_quote')}
+                    {/*this.renderBlockButton('block-quote', 'format_quote')*/}
                     {this.renderBlockButton('numbered-list', 'format_list_numbered')}
                     {this.renderBlockButton('bulleted-list', 'format_list_bulleted')}
-                    <button className="save-document"variant='light' onPointerDown={event => this.handleSubmit(event, existingValue)}>
+                    {/*<button className="save-document"variant='light' onPointerDown={event => this.handleSubmit(event, existingValue)}>
                     <Icon>{'save'}</Icon>
-                    </button>
+        </button>*/}
                 </FormatToolbar>
             <Editor
             ref={this.ref}

@@ -7,49 +7,72 @@ const API = "https://localhost:8086/group/add"
 export default class AddGroup extends Component{
     constructor(props) {
         super(props);
-    
+
         this.state = {
-          alert : "",
+          alert : false,
+          groupName : "",
+          groupId : "",
         };
     }
-    addGroup(event){
+
+    addGroup = async (event) =>{
         event.preventDefault();
-        const data = new FormData(event.target);
-        let object = {};
-        data.forEach(function(value, key){
-        object[key] = value;
-        });
-        let json = JSON.stringify(object);
-        fetch(API, {
-          method: 'POST',
-          body: json,
-        }).then(response => {
-          console.log(response.status);
-          if(response.status === 201 || 200){
-            console.log("Grupė pridėta");
-          }
-          else{
-            console.log("Grupės pridėti nepavyko");
-          }
-        }).catch(error => console.error(error));
+        const {groupName} = this.state;
+        console.log(groupName);
+        //only fetch if its all letters
+        if(/^[A-Za-ząčęėįšųūžĄČĘĖĮŠŲŪŽ]+$/.test(groupName)){
+         try{ 
+            const res = await fetch(API, {
+            method: 'POST',
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+              "groupName": groupName,
+            }),
+          })
+          await console.log("You want to add group ",groupName);
+          const statusCode = await res.status;
+          await console.log(statusCode).catch((err)=>{console.log(err)});
+          
+         }catch(err){console.log(err)}
+         
+        }else{
+          this.setState({ alert: true });
+          setTimeout(() => this.setState({ alert: false}), 2000);
+        }
+        
       }
 
+    handleChange = (event)=>{
+      const {value} = event.target;
+      this.setState({
+        groupName: value,
+      }); 
+    }
+
     render(){
-        const {alert} = this.state;
+        const {alert, groupName} = this.state;
         return(
             <Form onSubmit={this.addGroup}>
+            <div>
+                { alert
+                  ? <div className="alert alert-danger">Galima naudoti tik raides</div>
+                  : null
+                }
+              </div>
             <div className="group-name">
+            
             <FormControl 
                   type="text" 
-                  name="group-name"
+                  value={groupName}
+                  name="groupName"
                   placeholder="Grupės pavadinimas"
                   onChange={this.handleChange}
               /> 
-              <div className="alert"></div>
                <input 
-                    className="table-button" 
                     type="submit" 
-                    className="btn btn-dark" 
+                    className="btn btn-success" 
                     value="Pridėti grupę"/>
             </div>
             </Form>

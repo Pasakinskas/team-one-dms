@@ -1,0 +1,36 @@
+.groups-table{
+    display: block;
+    width: 60%;
+}
+.groups-table .table-button{
+    display: inline-flex;
+}
+.group-name{
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    margin-right: 4em;
+    margin-left: 9em;
+    width: 20rem;
+    text-align: left;
+    display: flex;
+}
+.group-name .alert{
+    text-emphasis: warp;
+}
+.groups-table select{
+    padding-right:1rem;
+    width: 12rem;
+}
+.groups-table .btn{
+    margin-left: 1rem;
+    display: inline-block;
+    text-align: left;
+}
+.groups-table .table-form{
+    display: inline-flex;
+    min-width: 10rem;
+}
+.user-selector, .user-selector-g, .basic-multi-select{
+    display: inline-flex;
+    width:200px;
+}

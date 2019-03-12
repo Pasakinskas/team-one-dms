@@ -3,15 +3,14 @@ import { Table } from 'react-bootstrap';
 import GroupManagerData from './GroupManagerData';
 import AddGroup from './AddGroup';
 
-import './AdminGroupManager.css'
+import './GroupManager.css'
 
 
-export default class AdminGroupManager extends Component{
-
+export default class GroupManager extends Component{
     render(){
         return(
         <div className="groups-table">
-            <AddGroup/>
+            <AddGroup className="groups-add"/>
             <Table striped bordered hover>
             <tbody>
               <GroupManagerData/>

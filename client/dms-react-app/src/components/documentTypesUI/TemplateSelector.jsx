@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 const API = 'https://reqres.in/api/users?page=2';
 const DEFAULT_QUERY = 'redux';
 
-class UserSelector extends Component{
+class TemplateSelector extends Component{
     constructor(props) {
         super(props);
     
@@ -45,11 +45,9 @@ class UserSelector extends Component{
                  value={data.id}
                  >
                  {data.first_name}
-                 &nbsp;
-                 {data.last_name}
                  </option>
             )
         );
     }
 }
-export default UserSelector;
+export default TemplateSelector;
