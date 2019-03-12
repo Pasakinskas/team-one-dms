@@ -27,6 +27,7 @@ class App extends Component {
     super(props);
     this.state = {
         user: {},
+        response: "",
         token: {},
         text:'kažkas'
 
@@ -38,7 +39,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={HomePage} />
           {/* <Route exact path="/login" component={LoginPage} hanfler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/> */}
-          <Login fetchUserData ={this.fetchUserData} text={this.state.text} />
+          <Login fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response}/>
           <Route exact path="/registration" component={RegistrationPage} />
           {/* roles reiktų perduoti taip? 
           {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />} */}
@@ -57,23 +58,27 @@ class App extends Component {
 
 //userio duomenų gavimui ir setinimui
   fetchUserData = async () => {
+    //pasidarau iš anksto data
+    const data = JSON.stringify({
+      "email": "ana@ses.lt",
+      "password": "Kalafioras1"
+    });
+    //spausdinu
+    console.log("my data is: " + data)
     const res = await fetch("http://localhost:8086/login", {
-      
       method: "POST",
       headers: {
         "content-type": "application/json"
-      
       },
-      body: JSON.stringify({
-        "email": this.state.email,
-        "password": this.state.password
-      })
+      body: data
     });
     const json = await res.json();
-    console.log(json)
+    console.log(res.status)
     this.setState({
-      user: json
+      user: json, 
+      response:res.status
     })
+    console.log(json)
     return json;
   }
 
