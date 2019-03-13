@@ -178,7 +178,15 @@ class UserDocListGeted extends Component {
          })
      }
  
-     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
+    getDocToSubmit = () => {
+        let docList = this.state.selectedDocuments;
+        for(let doc of docList){
+            doc.condition = 'submited';
+        }
+        return docList;
+    }
+
+    //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
     showDoc =() => {
         const localDoc = this.state.document;
         for(const row of localDoc){
@@ -187,15 +195,8 @@ class UserDocListGeted extends Component {
             }
         }
     };
-
-    getDocToSubmit = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition = 'submited';
-        }
-        return docList;
-    }
-    
+ 
+    //Document condition changes to accepted. After that isn't shown in geted document list
     acceptDoc =(e) => {
         e.preventDefault();
         const acceptDocList = this.getDocToSubmit();
@@ -215,7 +216,8 @@ class UserDocListGeted extends Component {
             }
         }).catch(error => console.error(error));
     };
-     
+    
+    //Document condition changes to rejected. After that isn't shown in geted document list
     rejectDoc = (e) => {
         e.preventDefault();
         const rejectDocList = this.getDocToSubmit();
@@ -240,6 +242,7 @@ class UserDocListGeted extends Component {
         this.fetchDataDocListGeted()
     }
 
+    //Gauna visus dokumentus, kuriuos jis tuiri teisę priimti ar atmesti. O returne (130) filtruoja pagal condition = 'submited'.
     fetchDataDocListGeted = async () => {
         const res = await fetch("http://localhost:8086/document/user/all", 
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.

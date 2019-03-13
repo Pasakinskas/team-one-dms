@@ -214,6 +214,7 @@ class UserDocList extends Component {
         }
     };
   
+    //Document condition changes to submited(pateikti dok.)
     sendDoc =(e) => {
         e.preventDefault();
         const sentDocList = this.getDocToSend();
@@ -234,6 +235,7 @@ class UserDocList extends Component {
         }).catch(error => console.error(error));
     };
 
+    //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
         e.preventDefault();
         const deleteDocList = this.getDocToSend();
@@ -258,6 +260,7 @@ class UserDocList extends Component {
         this. fetchDataDocListUser()
     }
 
+    //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
     fetchDataDocListUser = async () => {
         const res = await fetch("http://localhost:8086/documents",
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.

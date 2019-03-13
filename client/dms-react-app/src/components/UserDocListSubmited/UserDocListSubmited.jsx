@@ -57,7 +57,8 @@ class UserDocListSubmited extends Component {
             headerStyle: bgcolor,
         };                
      
-        const columns = [{
+        const columns = [
+        {
             dataField: 'id',
             text: 'Nr.',
             sort: true,
@@ -179,6 +180,7 @@ class UserDocListSubmited extends Component {
         this.fetchDataDocListUser()
     }
 
+    
     fetchDataDocListUser = async() => {
         const res = await fetch("http://localhost:8086/document/user/all", 
         // + this.props.user.id
