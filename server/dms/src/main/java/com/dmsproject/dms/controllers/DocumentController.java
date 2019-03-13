@@ -6,18 +6,23 @@ import com.dmsproject.dms.dao.DocumentDAO;
 import com.dmsproject.dms.dto.DocSelection;
 import com.dmsproject.dms.dto.DocTypes;
 import com.dmsproject.dms.dto.Document;
+import com.dmsproject.dms.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
 @RestController()
 @CrossOrigin(origins = Constants.REACT_URL)
 public class DocumentController {
+//    @Autowired
+//    private TokenProvider tokenProvider;
+
     @Autowired
     private DocumentDAO documentDAO;
 
@@ -44,16 +49,19 @@ public class DocumentController {
 
         documentDAO.editDocument(document);
     }
-
+// visiems dokumentams gauti (admin)
     @RequestMapping (value = "/document/get/all", method = RequestMethod.GET, produces = "application/json")
     public List<DocSelection> getAll() {
         return documentDAO.getAllDocuments();
     }
 
-//    @RequestMapping (value = "/document/get/byUserId", method = RequestMethod.GET, produces = "application/json")
-//    public List<DocSelection> getByUserId() {
-//         Integer userId = (Integer) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-//        return DocumentDAO.searchByUser(userId);
-//    }
+
+
+// userio dokumentams gauti
+    @RequestMapping (value = "/document/get/byUserId", method = RequestMethod.GET, produces = "application/json")
+    public List<Document> getByUserId(){
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        return documentDAO.searchByUser(Integer.parseInt (userId));
+    }
 
 }

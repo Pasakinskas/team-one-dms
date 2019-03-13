@@ -1,14 +1,18 @@
 package com.dmsproject.dms.dto;
 
 public class DocSelection {
-        private String number;
-        private String userName;
-        private String userSurname;
-        private String type;
-        private String name;
-        private String status;
-        private String date;
-        private String statusDescr;
+    private String number;
+    private String ownerName;
+    private String ownerSurname;
+    private String docName;
+    private String status;
+    private String details;
+    private String date;
+    private String receivGroupName;
+    private Integer receivGroupId;
+    private String receiverPosition;
+    private String receiverName;
+    private String receiverSurname;
 
     public String getNumber() {
         return number;
@@ -18,36 +22,28 @@ public class DocSelection {
         this.number = number;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getOwnerName() {
+        return ownerName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
-    public String getUserSurname() {
-        return userSurname;
+    public String getOwnerSurname() {
+        return ownerSurname;
     }
 
-    public void setUserSurname(String userSurname) {
-        this.userSurname = userSurname;
+    public void setOwnerSurname(String ownerSurname) {
+        this.ownerSurname = ownerSurname;
     }
 
-    public String getType() {
-        return type;
+    public String getDocName() {
+        return docName;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setDocName(String docName) {
+        this.docName = docName;
     }
 
     public String getStatus() {
@@ -58,6 +54,14 @@ public class DocSelection {
         this.status = status;
     }
 
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
     public String getDate() {
         return date;
     }
@@ -66,11 +70,43 @@ public class DocSelection {
         this.date = date;
     }
 
-    public String getStatusDescr() {
-        return statusDescr;
+    public String getReceivGroupName() {
+        return receivGroupName;
     }
 
-    public void setStatusDescr(String statusDescr) {
-        this.statusDescr = statusDescr;
+    public void setReceivGroupName(String receivGroupName) {
+        this.receivGroupName = receivGroupName;
+    }
+
+    public Integer getReceivGroupId() {
+        return receivGroupId;
+    }
+
+    public void setReceivGroupId(Integer receivGroupId) {
+        this.receivGroupId = receivGroupId;
+    }
+
+    public String getReceiverPosition() {
+        return receiverPosition;
+    }
+
+    public void setReceiverPosition(String receiverPosition) {
+        this.receiverPosition = receiverPosition;
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
+    public String getReceiverSurname() {
+        return receiverSurname;
+    }
+
+    public void setReceiverSurname(String receiverSurname) {
+        this.receiverSurname = receiverSurname;
     }
 }
