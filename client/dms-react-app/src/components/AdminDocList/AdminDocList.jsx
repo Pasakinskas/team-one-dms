@@ -233,7 +233,7 @@ class AdminDocList extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data={ this.state.document }
-                    // { this.state.documents.filter((document)=>{return document.status !== "saved"}) }                  
+                    // { this.state.documents.filter((document)=>{return (document.status !== "saved") && (document.status !== "deleted")}) }                  
                     columns={ columns }
                     search
                     >
@@ -250,8 +250,8 @@ class AdminDocList extends Component {
                                 <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
                                     Peržiūrėti
                                 </Button>
-                                <Button variant="success" type="submit" onClick={() => { this.send() }}>
-                                    Pateikti
+                                <Button className="repeat" variant="success" type="submit" onClick={() => { this.send() }}>
+                                    Leisti pateikti pakartotinai
                                 </Button>
                             </span>
                             <BootstrapTable 
@@ -299,12 +299,26 @@ class AdminDocList extends Component {
            return row;
         })
         this.setState({
-            document: newDoc
+            documents: newDoc
         })
     }
 
+    getDocToResubmit = () => {
+        let docList = this.state.selectedDocuments;
+        for(let doc of docList){
+            doc.condition = 'rejected';
+        }
+        return docList;
+    }
+    getDocToDelete = () => {
+        let docList = this.state.selectedDocuments;
+        for(let doc of docList){
+            doc.condition != 'submited';
+        }
+        return docList;
+    }
     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
-    showDoc =() => {
+    showDoc = () => {
         const localDoc = this.state.document;
         for(const row of localDoc){
             if (row.isChecked === true){
@@ -314,19 +328,22 @@ class AdminDocList extends Component {
         }
     };
 
-    sendDoc =(e) => {
-        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
+    letResubmitDoc =(e) => {
         e.preventDefault();
-        const text = this.document.text;
-        const API = 'localhost:8080/document/add';
+        const resubmitDocList = this.getDocToResubmit();
+        const API = 'https://localhost:8086/document/add';
         fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
+            method: 'PUT',
+            headers: {
+                'token': this.props.token,
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({resubmitDocList}),
         }).then(response => {
-            if(response.status === 201){
+            if(response.status === 200){
                 this.nextPath(`/adminboarddocs`);
             }else{
-                alert("Pateikti nepavyko");
+                alert("Leisti pateikti pakartotinai nepavyko");
             }
         }).catch(error => console.error(error));
     };
@@ -334,13 +351,17 @@ class AdminDocList extends Component {
     deleteDoc = (e) => {
         //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
         e.preventDefault();
-        const text = this.document.text;
-        const API = 'localhost:8086/document/add';
+        const deleteDocList = this.getDocToDelete();
+        const API = 'https://localhost:8086/document/add';
         fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
+            method: 'DELETE',
+            headers: {
+                'token': this.props.token,
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({deleteDocList}),
         }).then(response => {
-            if(response.status === 201){
+            if(response.status === 200){
                 //do not show document in the list;
             }else{
                 alert("Pašalinti nepavyko");
@@ -358,9 +379,13 @@ class AdminDocList extends Component {
           
           method: "GET",
           headers: {
-            "content-type": "Application/json",
+            "token": this.props.token,
+            "content-type": "application/json",
           },
-        });
+        })
+        if (res.status > 300) {
+            alert("Fail")
+        }
         const json = await res.json();
         console.log(json)
         this.setState({ 
