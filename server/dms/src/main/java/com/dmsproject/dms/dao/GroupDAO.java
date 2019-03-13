@@ -64,11 +64,17 @@ public class GroupDAO {
         }
     }
 
-    public boolean addMemberToGroup(int groupid, int userid) {
-        String statementString = "INSERT INTO user_assignments (group_id, user_id) VALUES (?, ?)";
-
+    public boolean modifyGroup(boolean addToGroup, int groupid, int userid) {
+        String insertStatement = "INSERT INTO user_assignments (group_id, user_id) VALUES (?, ?)";
+        String deleteStatement = "DELETE FROM user_assignments WHERE group_id = (?) && user_id = (?)";
         try {
-            PreparedStatement statement = database.connection.prepareStatement(statementString);
+            PreparedStatement statement;
+            if (addToGroup) {
+                statement = database.connection.prepareStatement(insertStatement);
+            } else {
+                statement = database.connection.prepareStatement(deleteStatement);
+            }
+
             statement.setInt(1, groupid);
             statement.setInt(2, userid);
             statement.executeUpdate();

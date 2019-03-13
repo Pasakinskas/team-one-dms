@@ -53,9 +53,6 @@ public class UserController {
 
     /**
      * TODO: Handle string input. Return error
-     * TODO: if user is null by id I must return an error
-     * @param id
-     * @return
      */
 
     @Secured("ROLE_ADMIN")
@@ -64,8 +61,12 @@ public class UserController {
             method = RequestMethod.GET,
             produces = "Application/json"
     )
-    public User getUser(@PathVariable("id") int id) {
-        return userDAO.getUserById(id, false);
+    public ResponseEntity<?> getUser(@PathVariable("id") int id) {
+        User user = userDAO.getUserById(id, false);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<Error>(HttpStatus.BAD_REQUEST);
     }
 
     @Secured("ROLE_ADMIN")

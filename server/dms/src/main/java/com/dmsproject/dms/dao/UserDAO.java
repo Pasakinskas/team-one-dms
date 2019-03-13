@@ -42,7 +42,6 @@ public class UserDAO {
                 statement.close();
                 return user;
             }
-            System.out.println("returning a null user object");
             return null;
         } catch (java.sql.SQLException e) {
             System.out.println("SQL error!");
