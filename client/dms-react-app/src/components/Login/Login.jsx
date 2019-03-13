@@ -11,6 +11,7 @@ class Login extends Component {
           user: {},
           email: "",
           password: "",
+          test:"test",
           formErrors: {
             email: "",
             password: ""
@@ -69,15 +70,16 @@ class Login extends Component {
   handleSubmit = async (e) => {
       e.preventDefault();
       if (this.formValid()) {
+        this.props.handleDatafromChild(this.state.test, this.state.email, this.state.password);
         const fetchUserData = await this.props.fetchUserData;
-        const text = this.props.text;
-        console.log("state elementas " + text)
-        console.log("turėtų būti userio jsonas "+ fetchUserData());
-        this.evalRes();
+        const res = await fetchUserData();
+        const status = this.props.response;
+        console.log(status);
+        this.evalRes(status);
       } 
   };
     
-  evalRes(isRegGood){
+  evalRes = (isRegGood)=>{
     isRegGood === 200
     ? this.nextPath(`/userboard`)
     : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/`)
@@ -112,7 +114,6 @@ class Login extends Component {
   formValid = (e) => {
       const { password, email } = this.state;
       if(email.length&&password.length !== 0){
-        console.log("viskas gerai")
         return true;
       }else{
         alert("Visi laukai turi būti užpildyti");

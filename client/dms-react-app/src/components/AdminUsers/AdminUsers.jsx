@@ -16,8 +16,9 @@ class AdminUsers extends Component {
         super(props);
     
         this.state = {
-            users: [{}],
-            user:[{
+            users: {},
+            user:[
+            {
                 id: 1,
                 name: "Ana",
                 surname: "Taurienė",
@@ -115,7 +116,8 @@ class AdminUsers extends Component {
             headerStyle: bgcolor,   
         };
 
-        const columns = [{
+        const columns = [
+        {
             dataField: 'id',
             text: 'Nr.',
             sort: true,
@@ -180,13 +182,17 @@ class AdminUsers extends Component {
     };
 
     fetchDataUserList = async (url) => {
-        const res = await fetch("http://localhost:8086/users" , {
-          
+        const res = await fetch("http://localhost:8086/users",
+        {  
           method: "GET",
           headers: {
-            "content-type": "Application/json",
-        },
-        });
+            "token": this.props.token,
+            "content-type": "application/json",
+          },
+        })
+        if (res.status > 300) {
+            alert("Fail")
+        }
         const json = await res.json();
         this.setState({ 
             users: json

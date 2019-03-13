@@ -25,12 +25,12 @@ public class UserDAO {
     }
 
     public User getUserById(int id, boolean includePassword) {
-        return getUserByField("id", Integer.toString(id), includePassword);
+        return getUserByField("user_id", Integer.toString(id), includePassword);
     }
 
     private User getUserByField(String field, String value, boolean includePassword) {
         String statementString = "SELECT * FROM users WHERE " +
-                field + " = ? && deleted = 0";
+                field + " = ?";
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(statementString);
@@ -59,7 +59,7 @@ public class UserDAO {
                 passwordField = null;
             }
             User user = new User(
-                    rs.getInt("id"),
+                    rs.getInt("user_id"),
                     rs.getString("name"),
                     rs.getString("surname"),
                     rs.getString("email"),
