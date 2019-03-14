@@ -11,7 +11,7 @@ class Login extends Component {
           user: {},
           email: "",
           password: "",
-          test:"test",
+          text:"oooooo",
           formErrors: {
             email: "",
             password: ""
@@ -70,7 +70,8 @@ class Login extends Component {
   handleSubmit = async (e) => {
       e.preventDefault();
       if (this.formValid()) {
-        this.props.handleDatafromChild(this.state.test, this.state.email, this.state.password);
+        // this.props.handleDatafromChild(this.state.test, this.state.email, this.state.password);
+        console.log(this.props.text);
         const fetchUserData = await this.props.fetchUserData;
         const res = await fetchUserData();
         const status = this.props.response;

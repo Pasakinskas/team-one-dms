@@ -310,10 +310,11 @@ class AdminDocList extends Component {
         }
         return docList;
     }
+
     getDocToDelete = () => {
         let docList = this.state.selectedDocuments;
         for(let doc of docList){
-            doc.condition != 'submited';
+            // doc.condition != 'submited';
         }
         return docList;
     }
@@ -349,7 +350,6 @@ class AdminDocList extends Component {
     };
     
     deleteDoc = (e) => {
-        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
         e.preventDefault();
         const deleteDocList = this.getDocToDelete();
         const API = 'https://localhost:8086/document/add';
@@ -362,21 +362,20 @@ class AdminDocList extends Component {
             body: JSON.stringify({deleteDocList}),
         }).then(response => {
             if(response.status === 200){
-                //do not show document in the list;
+                this.nextPath('/adminboarddocs')
             }else{
-                alert("Pašalinti nepavyko");
+                alert("Pašalinti dokumento nepavyko");
             }
         }).catch(error => console.error(error));
     };
 
     componentDidMount(){
-        console.log("mountina")
         this.fetchDataDocList()
     }
 
     fetchDataDocList = async (url) => {
-        const res = await fetch("http://localhost:8086/document/get/all", {
-          
+        const res = await fetch("http://localhost:8086/document/get/all", 
+        {
           method: "GET",
           headers: {
             "token": this.props.token,
