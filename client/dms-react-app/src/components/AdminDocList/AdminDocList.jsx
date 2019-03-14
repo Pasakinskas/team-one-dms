@@ -94,48 +94,49 @@ class AdminDocList extends Component {
                 condition: "dead",
                 isChecked: true,
             }, {
-                id: 5,
+                id: 11,
                 name: "Dalia",
                 surname: "Kaka",
                 template: "opka",
                 condition: "good kido",
                 isChecked: false,
             }, {
-                id: 6,
+                id: 12,
                 name: "Marius",
                 surname: "Kaka",
                 template: "opka",
                 condition: "not very alive",
                 isChecked: false,
             }, {
-                id: 7,
+                id: 13,
                 name: "Ana",
                 surname: "Kaka",
                 template: "opa",
                 condition: "dead",
                 isChecked: false,
             }, {
-                id: 8,
+                id: 14,
                 name: "Marius",
                 surname: "Kakaliukas",
                 template: "opka",
                 condition: "very alive",
                 isChecked: false,
             }, {
-                id: 9,
+                id: 15,
                 name: "Birutė",
                 surname: "Kakaliukas",
                 template: "opapa",
                 condition: "not dead",
                 isChecked: false,
             }, {
-                id: 10,
+                id: 16,
                 name: "Šarūnas",
                 surname: "Kakaliukas",
                 template: "opka",
                 condition: "dead",
                 isChecked: true,
-            }],
+            }
+        ],
             modalIsOpen: false,
         }
     }
@@ -291,7 +292,7 @@ class AdminDocList extends Component {
     }
 
     changeSelectStatus = (rowIndex)=>{
-       const newDoc = this.state.document.map(row => {
+       const newDoc = this.state.documents.map(row => {
            if(row.id -1 === rowIndex){
                 console.log(rowIndex)
                 row.isChecked = !row.isChecked;
@@ -303,21 +304,19 @@ class AdminDocList extends Component {
         })
     }
 
-    getDocToResubmit = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition = 'rejected';
+    changeDocByCondition = (newCondition) => {
+        let selectedDocuments = this.state.documents.map(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+        });
+
+        for (let doc of selectedDocuments) {
+            doc.condition = newCondition;
         }
-        return docList;
+        return selectedDocuments;
     }
 
-    getDocToDelete = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            // doc.condition != 'submited';
-        }
-        return docList;
-    }
     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
     showDoc = () => {
         const localDoc = this.state.document;
@@ -329,9 +328,10 @@ class AdminDocList extends Component {
         }
     };
 
+    //
     letResubmitDoc =(e) => {
         e.preventDefault();
-        const resubmitDocList = this.getDocToResubmit();
+        const resubmitDocList = this.changeDocByCondition("submitted");
         const API = 'https://localhost:8086/document/add';
         fetch(API, {
             method: 'PUT',

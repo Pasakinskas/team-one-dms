@@ -22,7 +22,7 @@ render() {
     return (
       <div className="Login">
         <Header/>
-        <Login fetchUserData ={this.fetchUserData} text={test} response={this.state.response}/>/>
+        <Login fetchUserData ={this.fetchUserData} text={test} response={this.state.response}/>
         <Footer/>
       </div>
     );

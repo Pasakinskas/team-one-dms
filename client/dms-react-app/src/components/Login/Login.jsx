@@ -22,7 +22,7 @@ class Login extends Component {
   render() {
       const { password, email, formErrors } = this.state;
       return (
-          <div className="wrapper">
+          <div className="wrapperLogin">
             <div className="form-wrapper">
               <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
                 <div className="email"> 

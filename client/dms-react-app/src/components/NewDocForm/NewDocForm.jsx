@@ -85,6 +85,7 @@ class NewDocForm extends Component {
             </div>
         );
     }
+    
     componentDidMount(){
         this.fetchDataDocTemplates()
         this.fetchDataRecipients()

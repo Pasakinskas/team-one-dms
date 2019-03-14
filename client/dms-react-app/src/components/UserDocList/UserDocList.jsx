@@ -27,7 +27,7 @@ class UserDocList extends Component {
         super(props);
     
         this.state = {
-            userDocuments:[{}],
+            userDocuments:[],
             selectedDocuments: [],
             modalIsOpen: false,
         }
@@ -162,7 +162,8 @@ class UserDocList extends Component {
                                 contentLabel="Dokumento peržiūra"
                                 >  
                                 <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="modalTextEditor"/>                      
+                                <TextEditor className="modalTextEditor"/>    
+                                {/* editor = {userDocuments filter text}                   */}
                             </Modal>                                               
                         </div>
                         )
@@ -178,6 +179,7 @@ class UserDocList extends Component {
 
     openModal = () => {
         this.setState({modalIsOpen: true});
+        this.showDoc();
     }
 
     closeModal = () => {
