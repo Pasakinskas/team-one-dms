@@ -166,7 +166,7 @@ class UserDocListGeted extends Component {
     }
 
     changeSelectStatus = (rowIndex)=>{
-        const newDoc = this.state.document.map(row => {
+        const newDoc = this.state.userDocuments.map(row => {
             if(row.id -1 === rowIndex){
                  console.log(rowIndex)
                  row.isChecked = !row.isChecked;
@@ -174,16 +174,21 @@ class UserDocListGeted extends Component {
             return row;
          })
          this.setState({
-             document: newDoc
+            userDocuments: newDoc
          })
      }
  
-    getDocToSubmit = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition = 'submited';
+     changeDocByCondition = (newCondition) => {
+        let selectedDocuments = this.state.userDocuments.map(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+        });
+
+        for (let doc of selectedDocuments) {
+            doc.condition = newCondition;
         }
-        return docList;
+        return selectedDocuments;
     }
 
     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
@@ -199,7 +204,7 @@ class UserDocListGeted extends Component {
     //Document condition changes to accepted. After that isn't shown in geted document list
     acceptDoc =(e) => {
         e.preventDefault();
-        const acceptDocList = this.getDocToSubmit();
+        const acceptDocList = this.changeDocByConditiont("accepted");
         const API = 'http://localhost:8086/document/add';
         fetch(API, {
             method: 'PUT',
@@ -220,7 +225,7 @@ class UserDocListGeted extends Component {
     //Document condition changes to rejected. After that isn't shown in geted document list
     rejectDoc = (e) => {
         e.preventDefault();
-        const rejectDocList = this.getDocToSubmit();
+        const rejectDocList = this.changeDocByConditiont("rejected");
         const API = 'http://localhost:8086/document/add';
         fetch(API, {
             method: 'DELETE',
