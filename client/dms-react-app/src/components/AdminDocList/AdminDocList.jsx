@@ -20,8 +20,7 @@ class AdminDocList extends Component {
     
         this.state = {
             documents: [],
-            document: [
-            {
+            document: [{
                 id: 1,
                 name: "Ana",
                 surname: "Kaka",
@@ -278,15 +277,14 @@ class AdminDocList extends Component {
             </div>
         );
     }
+    nextPath = (path)=>{
+        this.props.history.push(path);
+    }
 
     openModal = () => {
         this.setState({modalIsOpen: true});
     }
-    
-    afterOpenModal = () => {
-        // references are now sync'd and can be accessed.
-    }
-    
+      
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
@@ -328,7 +326,7 @@ class AdminDocList extends Component {
         }
     };
 
-    //
+    //Document condition changes from rejected to submited
     letResubmitDoc =(e) => {
         e.preventDefault();
         const resubmitDocList = this.changeDocByCondition("submitted");
@@ -349,9 +347,10 @@ class AdminDocList extends Component {
         }).catch(error => console.error(error));
     };
     
+    //Document condition changes to deleted
     deleteDoc = (e) => {
         e.preventDefault();
-        const deleteDocList = this.getDocToDelete();
+        const deleteDocList = this.changeDocByCondition("deleted");
         const API = 'https://localhost:8086/document/add';
         fetch(API, {
             method: 'DELETE',

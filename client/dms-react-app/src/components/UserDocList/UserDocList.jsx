@@ -199,12 +199,17 @@ class UserDocList extends Component {
          })
     }
 
-    getDocToSend = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition = 'saved';
+    changeDocByCondition = (newCondition) => {
+        let selectedDocuments = this.state.documents.map(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+        });
+
+        for (let doc of selectedDocuments) {
+            doc.condition = newCondition;
         }
-        return docList;
+        return selectedDocuments;
     }
     
     showDoc =() => {
@@ -219,7 +224,7 @@ class UserDocList extends Component {
     //Document condition changes to submited(pateikti dok.)
     sendDoc =(e) => {
         e.preventDefault();
-        const sentDocList = this.getDocToSend();
+        const sentDocList = this.changeDocByCondition("submited");
         const API = 'http://localhost:8086/document/add';
          fetch(API, {
             method: 'PUT',
@@ -240,7 +245,7 @@ class UserDocList extends Component {
     //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
         e.preventDefault();
-        const deleteDocList = this.getDocToSend();
+        const deleteDocList = this.changeDocByCondition("deleted");
         const API = 'http://localhost:8086/document/add';
           fetch(API, {
             method: 'DELETE',
