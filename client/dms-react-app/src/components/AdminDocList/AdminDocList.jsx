@@ -179,7 +179,6 @@ class AdminDocList extends Component {
                 console.log("IsSelect: " + isSelect);
                 console.log("rowIndex: " + rowIndex);
                 console.log(e);
-
             },    
         };
 

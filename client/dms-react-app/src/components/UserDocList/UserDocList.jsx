@@ -97,7 +97,7 @@ class UserDocList extends Component {
             text: 'Gavėjas',
             sort: true,
             align: "center",
-        },{
+        }, {
             dataField: 'template',
             text: 'Šablonas',
             sort: true,
