@@ -26,14 +26,16 @@ public class DocumentController {
     @Autowired
     private DocumentDAO documentDAO;
 
+// išsaugoti dokumentą
     @RequestMapping(value = "/document/add", method = RequestMethod.POST, consumes = "application/json")
-    public Boolean add(@RequestBody String docContent) {
+    public Integer add(@RequestBody String docContent) {
         Document document = new Document();
         document.setTypeId(1);
         document.setContent(docContent);
         return documentDAO.addDocument(document);
     }
 
+// redaguoti dokumentą
     @RequestMapping(value = "/document/edit", method = RequestMethod.POST)
     public void edit(@RequestParam(name = "doc_id") Integer id,
                      @RequestParam(name = "doc_type_id") Integer TypeId,
@@ -49,7 +51,14 @@ public class DocumentController {
 
         documentDAO.editDocument(document);
     }
-// visiems dokumentams gauti (admin)
+
+// gauti dokumentą pagal dokumento id
+    @RequestMapping(value = "/document/get", method = RequestMethod.GET, produces = "application/json")
+    public Document getDocument(@RequestParam(name = "id") Integer id) {
+        return documentDAO.getDocumentById(id);
+    }
+
+// ištraukti visiems dokumentams (admin)
     @RequestMapping (value = "/document/get/all", method = RequestMethod.GET, produces = "application/json")
     public List<DocSelection> getAll() {
         return documentDAO.getAllDocuments();
@@ -57,7 +66,7 @@ public class DocumentController {
 
 
 
-// userio dokumentams gauti
+// ištraukti userio dokumentams
     @RequestMapping (value = "/document/get/byUserId", method = RequestMethod.GET, produces = "application/json")
     public List<Document> getByUserId(){
         String userId = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();

@@ -1,6 +1,7 @@
 package com.dmsproject.dms.dto;
 
 public class DocSelection {
+    private Integer Id;
     private String number;
     private String ownerName;
     private String ownerSurname;
@@ -13,6 +14,15 @@ public class DocSelection {
     private String receiverPosition;
     private String receiverName;
     private String receiverSurname;
+    private Integer receiverId;
+
+    public Integer getId() {
+        return Id;
+    }
+
+    public void setId(Integer id) {
+        Id = id;
+    }
 
     public String getNumber() {
         return number;
@@ -108,5 +118,13 @@ public class DocSelection {
 
     public void setReceiverSurname(String receiverSurname) {
         this.receiverSurname = receiverSurname;
+    }
+
+    public Integer getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(Integer receiverId) {
+        this.receiverId = receiverId;
     }
 }
