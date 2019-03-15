@@ -55,6 +55,9 @@ class UserDocListSubmited extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
+            onSelect: (row, isSelect, rowIndex, e) => {
+                this.changeSelectStatus(rowIndex);
+            },    
         };                
      
         const columns = [
@@ -154,7 +157,7 @@ class UserDocListSubmited extends Component {
     }
 
     changeSelectStatus = (rowIndex)=>{
-        const newDoc = this.state.document.map(row => {
+        const newDoc = this.state.userDocuments.map(row => {
             if(row.id -1 === rowIndex){
                  console.log(rowIndex)
                  row.isChecked = !row.isChecked;
@@ -162,9 +165,23 @@ class UserDocListSubmited extends Component {
             return row;
          })
          this.setState({
-             document: newDoc
+            userDocuments: newDoc
          })
-     }
+    }
+
+    changeDocByCondition = (newCondition) => {
+        let selectedDocuments = this.state.userDocuments.map(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+        });
+
+        for (let doc of selectedDocuments) {
+            doc.condition = newCondition;
+        }
+        return selectedDocuments;
+    }
+
  
      //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
     showDoc =() => {
@@ -183,13 +200,12 @@ class UserDocListSubmited extends Component {
     
     fetchDataDocListUser = async() => {
         const res = await fetch("http://localhost:8086/document/user/all", 
-        // + this.props.user.id
         {
           method: "GET",
           headers: {
             "token": this.props.token,
             "content-type": "Application/json",
-        },
+          },
         })
         if (res.status > 300) {
             alert("Fail")

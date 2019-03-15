@@ -93,8 +93,8 @@ class NewDocForm extends Component {
 
     //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
     fetchDataDocTemplates = async (url) => {
-      const res = await fetch("http://localhost:8086/documentTypes/get", {
-        
+      const res = await fetch("http://localhost:8086/documentTypes/get", 
+      {
         method: "GET",
         headers: {
           "content-type": "Application/json",
@@ -105,8 +105,8 @@ class NewDocForm extends Component {
     }
     //kokiu API kreiptis
     fetchDataRecipients = async (url) => {
-      const res = await fetch("http://localhost:8086/", {
-        
+      const res = await fetch("http://localhost:8086/",
+      {
         method: "GET",
         headers: {
           "content-type": "Application/json",
@@ -130,15 +130,15 @@ class NewDocForm extends Component {
       e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
         const data = this.props.existingValue;
-        const API = 'localhost:8080/document/add';
+        const API = 'https://localhost:8080/document/add';
         fetch(API, {
           method: 'POST',
           body: JSON.stringify({document: data}),
         }).then(response => {
 //Kaip suformuoti būsenos pakeitimą?
-          if(response.status === 201){
+          if (response.status === 201){
             this.nextPath(`/userboard`);
-          }else{
+          } else {
             alert("Pateikti nepavyko");
           }
         }).catch(error => console.error(error));
@@ -148,14 +148,14 @@ class NewDocForm extends Component {
         e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
           const data = this.props.existingValue;
-          const API = 'localhost:8080/document/add';
+          const API = 'https://localhost:8080/document/add';
           fetch(API, {
             method: 'POST',
             body: JSON.stringify({document: data}),
           }).then(response => {
-            if(response.status === 201){
+            if (response.status === 201){
               this.nextPath(`/userboard`);
-            }else{
+            } else {
               alert("Išsaugoti nepavyko");
             }
           }).catch(error => console.error(error));

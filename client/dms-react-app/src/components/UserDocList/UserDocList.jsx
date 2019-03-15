@@ -67,7 +67,9 @@ class UserDocList extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            onSelect: (row, isSelect, rowIndex, e) => {this.changeSelectStatus()}
+            onSelect: (row, isSelect, rowIndex, e) => {
+                this.changeSelectStatus(rowIndex);
+            },
         };                
      
         const columns = [
@@ -200,7 +202,7 @@ class UserDocList extends Component {
     }
 
     changeDocByCondition = (newCondition) => {
-        let selectedDocuments = this.state.documents.map(doc =>{
+        let selectedDocuments = this.state. userDocuments.map(doc =>{
            if(doc.isChecked){
              return doc
            } 

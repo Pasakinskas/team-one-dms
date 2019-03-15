@@ -43,8 +43,8 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/login" render= { props => <LoginPage {...props} fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response}/>}/>
           {/* <Route exact path="/login" component={LoginPage} handler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/> */}
+          {/* <Route exact path="/login" render = { props => <Login {...props} fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response}/>}/> */}
           {/* <Login fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response} handleDatafromChild={this.handleDatafromChild}/> */}
           <Route exact path="/registration" component={RegistrationPage} />
           {/* roles reiktų perduoti taip?  */}
@@ -73,7 +73,8 @@ class App extends Component {
     });
     //spausdinu
     console.log("my data is: " + data)
-    const res = await fetch("http://localhost:8086/login", {
+    const res = await fetch("http://localhost:8086/login", 
+    {
       method: "POST",
       headers: {
         "content-type": "application/json"

@@ -60,6 +60,9 @@ class UserDocListGeted extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
+            onSelect: (row, isSelect, rowIndex, e) => {
+                this.changeSelectStatus(rowIndex);
+            },   
         };                
      
         const columns = [{
@@ -266,8 +269,7 @@ class UserDocListGeted extends Component {
             userDocuments: json
         });             
         return json;
-    }
+    } 
+}
   
-  }
-  
-  export default withRouter(UserDocListGeted);
+export default withRouter(UserDocListGeted);

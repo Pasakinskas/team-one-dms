@@ -371,7 +371,7 @@ class AdminDocList extends Component {
         this.fetchDataDocList()
     }
 
-    fetchDataDocList = async (url) => {
+    fetchDataDocList = async () => {
         const res = await fetch("http://localhost:8086/document/get/all", 
         {
           method: "GET",
