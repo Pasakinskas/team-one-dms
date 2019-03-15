@@ -204,7 +204,7 @@ class UserDocListSubmited extends Component {
           method: "GET",
           headers: {
             "token": this.props.token,
-            "content-type": "Application/json",
+            "content-type": "application/json",
           },
         })
         if (res.status > 300) {
@@ -219,4 +219,4 @@ class UserDocListSubmited extends Component {
   
   }
   
-  export default withRouter(UserDocListSubmited );
+  export default withRouter(UserDocListSubmited);

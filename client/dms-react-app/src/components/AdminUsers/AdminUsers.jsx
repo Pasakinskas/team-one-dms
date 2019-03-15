@@ -16,7 +16,7 @@ class AdminUsers extends Component {
         super(props);
     
         this.state = {
-            users: {},
+            users: [{}],
             user:[
             {
                 id: 1,
