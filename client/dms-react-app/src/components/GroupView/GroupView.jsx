@@ -57,19 +57,26 @@ class GroupView extends Component {
         );
     }
 
-    fetchGroups = async (url) => {
-        const res = await fetch("http://localhost:8086/groups", {
-          
+    fetchAllGroups = async (url) => {
+        const res = await fetch("http://localhost:8086/groups", 
+        {
           method: "GET",
           headers: {
+            "token": this.props.token,
             "content-type": "Application/json",
           },
         });
+        if (res.status > 300) {
+          alert("Fail")
+        }
         const groupsJson = await res.groupsJson();
+        this.setState({ 
+          groups: groupsJson
+        });
         return groupsJson;
     }
 
-    fetchGroups = async (url) => {
+    fetchMyGroups = async (url) => {
         const res = await fetch("http://localhost:8086/groups/",  
         // + this.props.user.id, 
         {
@@ -79,6 +86,9 @@ class GroupView extends Component {
           },
         });
         const myGroupsJson = await res.myGroupsJson();
+        this.setState({ 
+          groups: myGroupsJson
+        });
         return myGroupsJson;
     }
 }

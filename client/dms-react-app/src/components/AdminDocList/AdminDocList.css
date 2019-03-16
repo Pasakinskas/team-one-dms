@@ -19,8 +19,8 @@ th {
 #btn button{
     width: 90px;
 }
-#btn.repeat {
-    width: 130px;
+#btn .repeat {
+    width: 230px;
 }
 
 

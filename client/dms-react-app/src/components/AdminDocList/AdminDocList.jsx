@@ -20,8 +20,7 @@ class AdminDocList extends Component {
     
         this.state = {
             documents: [],
-            document: [
-            {
+            document: [{
                 id: 1,
                 name: "Ana",
                 surname: "Kaka",
@@ -94,48 +93,49 @@ class AdminDocList extends Component {
                 condition: "dead",
                 isChecked: true,
             }, {
-                id: 5,
+                id: 11,
                 name: "Dalia",
                 surname: "Kaka",
                 template: "opka",
                 condition: "good kido",
                 isChecked: false,
             }, {
-                id: 6,
+                id: 12,
                 name: "Marius",
                 surname: "Kaka",
                 template: "opka",
                 condition: "not very alive",
                 isChecked: false,
             }, {
-                id: 7,
+                id: 13,
                 name: "Ana",
                 surname: "Kaka",
                 template: "opa",
                 condition: "dead",
                 isChecked: false,
             }, {
-                id: 8,
+                id: 14,
                 name: "Marius",
                 surname: "Kakaliukas",
                 template: "opka",
                 condition: "very alive",
                 isChecked: false,
             }, {
-                id: 9,
+                id: 15,
                 name: "Birutė",
                 surname: "Kakaliukas",
                 template: "opapa",
                 condition: "not dead",
                 isChecked: false,
             }, {
-                id: 10,
+                id: 16,
                 name: "Šarūnas",
                 surname: "Kakaliukas",
                 template: "opka",
                 condition: "dead",
                 isChecked: true,
-            }],
+            }
+        ],
             modalIsOpen: false,
         }
     }
@@ -178,7 +178,6 @@ class AdminDocList extends Component {
                 console.log("IsSelect: " + isSelect);
                 console.log("rowIndex: " + rowIndex);
                 console.log(e);
-
             },    
         };
 
@@ -277,21 +276,20 @@ class AdminDocList extends Component {
             </div>
         );
     }
+    nextPath = (path)=>{
+        this.props.history.push(path);
+    }
 
     openModal = () => {
         this.setState({modalIsOpen: true});
     }
-    
-    afterOpenModal = () => {
-        // references are now sync'd and can be accessed.
-    }
-    
+      
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
 
     changeSelectStatus = (rowIndex)=>{
-       const newDoc = this.state.document.map(row => {
+       const newDoc = this.state.documents.map(row => {
            if(row.id -1 === rowIndex){
                 console.log(rowIndex)
                 row.isChecked = !row.isChecked;
@@ -303,20 +301,19 @@ class AdminDocList extends Component {
         })
     }
 
-    getDocToResubmit = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition = 'rejected';
+    changeDocByCondition = (newCondition) => {
+        let selectedDocuments = this.state.documents.map(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+        });
+
+        for (let doc of selectedDocuments) {
+            doc.condition = newCondition;
         }
-        return docList;
+        return selectedDocuments;
     }
-    getDocToDelete = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition != 'submited';
-        }
-        return docList;
-    }
+
     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
     showDoc = () => {
         const localDoc = this.state.document;
@@ -328,9 +325,10 @@ class AdminDocList extends Component {
         }
     };
 
+    //Document condition changes from rejected to submited
     letResubmitDoc =(e) => {
         e.preventDefault();
-        const resubmitDocList = this.getDocToResubmit();
+        const resubmitDocList = this.changeDocByCondition("submitted");
         const API = 'https://localhost:8086/document/add';
         fetch(API, {
             method: 'PUT',
@@ -348,10 +346,10 @@ class AdminDocList extends Component {
         }).catch(error => console.error(error));
     };
     
+    //Document condition changes to deleted
     deleteDoc = (e) => {
-        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
         e.preventDefault();
-        const deleteDocList = this.getDocToDelete();
+        const deleteDocList = this.changeDocByCondition("deleted");
         const API = 'https://localhost:8086/document/add';
         fetch(API, {
             method: 'DELETE',
@@ -362,21 +360,20 @@ class AdminDocList extends Component {
             body: JSON.stringify({deleteDocList}),
         }).then(response => {
             if(response.status === 200){
-                //do not show document in the list;
+                this.nextPath('/adminboarddocs')
             }else{
-                alert("Pašalinti nepavyko");
+                alert("Pašalinti dokumento nepavyko");
             }
         }).catch(error => console.error(error));
     };
 
     componentDidMount(){
-        console.log("mountina")
         this.fetchDataDocList()
     }
 
-    fetchDataDocList = async (url) => {
-        const res = await fetch("http://localhost:8086/document/get/all", {
-          
+    fetchDataDocList = async () => {
+        const res = await fetch("http://localhost:8086/document/get/all", 
+        {
           method: "GET",
           headers: {
             "token": this.props.token,
