@@ -23,3 +23,11 @@ code {
   cursor: pointer;
   border:0;
 }
+
+.headers {
+  color:  #2e2e2e;
+  font-size: 1.2em;
+  font-weight: 400;
+  margin: 20px 0 0 40px;
+  float: left;
+}

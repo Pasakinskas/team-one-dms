@@ -11,6 +11,7 @@ class UserBoard extends Component {
             <div className="UserBoard">
                 <UserNavbar/>
                 <NewDocButton/>
+                <p className="headers" >IŠSAUGOTI DOKUMENTAI</p>
                 <GroupView/>
                 <UserDocList/>                
                 <Footer/> 

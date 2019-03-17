@@ -12,7 +12,6 @@ import AdminBoardTemplates from './containers/AdminBoardTemplates';
 import UserBoardSubmitedDoc from './containers/UserBoardSubmitedDoc';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { hasRole } from './containers/Auth';
-import Login from "./components/Login/Login";
 
 // kai turėsiu json iš BE tai pas mane bus tik const user = json ir iš vidaus matysis
 // kokias roles jis turi ir ką gali daryti. kol kas tai yra statiška, nežinau kaip padryti kad JIS ŽINOTŲ kas aš. 
@@ -30,12 +29,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        user: {},
-        response: "",
+      //from child
+        user: [],
         token:'',
-        email:'',
-        password:'',
-        text:'aaaa',
     }
 }
   render() {
@@ -44,11 +40,11 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={HomePage} />
           {/* <Route exact path="/login" component={LoginPage} handler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/> */}
-          <Route exact path="/login" render = { props => <LoginPage {...props} fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response}/>}/>
+          <Route exact path="/login" render={ (props,state) => <LoginPage handleDatafromChild ={this.handleDatafromChild}/>}/>
           {/* <Login fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response} handleDatafromChild={this.handleDatafromChild}/> */}
           <Route exact path="/registration" component={RegistrationPage} />
-          {/* roles reiktų perduoti taip?  */}
-          {/* {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />} */}
+          {/* roles reiktų perduoti taip? 
+          {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />}  */}
           {hasRole(user, ['user']) && <Route exact path="/userboard" component={UserBoard} handler={ (props,state) => <UserBoard id = {this.state.user.id} token = {this.state.user.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} handler={ (props, state) => <UserBoardSubmitedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/newdoc" component={NewDocument} />}
@@ -62,46 +58,13 @@ class App extends Component {
     );
   }
 
-//userio duomenų gavimui ir setinimui
-  fetchUserData = async () => {
-    //pasidarau iš anksto data
-    const data = JSON.stringify({
-      // "email": this.state.email,
-      // "password": this.state.password
-      "email": "ana@ses.lt",
-      "password": "Kalafioras1"
-    });
-    //spausdinu
-    console.log("my data is: " + data)
-    const res = await fetch("http://localhost:8086/login", 
-    {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: data
-    });
-    const json = await res.json();
-    console.log(res.status)
-    console.log(json)
-    const token = res.headers.get("token");
-    console.log(token);
+  handleDatafromChild = (user, token) => {
     this.setState({
-      user: json, 
-      response:res.status,
+      user: user,
       token: token
     })
-    return json;
+    console.log("tai turi būti iš vaiko " + this.state.user + this.state.token)
   }
-
-  // handleDatafromChild = (data, email, password) =>{
-  //   this.setState({
-  //     test: data,
-  //     email: email,
-  //     password: password
-  //   })
-  //   console.log(this.state)
-  // }
 }
 
 export default App;
