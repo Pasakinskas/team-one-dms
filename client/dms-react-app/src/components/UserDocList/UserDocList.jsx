@@ -202,12 +202,12 @@ class UserDocList extends Component {
     }
 
     changeDocByCondition = (newCondition) => {
-        let selectedDocuments = this.state. userDocuments.map(doc =>{
+        let selectedDocuments = this.state.userDocuments.map(doc =>{
            if(doc.isChecked){
              return doc
            } 
+           return selectedDocuments;
         });
-
         for (let doc of selectedDocuments) {
             doc.condition = newCondition;
         }
@@ -266,7 +266,7 @@ class UserDocList extends Component {
     };
      
     componentDidMount(){
-        this. fetchDataDocListUser()
+        this.fetchDataDocListUser()
     }
 
     //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.

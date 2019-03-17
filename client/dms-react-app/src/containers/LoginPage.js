@@ -7,25 +7,24 @@ class LoginPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        user: {},
-        response: "",
+        user: [],
         token:'',
-        email:'',
-        password:'',
-        text:'',
     }
 }
 
 
 render() {
-  let test = this.props.text;
     return (
       <div className="Login">
         <Header/>
-        <Login fetchUserData ={this.fetchUserData} text={test} response={this.state.response}/>
+        <Login handleDatafromChild ={this.props.handleDatafromChild}/>
         <Footer/>
       </div>
     );
+  }
+
+  handleDatafromChild = () =>{
+    this.props.handleDatafromChild(this.state.user, this.state.token);
   }
 }
 

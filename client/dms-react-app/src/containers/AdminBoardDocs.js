@@ -8,6 +8,7 @@ class AdminBoardDocs extends Component {
         return (
             <div>
                 <AdminNavBar/> 
+                <p  className="headers">DOKUMENTAI</p>
                 <AdminDocList/>
                 <Footer/>  
             </div>

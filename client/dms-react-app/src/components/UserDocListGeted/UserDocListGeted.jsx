@@ -186,6 +186,7 @@ class UserDocListGeted extends Component {
            if(doc.isChecked){
              return doc
            } 
+           return selectedDocuments;
         });
 
         for (let doc of selectedDocuments) {

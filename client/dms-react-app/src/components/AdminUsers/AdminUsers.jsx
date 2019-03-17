@@ -190,10 +190,11 @@ class AdminUsers extends Component {
     }
 
     selectedUsers = () => {
-        let selectedUsers= this.state.documents.map(doc =>{
+        let selectedUsers= this.state.users.filter(doc =>{
            if(doc.isChecked){
              return doc
            } 
+           return selectedUsers;
         });
         return selectedUsers;
     }
