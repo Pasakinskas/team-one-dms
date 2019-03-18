@@ -320,7 +320,6 @@ class AdminDocList extends Component {
            } 
            return selectedDocuments;
         });
-
         for (let doc of selectedDocuments) {
             doc.condition = newCondition;
         }

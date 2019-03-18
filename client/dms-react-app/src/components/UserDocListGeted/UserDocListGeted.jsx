@@ -269,7 +269,7 @@ class UserDocListGeted extends Component {
 
     //Gauna visus dokumentus, kuriuos jis tuiri teisę priimti ar atmesti. O returne (130) filtruoja pagal condition = 'submited'.
     fetchDataDocListGeted = async () => {
-        const res = await fetch("http://localhost:8086/document/user/all", 
+        const res = await fetch("http://localhost:8086//document/get/submitedToUser", 
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
         {
           method: "GET",

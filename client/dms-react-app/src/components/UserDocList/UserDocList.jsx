@@ -232,7 +232,7 @@ class UserDocList extends Component {
     sendDoc =(e) => {
         e.preventDefault();
         const sentDocList = this.changeDocByCondition("submited");
-        const API = 'http://localhost:8086/document/add';
+        const API = 'http://localhost:8086/document/';
          fetch(API, {
             method: 'PUT',
             headers: {
@@ -276,7 +276,7 @@ class UserDocList extends Component {
 
     //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
     fetchDataDocListUser = async () => {
-        const res = await fetch("http://localhost:8086/documents",
+        const res = await fetch("http://localhost:8086/getSaved/byUserId",
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
         {
           method: "GET",

@@ -215,7 +215,7 @@ class UserDocListSubmited extends Component {
 
     
     fetchDataDocListUser = async() => {
-        const res = await fetch("http://localhost:8086/document/user/all", 
+        const res = await fetch("http://localhost:8086/document/getSubmited/byUserId", 
         {
           method: "GET",
           headers: {
