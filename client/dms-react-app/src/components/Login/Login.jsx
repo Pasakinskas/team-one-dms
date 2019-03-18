@@ -3,15 +3,17 @@ import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import './Login.css';
 
+//jei fecho responsas 400 tai nulūžta
+
 class Login extends Component {
     constructor(props) {
         super(props);
-    
         this.state = {
-          user: {},
+          user: [],
+          token: "",
+          response: "",
           email: "",
           password: "",
-          test:"test",
           formErrors: {
             email: "",
             password: ""
@@ -22,7 +24,7 @@ class Login extends Component {
   render() {
       const { password, email, formErrors } = this.state;
       return (
-          <div className="wrapper">
+          <div className="wrapperLogin">
             <div className="form-wrapper">
               <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
                 <div className="email"> 
@@ -70,11 +72,12 @@ class Login extends Component {
   handleSubmit = async (e) => {
       e.preventDefault();
       if (this.formValid()) {
-        this.props.handleDatafromChild(this.state.test, this.state.email, this.state.password);
-        const fetchUserData = await this.props.fetchUserData;
+        const fetchUserData = await this.fetchUserData;
         const res = await fetchUserData();
-        const status = this.props.response;
-        console.log(status);
+        const status = this.state.response;
+        this.props.handleDatafromChild(this.state.user, this.state.token);
+        console.log("fetcho rezultatas " + res);
+        console.log("response " + status);
         this.evalRes(status);
       } 
   };
@@ -120,6 +123,36 @@ class Login extends Component {
         return false;
       }
   };
+
+  //userio duomenų gavimui ir setinimui
+  fetchUserData = async () => {
+    //pasidarau iš anksto data
+    const data = JSON.stringify({
+      "email": this.state.email,
+      "password": this.state.password
+    });
+    //spausdinu
+    console.log("my data is: " + data)
+    const res = await fetch("http://localhost:8086/login", 
+    {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: data
+    });
+    const json = JSON.stringify (await res.json());
+    console.log(res.status)
+    console.log("visas useris" + json)
+    const token = res.headers.get("token");
+    console.log(token);
+    this.setState({
+      user: json, 
+      response: res.status,
+      token: token
+    })
+    return json;
+  }
 }
 
 export default withRouter(Login);

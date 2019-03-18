@@ -3,17 +3,20 @@ package com.dmsproject.dms.dao;
 import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.DocStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 
 
 
+@Component
 public class DocStatusDAO {
+
     @Autowired
     private Database database;
 
     private static final String INSERT_SQL = "INSERT INTO document_status" +
-            "(int statusId, int docId, int userId, String description, String date) " +
+            "(status_id, document_id, user_id, doc_status_descr) " +
             "values (?, ?, ?, ?, ?)";
 
     public boolean addDocStatus(final DocStatus docStatus) {
@@ -23,7 +26,6 @@ public class DocStatusDAO {
             statement.setInt( 2, docStatus.getDocId());
             statement.setInt( 3, docStatus.getUserId());
             statement.setString(4, docStatus.getDescription());
-            statement.setString(5, docStatus.getDate());
 
             statement.executeUpdate();
             statement.close();

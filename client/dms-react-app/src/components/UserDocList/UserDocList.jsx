@@ -27,7 +27,7 @@ class UserDocList extends Component {
         super(props);
     
         this.state = {
-            userDocuments:[{}],
+            userDocuments:[],
             selectedDocuments: [],
             modalIsOpen: false,
         }
@@ -67,7 +67,9 @@ class UserDocList extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            onSelect: (row, isSelect, rowIndex, e) => {this.changeSelectStatus()}
+            onSelect: (row, isSelect, rowIndex, e) => {
+                this.changeSelectStatus(rowIndex);
+            },
         };                
      
         const columns = [
@@ -97,7 +99,7 @@ class UserDocList extends Component {
             text: 'Gavėjas',
             sort: true,
             align: "center",
-        },{
+        }, {
             dataField: 'template',
             text: 'Šablonas',
             sort: true,
@@ -105,6 +107,11 @@ class UserDocList extends Component {
         }, {
             dataField: 'condition',
             text: 'Būsena',
+            sort: true,
+            headerStyle: bgcolor,
+        }, {
+            dataField: 'notes',
+            text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
         }]; 
@@ -162,7 +169,8 @@ class UserDocList extends Component {
                                 contentLabel="Dokumento peržiūra"
                                 >  
                                 <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="modalTextEditor"/>                      
+                                <TextEditor className="modalTextEditor"/>    
+                                {/* editor = {userDocuments filter text}                   */}
                             </Modal>                                               
                         </div>
                         )
@@ -178,6 +186,7 @@ class UserDocList extends Component {
 
     openModal = () => {
         this.setState({modalIsOpen: true});
+        this.showDoc();
     }
 
     closeModal = () => {
@@ -197,12 +206,17 @@ class UserDocList extends Component {
          })
     }
 
-    getDocToSend = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition = 'saved';
+    changeDocByCondition = (newCondition) => {
+        let selectedDocuments = this.state.userDocuments.map(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+           return selectedDocuments;
+        });
+        for (let doc of selectedDocuments) {
+            doc.condition = newCondition;
         }
-        return docList;
+        return selectedDocuments;
     }
     
     showDoc =() => {
@@ -217,8 +231,8 @@ class UserDocList extends Component {
     //Document condition changes to submited(pateikti dok.)
     sendDoc =(e) => {
         e.preventDefault();
-        const sentDocList = this.getDocToSend();
-        const API = 'http://localhost:8086/document/add';
+        const sentDocList = this.changeDocByCondition("submited");
+        const API = 'http://localhost:8086/document/';
          fetch(API, {
             method: 'PUT',
             headers: {
@@ -238,7 +252,7 @@ class UserDocList extends Component {
     //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
         e.preventDefault();
-        const deleteDocList = this.getDocToSend();
+        const deleteDocList = this.changeDocByCondition("deleted");
         const API = 'http://localhost:8086/document/add';
           fetch(API, {
             method: 'DELETE',
@@ -257,12 +271,12 @@ class UserDocList extends Component {
     };
      
     componentDidMount(){
-        this. fetchDataDocListUser()
+        this.fetchDataDocListUser()
     }
 
     //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
     fetchDataDocListUser = async () => {
-        const res = await fetch("http://localhost:8086/documents",
+        const res = await fetch("http://localhost:8086/getSaved/byUserId",
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
         {
           method: "GET",

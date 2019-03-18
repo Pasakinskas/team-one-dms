@@ -15,17 +15,20 @@ public class DocumentTypesController {
     @Autowired
     private DocTypesDAO docTypesDAO;
 
+
+// gauti dokumento šabloną pagal dokumento tipo id
     @RequestMapping(value = "/documentTypes/getTemplate", method = RequestMethod.GET, produces = "application/json")
     public DocTypes getDocTemplate(@RequestParam(name = "id") Integer id) {
         return docTypesDAO.getDocTemplateByType(id);
     }
 
+// gauti dokumentų šablonų sąrašą
     @RequestMapping(value = "/documentTypes/get", method = RequestMethod.GET, produces = "application/json")
     public List<DocTypes> getDocTypes() {
         return docTypesDAO.getDocTypes();
     }
 
-
+// sukurti naują dokumento šabloną
     @RequestMapping(value = "/documentTemplate/add", method = RequestMethod.POST)
     public Boolean add(@RequestParam(name = "description") String description,
                        @RequestParam(name = "template") String template) {
@@ -36,9 +39,10 @@ public class DocumentTypesController {
         return docTypesDAO.addDocTemplate(docTypes);
     }
 
+// redaguoti dokumento šabloną
     @RequestMapping(value = "/documentTemplate/edit", method = RequestMethod.POST)
     public void edit(@RequestParam(name = "id") Integer id,
-            @RequestParam(name = "description") String description,
+                     @RequestParam(name = "description") String description,
                      @RequestParam(name = "template") String template) {
         DocTypes docTypes = new DocTypes();
         docTypes.setId(id);
@@ -48,6 +52,7 @@ public class DocumentTypesController {
         docTypesDAO.editDocTemplate(docTypes);
     }
 
+// ištrinti dokumento šabloną
     @RequestMapping(value = "/documentTemplate/delete", method = RequestMethod.DELETE)
     public void delete(@RequestParam(name = "docTypeId") Integer docTypeId) {
         docTypesDAO.deleteTemplate(docTypeId);
