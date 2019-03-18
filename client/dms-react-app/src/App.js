@@ -35,6 +35,7 @@ class App extends Component {
       //from child
         user: [],
         token:'',
+        role:''
     }
 }
   render() {
@@ -47,14 +48,14 @@ class App extends Component {
           {/* <Login fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response} handleDatafromChild={this.handleDatafromChild}/> */}
           <Route exact path="/registration" component={RegistrationPage} />
           {/* roles reiktų perduoti taip? 
-          {hasRole(this.user, ['user']) && <Route exact path="/userboard" component={UserBoard} />}  */}
-          {hasRole(user, ['user']) && <Route exact path="/userboard" component={UserBoard} handler={ (props,state) => <UserBoard id = {this.state.user.id} token = {this.state.user.token} />}/>}
+          {hasRole(this.state.role, ['user']) && <Route exact path="/userboard" component={UserBoard} />}  */}
+          {hasRole(user, ['user']) && <Route exact path="/userboard" render={ (props,state) => <UserBoard token = {this.state.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} handler={ (props, state) => <UserBoardSubmitedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/newdoc" component={NewDocument} />}
           {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} handler={ (props, state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardgroups" component={AdminBoardGroups} />}
-          {hasRole(user, ['admin']) &&<Route exact path="/adminboarddocs" component={AdminBoardDocs} />}
+          {hasRole(user, ['admin']) &&<Route exact path="/adminboarddocs" render = { (props,state) => <AdminBoardDocs token ={ this.state.token }/>}/>}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardtemplates" component={AdminBoardTemplates} />}
         </Switch>
       </Router>

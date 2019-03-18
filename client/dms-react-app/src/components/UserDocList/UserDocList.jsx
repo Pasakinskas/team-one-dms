@@ -276,6 +276,7 @@ class UserDocList extends Component {
 
     //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
     fetchDataDocListUser = async () => {
+        console.log("man reikia šito " + this.props.token)
         const res = await fetch("http://localhost:8086/getSaved/byUserId",
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
         {
@@ -285,6 +286,7 @@ class UserDocList extends Component {
             "content-type": "application/json"
           },
         })
+        console.log("man reikai šito " + this.props.token)
         if (res.status > 300) {
             alert("Fail")
         }

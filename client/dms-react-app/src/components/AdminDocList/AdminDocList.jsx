@@ -20,6 +20,7 @@ class AdminDocList extends Component {
     
         this.state = {
             documents: [],
+            token:'',
             document: [{
                 id: 1,
                 name: "Ana",
@@ -392,6 +393,7 @@ class AdminDocList extends Component {
             "content-type": "application/json",
           },
         })
+        console.log(this.props.token)
         if (res.status > 300) {
             alert("Fail")
         }

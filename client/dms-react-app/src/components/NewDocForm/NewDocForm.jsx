@@ -136,7 +136,7 @@ class NewDocForm extends Component {
           body: JSON.stringify({document: data}),
         }).then(response => {
 //Kaip suformuoti būsenos pakeitimą?
-          if (response.status === 201){
+          if (response.status === 200){
             this.nextPath(`/userboard`);
           } else {
             alert("Pateikti nepavyko");
