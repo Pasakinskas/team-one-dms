@@ -25,13 +25,12 @@ DROP TABLE IF EXISTS `document_receiver`;
 CREATE TABLE `document_receiver` (
   `doc_receiv_id` int(11) NOT NULL AUTO_INCREMENT,
   `doc_id` int(11) NOT NULL,
-  `receiver_id` int(11) NOT NULL,
+  `receiv_user_id` int(11) DEFAULT NULL,
+  `receiv_group_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`doc_receiv_id`),
   KEY `doc_id_idx` (`doc_id`),
-  KEY `doc-receiv_receiver_id_idx` (`receiver_id`),
-  CONSTRAINT `doc-receiv_receiver_id` FOREIGN KEY (`receiver_id`) REFERENCES `receivers` (`receiver_id`),
   CONSTRAINT `doc_receiv_doc_id` FOREIGN KEY (`doc_id`) REFERENCES `documents` (`doc_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +39,7 @@ CREATE TABLE `document_receiver` (
 
 LOCK TABLES `document_receiver` WRITE;
 /*!40000 ALTER TABLE `document_receiver` DISABLE KEYS */;
-INSERT INTO `document_receiver` VALUES (3,3,1),(4,7,2),(5,9,5);
+INSERT INTO `document_receiver` VALUES (3,3,1,NULL),(4,7,2,NULL),(5,9,2,NULL),(6,14,NULL,1),(7,15,NULL,2),(8,16,NULL,3);
 /*!40000 ALTER TABLE `document_receiver` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,7 +64,7 @@ CREATE TABLE `document_status` (
   CONSTRAINT `document_status_documents_FK` FOREIGN KEY (`document_id`) REFERENCES `documents` (`doc_id`),
   CONSTRAINT `document_status_status_FK` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`),
   CONSTRAINT `document_status_user_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +73,7 @@ CREATE TABLE `document_status` (
 
 LOCK TABLES `document_status` WRITE;
 /*!40000 ALTER TABLE `document_status` DISABLE KEYS */;
-INSERT INTO `document_status` VALUES (1,2,1,2,NULL,'2019-02-21 00:25:26'),(2,3,2,1,NULL,'2019-02-21 00:25:26'),(3,4,3,2,NULL,'2019-02-21 00:25:26'),(4,5,4,1,'bad mood','2019-02-21 00:25:26'),(5,6,1,2,NULL,'2019-02-21 00:25:26'),(6,7,2,1,NULL,'2019-02-21 00:25:26'),(7,8,3,2,NULL,'2019-02-21 00:25:26'),(9,9,3,1,NULL,'2019-03-13 00:05:34');
+INSERT INTO `document_status` VALUES (1,2,1,2,NULL,'2019-02-21 00:25:26'),(2,3,2,1,NULL,'2019-02-21 00:25:26'),(3,4,3,2,NULL,'2019-02-21 00:25:26'),(4,5,4,1,'bad mood','2019-02-21 00:25:26'),(5,6,1,2,NULL,'2019-02-21 00:25:26'),(6,7,2,1,NULL,'2019-02-21 00:25:26'),(7,8,3,2,NULL,'2019-02-21 00:25:26'),(9,9,2,1,NULL,'2019-03-13 00:05:34'),(10,9,3,1,NULL,'2019-03-14 00:29:07'),(12,14,2,2,NULL,'2019-03-17 01:56:21'),(13,15,2,2,NULL,'2019-03-17 01:56:21'),(14,16,2,1,NULL,'2019-03-17 17:30:19');
 /*!40000 ALTER TABLE `document_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +89,7 @@ CREATE TABLE `document_types` (
   `doc_type_descr` varchar(45) NOT NULL,
   `doc_template` longtext NOT NULL,
   PRIMARY KEY (`doc_type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +98,7 @@ CREATE TABLE `document_types` (
 
 LOCK TABLES `document_types` WRITE;
 /*!40000 ALTER TABLE `document_types` DISABLE KEYS */;
-INSERT INTO `document_types` VALUES (1,'Atostogų prašymas','fsffdf'),(2,'Prašymas atleisti iš darbo','sfasdf'),(3,'111111111','222222222');
+INSERT INTO `document_types` VALUES (1,'Atostogų prašymas','fsffdf'),(2,'Prašymas atleisti iš darbo','sfasdf'),(3,'Pasiaiškinimas','222222222'),(5,'Įsakymas','įsakau');
 /*!40000 ALTER TABLE `document_types` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,7 +118,7 @@ CREATE TABLE `documents` (
   PRIMARY KEY (`doc_id`),
   KEY `documents_doc_type_FK_idx` (`doc_type_id`),
   CONSTRAINT `documents_doc_type_FK` FOREIGN KEY (`doc_type_id`) REFERENCES `document_types` (`doc_type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +127,7 @@ CREATE TABLE `documents` (
 
 LOCK TABLES `documents` WRITE;
 /*!40000 ALTER TABLE `documents` DISABLE KEYS */;
-INSERT INTO `documents` VALUES (2,1,'aaa','222','{\"json\":\"data1111\"}'),(3,1,'bbb','333','333bbb'),(4,1,'ccc','444','444ccc'),(5,2,'ddd','555','555ddd'),(6,2,'eee','666','666eee'),(7,2,'fff','777','777fff'),(8,2,'ggg','888','888ggg'),(9,1,'hhh','999','999hhh');
+INSERT INTO `documents` VALUES (2,1,'aaa','222','{\"json\":\"data1111\"}'),(3,1,'bbb','333','333bbb'),(4,1,'ccc','444','444ccc'),(5,2,'ddd','555','555ddd'),(6,2,'eee','666','666eee'),(7,2,'fff','777','777fff'),(8,2,'ggg','888','888ggg'),(9,1,'hhh','999','999hhh'),(10,1,'iii','1010','1010iii'),(14,3,'jjj','1010','1010jjj'),(15,5,'kkk','1111','1111kkk'),(16,3,'lll','1212','1212lll');
 /*!40000 ALTER TABLE `documents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,7 +142,7 @@ CREATE TABLE `event_type` (
   `event_type_id` int(11) NOT NULL AUTO_INCREMENT,
   `event_descr` varchar(45) NOT NULL,
   PRIMARY KEY (`event_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -152,6 +151,7 @@ CREATE TABLE `event_type` (
 
 LOCK TABLES `event_type` WRITE;
 /*!40000 ALTER TABLE `event_type` DISABLE KEYS */;
+INSERT INTO `event_type` VALUES (1,'registracija'),(2,'prisijungta'),(3,'atsijungta'),(4,'dokumentas sukurtas'),(5,'dokumentas pateiktas'),(6,'dokumentas priimtas'),(7,'dokumentas atmestas');
 /*!40000 ALTER TABLE `event_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -236,7 +236,7 @@ CREATE TABLE `groups` (
 
 LOCK TABLES `groups` WRITE;
 /*!40000 ALTER TABLE `groups` DISABLE KEYS */;
-INSERT INTO `groups` VALUES (1,'abba'),(2,'acdc'),(3,'foje');
+INSERT INTO `groups` VALUES (1,'administracija'),(2,'it skyrius'),(3,'vairuotojai');
 /*!40000 ALTER TABLE `groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,32 +264,27 @@ LOCK TABLES `permissions` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `receivers`
+-- Table structure for table `roles`
 --
 
-DROP TABLE IF EXISTS `receivers`;
+DROP TABLE IF EXISTS `roles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
-CREATE TABLE `receivers` (
-  `receiver_id` int(11) NOT NULL AUTO_INCREMENT,
-  `receiv_user_id` int(11) DEFAULT NULL,
-  `receiv_group_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`receiver_id`),
-  KEY `receiv_user_idx` (`receiv_user_id`),
-  KEY `receiv_group_idx` (`receiv_group_id`),
-  CONSTRAINT `receiv_group` FOREIGN KEY (`receiv_group_id`) REFERENCES `groups` (`group_id`),
-  CONSTRAINT `receiv_user` FOREIGN KEY (`receiv_user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `receivers`
+-- Dumping data for table `roles`
 --
 
-LOCK TABLES `receivers` WRITE;
-/*!40000 ALTER TABLE `receivers` DISABLE KEYS */;
-INSERT INTO `receivers` VALUES (1,2,NULL),(2,NULL,3),(3,NULL,1),(4,1,NULL),(5,NULL,2);
-/*!40000 ALTER TABLE `receivers` ENABLE KEYS */;
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'manager'),(2,'admin'),(3,'user');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -332,7 +327,7 @@ CREATE TABLE `user_groups` (
   KEY `user_groups_user_FK_idx` (`user_id`),
   CONSTRAINT `user_groups_group_FK` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`),
   CONSTRAINT `user_groups_user_FK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -341,7 +336,37 @@ CREATE TABLE `user_groups` (
 
 LOCK TABLES `user_groups` WRITE;
 /*!40000 ALTER TABLE `user_groups` DISABLE KEYS */;
+INSERT INTO `user_groups` VALUES (1,1,1),(2,1,3),(3,2,2);
 /*!40000 ALTER TABLE `user_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_roles`
+--
+
+DROP TABLE IF EXISTS `user_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `user_roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userRoles_userFK_idx` (`user_id`),
+  KEY `userRoles_rolesFK_idx` (`role_id`),
+  CONSTRAINT `userRoles_rolesFK` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
+  CONSTRAINT `userRoles_userFK` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_roles`
+--
+
+LOCK TABLES `user_roles` WRITE;
+/*!40000 ALTER TABLE `user_roles` DISABLE KEYS */;
+INSERT INTO `user_roles` VALUES (1,1,3),(2,2,2);
+/*!40000 ALTER TABLE `user_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -358,6 +383,7 @@ CREATE TABLE `users` (
   `password` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `position` varchar(50) NOT NULL,
+  `deleted` int(11) DEFAULT '0',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -369,7 +395,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Test-user4','marius-test','wow','best@emails.com','driver'),(2,'boi','bestboi','asd','izi@email.com','pointer');
+INSERT INTO `users` VALUES (1,'Test-user4','marius-test','wow','best@emails.com','driver',0),(2,'boi','bestboi','asd','izi@email.com','pointer',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -382,4 +408,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-03-13  9:45:24
+-- Dump completed on 2019-03-18  2:45:58
