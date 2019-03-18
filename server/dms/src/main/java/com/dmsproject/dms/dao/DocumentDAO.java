@@ -207,7 +207,7 @@ public class DocumentDAO {
 
     public ArrayList<Document> selectSavedDocsByUserId(int id) {
 
-        String query2 = "SELECT documents.doc_id, documents.doc_number, documents.doc_name, document_status.`date` " +
+        String query2 = "SELECT documents.doc_id, documents.doc_number, documents.doc_name, `status`.status_descr, document_status.`date` " +
                 "FROM documents " +
                 "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
                 "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
@@ -263,6 +263,7 @@ public class DocumentDAO {
         try {
             PreparedStatement statement = database.connection.prepareStatement(query);
             statement.setInt(1, id);
+            statement.setInt(2, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 DocSelection docSelection = new DocSelection();
