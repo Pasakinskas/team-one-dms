@@ -3,10 +3,12 @@ package com.dmsproject.dms.dao;
 import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.Status;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 
+@Component
 public class StatusDAO {
 
     @Autowired
