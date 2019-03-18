@@ -3,17 +3,14 @@ package com.dmsproject.dms.dto;
 public class DocSelection {
     private Integer Id;
     private String number;
-    private String ownerName;
-    private String ownerSurname;
+    private String owner;
     private String docName;
     private String status;
     private String details;
     private String date;
     private String receivGroupName;
     private Integer receivGroupId;
-    private String receiverPosition;
-    private String receiverName;
-    private String receiverSurname;
+    private String receiver;
     private Integer receiverId;
 
     public Integer getId() {
@@ -32,20 +29,12 @@ public class DocSelection {
         this.number = number;
     }
 
-    public String getOwnerName() {
-        return ownerName;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
-    public String getOwnerSurname() {
-        return ownerSurname;
-    }
-
-    public void setOwnerSurname(String ownerSurname) {
-        this.ownerSurname = ownerSurname;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getDocName() {
@@ -96,28 +85,12 @@ public class DocSelection {
         this.receivGroupId = receivGroupId;
     }
 
-    public String getReceiverPosition() {
-        return receiverPosition;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setReceiverPosition(String receiverPosition) {
-        this.receiverPosition = receiverPosition;
-    }
-
-    public String getReceiverName() {
-        return receiverName;
-    }
-
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
-    }
-
-    public String getReceiverSurname() {
-        return receiverSurname;
-    }
-
-    public void setReceiverSurname(String receiverSurname) {
-        this.receiverSurname = receiverSurname;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public Integer getReceiverId() {

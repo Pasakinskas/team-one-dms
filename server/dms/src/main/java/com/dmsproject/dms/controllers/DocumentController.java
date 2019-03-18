@@ -66,11 +66,29 @@ public class DocumentController {
 
 
 
-// ištraukti userio dokumentams
-    @RequestMapping (value = "/document/get/byUserId", method = RequestMethod.GET, produces = "application/json")
-    public List<Document> getByUserId(){
+// ištraukti userio pateiktus, priimtus ir atmestus dokumentus
+    @RequestMapping (value = "/document/getSubmited/byUserId", method = RequestMethod.GET, produces = "application/json")
+    public List<Document> getSubmitedByUserId(){
         String userId = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-        return documentDAO.searchByUser(Integer.parseInt (userId));
+        return documentDAO.selectSubmitedDocsByUserId(Integer.parseInt (userId));
+    }
+
+
+    // ištraukti userio išsaugotus dokumentus
+    @RequestMapping (value = "/document/getSaved/byUserId", method = RequestMethod.GET, produces = "application/json")
+    public List<Document> getSavedByUserId(){
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        return documentDAO.selectSavedDocsByUserId(Integer.parseInt (userId));
+    }
+
+    // ištraukti useriui pateiktus dokumentus
+    @RequestMapping (value = "/document/get/submitedToUser", method = RequestMethod.GET, produces = "application/json")
+    public List<Document> getSubmitedToUserDocs(){
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        return documentDAO.selectSubmitedToUserDocs(Integer.parseInt (userId));
     }
 
 }
+
+
+
