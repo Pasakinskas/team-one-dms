@@ -65,11 +65,17 @@ class UserDocListGeted extends Component {
             },   
         };                
      
-        const columns = [{
+        const columns = [
+        {
             dataField: 'id',
             text: 'Nr.',
             sort: true,
             headerStyle: idStyle,
+            align: "center",
+        }, {
+            dataField: 'date',
+            text: 'Data',
+            sort: true,
             align: "center",
         }, {
             dataField: 'name',
@@ -82,6 +88,11 @@ class UserDocListGeted extends Component {
             sort: true,
             headerStyle: bgcolor,
         }, {
+            dataField: 'recipient',
+            text: 'Gavėjas',
+            sort: true,
+            align: "center",
+        }, {
             dataField: 'template',
             text: 'Šablonas',
             sort: true,
@@ -89,6 +100,11 @@ class UserDocListGeted extends Component {
         }, {
             dataField: 'condition',
             text: 'Būsena',
+            sort: true,
+            headerStyle: bgcolor,
+        }, {
+            dataField: 'notes',
+            text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
         }]; 

@@ -21,7 +21,7 @@ class AdminNavBar extends Component {
             <div>
                 <Navbar variant="dark">
                 <Nav className="mr-auto">
-                    <li style={{backgroundColor: this.state.bgColor}}><a href="/adminboardgroups">Grupės</a></li>
+                    <li style={{backgroundColor: this.state.bgColor}}><a href="/adminboardgroups">Padaliniai</a></li>
                     <li><a href="/adminboarddocs">Dokumentai</a></li>
                     <li><a href="/adminboardusers">Vartotojai</a></li>
                     <li><a href="/adminboardtemplates">Dokumentų šablonai</a></li>

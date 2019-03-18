@@ -109,6 +109,11 @@ class UserDocList extends Component {
             text: 'Būsena',
             sort: true,
             headerStyle: bgcolor,
+        }, {
+            dataField: 'notes',
+            text: 'Pastabos',
+            sort: true,
+            headerStyle: bgcolor,
         }]; 
 
         const customStyles = {

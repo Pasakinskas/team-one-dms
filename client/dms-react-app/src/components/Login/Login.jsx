@@ -3,7 +3,6 @@ import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import './Login.css';
 
-//mano Useris yra {object Object}
 //jei fecho responsas 400 tai nulūžta
 
 class Login extends Component {

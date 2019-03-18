@@ -189,6 +189,11 @@ class AdminDocList extends Component {
             headerStyle: idStyle,
             align: "center",
         }, {
+            dataField: 'date',
+            text: 'Data',
+            sort: true,
+            align: "center",
+        }, {
             dataField: 'name',
             text: 'Vardas',
             sort: true,
@@ -199,6 +204,11 @@ class AdminDocList extends Component {
             sort: true,
             headerStyle: bgcolor,
         }, {
+            dataField: 'recipient',
+            text: 'Gavėjas',
+            sort: true,
+            align: "center",
+        }, {
             dataField: 'template',
             text: 'Šablonas',
             sort: true,
@@ -208,11 +218,13 @@ class AdminDocList extends Component {
             text: 'Būsena',
             sort: true,
             headerStyle: bgcolor,
-            // formatter: cell => selectOptions[cell],
-            // filter: selectFilter({
-            //     options: selectOptions
-            // })
-        }];
+        }, {
+            dataField: 'notes',
+            text: 'Pastabos',
+            sort: true,
+            headerStyle: bgcolor,
+        }]; 
+    
 
         const customStyles = {
             content : {
@@ -231,7 +243,7 @@ class AdminDocList extends Component {
             <div className="AdminDocList">
                 <ToolkitProvider
                     keyField="id"
-                    data={ this.state.document }
+                    data={ this.state.documents }
                     // { this.state.documents.filter((document)=>{return (document.status !== "saved") && (document.status !== "deleted")}) }                  
                     columns={ columns }
                     search

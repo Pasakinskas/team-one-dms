@@ -20,6 +20,9 @@ import { hasRole } from './containers/Auth';
 // Update (PUT) - Change something
 // Delete (DELETE)- Remove something
 
+//cookiai. 
+//rolės, kur jas man paimti?
+
 const user = {
   roles: ['advancedUser', 'user', 'admin'],
   rights: ['can_view_articles']

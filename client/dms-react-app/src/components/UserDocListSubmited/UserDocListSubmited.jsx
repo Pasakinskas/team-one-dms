@@ -68,6 +68,11 @@ class UserDocListSubmited extends Component {
             headerStyle: idStyle,
             align: "center",
         }, {
+            dataField: 'date',
+            text: 'Data',
+            sort: true,
+            align: "center",
+        }, {
             dataField: 'name',
             text: 'Vardas',
             sort: true,
@@ -78,6 +83,11 @@ class UserDocListSubmited extends Component {
             sort: true,
             headerStyle: bgcolor,
         }, {
+            dataField: 'recipient',
+            text: 'Gavėjas',
+            sort: true,
+            align: "center",
+        }, {
             dataField: 'template',
             text: 'Šablonas',
             sort: true,
@@ -85,6 +95,11 @@ class UserDocListSubmited extends Component {
         }, {
             dataField: 'condition',
             text: 'Būsena',
+            sort: true,
+            headerStyle: bgcolor,
+        }, {
+            dataField: 'notes',
+            text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
         }]; 
