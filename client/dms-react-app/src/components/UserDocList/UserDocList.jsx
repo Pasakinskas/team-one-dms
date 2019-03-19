@@ -13,13 +13,21 @@ import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
 import ModalHeader from '../ModalHeader/ModalHeader';
 
+//255, 205,233 eil. API adresas - patikslinti
+//showDoc = () => pabaigti
+//document types: Saved(išsaugoti) - shown just to user,
+//                Submited(pateikti) - shown tu user and users who can accept or reject
+//                Accepted(priimti) - documents accepted by group or other users
+//                Rejected(atmesti) - documents rejected by group or other users
+//                Deleted(panaikinti) - can be deleted by user or admin only. After that don't shown in any list.
 
+ 
 class UserDocList extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
-            userDocuments:[{}],
+            userDocuments:[],
             selectedDocuments: [],
             modalIsOpen: false,
         }
@@ -59,7 +67,9 @@ class UserDocList extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            onSelect: (row, isSelect, rowIndex, e) => {this.changeSelectStatus()}
+            onSelect: (row, isSelect, rowIndex, e) => {
+                this.changeSelectStatus(rowIndex);
+            },
         };                
      
         const columns = [
@@ -89,7 +99,7 @@ class UserDocList extends Component {
             text: 'Gavėjas',
             sort: true,
             align: "center",
-        },{
+        }, {
             dataField: 'template',
             text: 'Šablonas',
             sort: true,
@@ -97,6 +107,11 @@ class UserDocList extends Component {
         }, {
             dataField: 'condition',
             text: 'Būsena',
+            sort: true,
+            headerStyle: bgcolor,
+        }, {
+            dataField: 'notes',
+            text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
         }]; 
@@ -154,7 +169,8 @@ class UserDocList extends Component {
                                 contentLabel="Dokumento peržiūra"
                                 >  
                                 <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="modalTextEditor"/>                      
+                                <TextEditor className="modalTextEditor"/>    
+                                {/* editor = {userDocuments filter text}                   */}
                             </Modal>                                               
                         </div>
                         )
@@ -170,6 +186,7 @@ class UserDocList extends Component {
 
     openModal = () => {
         this.setState({modalIsOpen: true});
+        this.showDoc();
     }
 
     closeModal = () => {
@@ -189,8 +206,21 @@ class UserDocList extends Component {
          })
     }
 
+    changeDocByCondition = (newCondition) => {
+        let selectedDocuments = this.state.userDocuments.map(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+           return selectedDocuments;
+        });
+        for (let doc of selectedDocuments) {
+            doc.condition = newCondition;
+        }
+        return selectedDocuments;
+    }
+    
     showDoc =() => {
-    const localDoc = this.state.userDocument;
+    const localDoc = this.state.userDocuments;
     for(const row of localDoc){
         if (row.isChecked === true){
             //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
@@ -198,18 +228,20 @@ class UserDocList extends Component {
         }
     };
   
+    //Document condition changes to submited(pateikti dok.)
     sendDoc =(e) => {
         e.preventDefault();
-        const sentDocList = this.getDocToSend();
-        const API = 'localhost:8086/document/add';
+        const sentDocList = this.changeDocByCondition("submited");
+        const API = 'http://localhost:8086/document/';
          fetch(API, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'token': this.props.token,
+                'content-Type': 'application/json'
             },
             body: JSON.stringify({sentDocList}),
         }).then(response => {
-            if(response.status === 201){
+            if(response.status === 200){
                 this.nextPath(`/userboard`);
             }else{
                 alert("Pateikti nepavyko");
@@ -217,49 +249,44 @@ class UserDocList extends Component {
         }).catch(error => console.error(error));
     };
 
-    getDocToSend = () => {
-        let docList = this.state.selectedDocuments;
-        for(let doc of docList){
-            doc.condition = 'saved';
-        }
-        return docList;
-    }
-    
+    //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
         e.preventDefault();
-        const doc = this.state.userDocuments;
-        const API = 'localhost:8086/document/add';
+        const deleteDocList = this.changeDocByCondition("deleted");
+        const API = 'http://localhost:8086/document/add';
           fetch(API, {
-            method: 'PUT',
-            body: {doc},
-            // body: JSON.stringify({
-            //     "condition": "deleted",
-            // })
+            method: 'DELETE',
+            headers: {
+                'token': this.props.token,
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({deleteDocList}),
         }).then(response => {
-            if(response.status === 201){
-                this.nextPath(`/userboard`); 
-                // REFRESH PAGE???
-            } else {
-                alert("Pašalinti nepavyko");
+            if(response.status === 200){
+                this.nextPath(`/userboard`);
+            }else{
+                alert("Pateikti nepavyko");
             }
         }).catch(error => console.error(error));
     };
      
     componentDidMount(){
-        this. fetchDataDocListUser()
+        this.fetchDataDocListUser()
     }
 
-    fetchDataDocListUser = async (url) => {
-        const res = await fetch("http://localhost:8086/documents" 
-        // + this.props.user.id
-        , {
+    //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
+    fetchDataDocListUser = async () => {
+        console.log("man reikia šito " + this.props.token)
+        const res = await fetch("http://localhost:8086/getSaved/byUserId",
+        // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
+        {
           method: "GET",
           headers: { 
             "token": this.props.token,
-            "content-type": "Application/json",
+            "content-type": "application/json"
           },
         })
-
+        console.log("man reikai šito " + this.props.token)
         if (res.status > 300) {
             alert("Fail")
         }

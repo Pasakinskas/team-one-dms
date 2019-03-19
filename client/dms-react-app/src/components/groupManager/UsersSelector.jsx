@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-const API = 'https://reqres.in/api/users?page=2';
+const API_TEST = 'https://reqres.in/api/users?page=2';
+const API ='http://localhost:8086/users';
 const DEFAULT_QUERY = 'redux';
 
 class UserSelector extends Component{
@@ -16,7 +17,7 @@ class UserSelector extends Component{
     componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch(API + DEFAULT_QUERY)
+        fetch(API_TEST + DEFAULT_QUERY)
         .then(response => {
             if (response.ok) {
               return response.json();

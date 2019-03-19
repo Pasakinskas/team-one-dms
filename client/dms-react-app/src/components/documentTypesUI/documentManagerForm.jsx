@@ -12,14 +12,15 @@ class DocManagerForm extends Component {
           doc_name: "",
         }
     }
-
+// save template
     onSubmit  = async (event, editorValue) =>{
         event.preventDefault();
         console.log("Button pressed");
-        //console.log(this.props.editorValue);
+//editorValue broken
+//        console.log(JSON.stringify(editorValue));
         let data = editorValue;
 // text editor on change saves to local storage which is then save
-        const data2 = sessionStorage.getItem('content');
+        const data2 = localStorage.getItem('content');
         try{
             const res = await fetch(API_ADD_TEMPLATE, {
             method: 'POST',
@@ -28,7 +29,7 @@ class DocManagerForm extends Component {
             },
             body: JSON.stringify({
                 doc_name:this.state.doc_name,
-                doc:data,
+                doc:data2,
             }),
             })
             const statusCode = await res.status;
@@ -36,7 +37,7 @@ class DocManagerForm extends Component {
             console.log(json);
             return statusCode;
         }catch(err){console.log(err)};
-        console.log("DATA: " + data);
+        console.log("DATA: " + data2);
       }
 
     nextPath = (path)=>{
@@ -47,7 +48,7 @@ class DocManagerForm extends Component {
         const {name} = this.state;
         return (
             <div className="form-wrapper" id="form">
-             <Form onSubmit={(e)=>{this.onSubmit(e,this.props.editorValue)}}>
+             <Form onSubmit={(e)=>{this.onSubmit(e,this.props.newEditorVar)}}>
                 <div className="name"> 
                     <FormLabel>Šablono pavadinimas</FormLabel>
                     <FormControl 

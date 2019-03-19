@@ -28,12 +28,11 @@ class ViewTemplates extends Component {
     }
 
 // on submit GET template json using id
-    onSubmit  = async (event) =>{
-        event.preventDefault();
-        console.log("Button pressed");
+    onSubmit  = async (id) =>{
+        console.log("Select option selected");
 // text editor on change saves to session storage
         try{
-            const res = await fetch(API_TEMPLATE, {
+            const res = await fetch(`http://localhost:8086:/template/${id}`, {
             method: 'GET',
             })
             const statusCode = await res.status;
@@ -50,7 +49,7 @@ class ViewTemplates extends Component {
             console.log(document);
             //sessionStorage.setItem('content',document);
             this.updateEditorValue(document);
-        }catch(err){console.log(err);sessionStorage.setItem('content',document);};
+        }catch(err){console.log(err);};
       }
 
 //remove template
@@ -59,7 +58,7 @@ class ViewTemplates extends Component {
         const {doc_id} = this.state;
         console.log("Remove button pressed");
 // curently takes local storage value for testing value -> editor
-        testValue = JSON.parse(sessionStorage.getItem('content'));
+        testValue = JSON.parse(localStorage.getItem('content'));
       // testValue = await this.props.newEditorVar;
 // after parse, stringify the value then send via POST
         console.log(JSON.stringify(testValue))
@@ -84,7 +83,7 @@ class ViewTemplates extends Component {
        // const {name} = this.state;
         return (
             <div className="form-wrapper" id="form">
-             <Form onSubmit={(e)=>this.onSubmit(e)}>
+             <Form>
                 <div className="name"> 
                     <FormLabel>Šablono pavadinimas</FormLabel>
                     <select 
@@ -97,9 +96,6 @@ class ViewTemplates extends Component {
                     </select>                              
                 </div>
                 <div className="docBtn">
-                  <Button variant="success" type="submit" name="show">
-                      Rodyti
-                  </Button>
                   <Button variant="danger" type="button" onPointerDown={(e)=>this.removeTemplate(e)} name="remove">
                       Pašalinti
                   </Button>
@@ -111,11 +107,12 @@ class ViewTemplates extends Component {
     }
 
     handleChange = (e) => {
-      const {value } = e.target;
+      const {value, name } = e.target;
       console.log("SELECTED DOC: "+ value);
       this.setState({
         "doc_id":value
       });
+      this.onSubmit(value);
     } 
 }
 

@@ -17,7 +17,8 @@ class AdminUsers extends Component {
     
         this.state = {
             users: [{}],
-            user:[{
+            user:[
+            {
                 id: 1,
                 name: "Ana",
                 surname: "Taurienė",
@@ -112,10 +113,14 @@ class AdminUsers extends Component {
         const selectRow = {
             mode: 'checkbox',
             clickToSelect: true,
-            headerStyle: bgcolor,   
+            headerStyle: bgcolor,
+            onSelect: (row, isSelect, rowIndex, e) => {
+                this.changeSelectStatus(rowIndex);  
+            }, 
         };
 
-        const columns = [{
+        const columns = [
+        {
             dataField: 'id',
             text: 'Nr.',
             sort: true,
@@ -171,8 +176,46 @@ class AdminUsers extends Component {
         this.props.history.push(path);
     };
 
-    deleteUser = () => {
+    changeSelectStatus = (rowIndex)=>{
+        const newUsers = this.state.documents.map(row => {
+            if(row.id -1 === rowIndex){
+                 console.log(rowIndex)
+                 row.isChecked = !row.isChecked;
+            }
+            return row;
+        })
+        this.setState({
+            users: newUsers
+        })
+    }
 
+    selectedUsers = () => {
+        let selectedUsers= this.state.users.filter(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+           return selectedUsers;
+        });
+        return selectedUsers;
+    }
+
+    deleteUser = (e) => {
+        e.preventDefault();
+        const deleteUserList = this.selectedUsers();
+        const API = 'https://localhost:8086/document/add';
+        fetch(API, {
+            method: 'DELETE',
+            headers: {
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({deleteUserList}),
+        }).then(response => {
+            if(response.status === 200){
+                this.nextPath('/adminboarddocs')
+            }else{
+                alert("Pašalinti dokumento nepavyko");
+            }
+        }).catch(error => console.error(error));
     }; 
 
     componentDidMount(){
@@ -180,13 +223,17 @@ class AdminUsers extends Component {
     };
 
     fetchDataUserList = async (url) => {
-        const res = await fetch("http://localhost:8086/users" , {
-          
+        const res = await fetch("http://localhost:8086/users",
+        {  
           method: "GET",
           headers: {
-            "content-type": "Application/json",
-        },
-        });
+            "token": this.props.token,
+            "content-type": "application/json",
+          },
+        })
+        if (res.status > 300) {
+            alert("Fail")
+        }
         const json = await res.json();
         this.setState({ 
             users: json

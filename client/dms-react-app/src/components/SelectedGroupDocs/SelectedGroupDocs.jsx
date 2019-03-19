@@ -4,31 +4,59 @@ import filterFactory from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import 'react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css';
-import '../UserDocList/UserDocList.css';
+import '../UserDocList/UserDocList';
 import 'react-bootstrap-table2-toolkit/dist/react-bootstrap-table2-toolkit.min.css';
 import ToolkitProvider, { Search } from 'react-bootstrap-table2-toolkit'
 import { Button } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
-import ModalHeaderSubmited from '../ModalHeader/ModalHeaderSubmited';
+import ModalHeader from '../ModalHeader/ModalHeader';
 
-//API adresai - patikslinti
+const API_TEST ='https://reqres.in/api/users?page=2';
+
+//255, 205,233 eil. API adresas - patikslinti
 //showDoc = () => pabaigti
-//110 
+//document types: Saved(išsaugoti) - shown just to user,
+//                Submited(pateikti) - shown tu user and users who can accept or reject
+//                Accepted(priimti) - documents accepted by group or other users
+//                Rejected(atmesti) - documents rejected by group or other users
+//                Deleted(panaikinti) - can be deleted by user or admin only. After that don't shown in any list.
 
-
-class UserDocListGeted extends Component {
+class SelectedGroupDocs extends Component {
     constructor(props) {
         super(props);
     
         this.state = {
-            userDocuments:[{}],
+            data:[],
+            userDocuments:[],
+            selectedDocuments: [],
             modalIsOpen: false,
         }
     } 
+    componentDidMount() {
+        this.setState({ isLoading: true });
+
+            const res = fetch("http://localhost:8086/docList", 
+            {
+              method: "GET",
+              headers: {
+                "token": this.props.token,
+                "content-type": "Application/json",
+              },
+            });
+            if (res.status > 300) {
+              alert("Fail")
+            }
+            const data = res.JSON();
+            this.setState({ 
+              data: data
+            });
+        
+    }
 
     render() {
+
         const { SearchBar } = Search;
         const bgcolor = {backgroundColor: "#9ef7e8"};
         const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
@@ -46,7 +74,7 @@ class UserDocListGeted extends Component {
             };
             return (
                 <li className="page-item">
-                  <a href="#" onClick={ handleClick }>{ page }</a>
+                  <a href="#" style={{color: "#2e2e2e"}} onClick={ handleClick }>{ page }</a>
                 </li>
             );
         };
@@ -55,14 +83,15 @@ class UserDocListGeted extends Component {
             pageButtonRenderer
         };
 
-        const selectRow = {
+        const selectRow = 
+        {
             mode: 'checkbox',
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
             onSelect: (row, isSelect, rowIndex, e) => {
                 this.changeSelectStatus(rowIndex);
-            },   
+            },
         };                
      
         const columns = [
@@ -111,7 +140,7 @@ class UserDocListGeted extends Component {
 
         const customStyles = {
             content : {
-              top: '47%',
+              top:'47%',
               left: '50%',
               right: 'auto',
               bottom: 'auto',
@@ -122,30 +151,30 @@ class UserDocListGeted extends Component {
             }
         };
 
-          return (
-              <div className="toolkit">
+        return (
+            <div className="toolkit">
                 <ToolkitProvider
                     keyField="id"
-                    data= { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return document.condition == "submited"}) }
+                    data=  { this.state.userDocuments }
+                    // { this.state.userDocuments.filter((document)=>{return document.condition == "saved"}) }
                     columns= { columns }
                     search
                     >
                     {
-                    props => (
-                        <div className="tableElem">
-                            <SearchBar id="searchBar"
+                        props => (
+                            <div className="tableElem">                      
+                            <SearchBar 
                                 { ...props.searchProps } 
-                                placeholder='Paieška...' />                                             
-                             <span id="btn">
-                                <Button variant="danger" type="submit" onClick={() => { this.rejectDoc()}}>
-                                    Atmesti
+                                placeholder='Paieška...' />
+                            <span id="btn">
+                                <Button variant="danger" type="submit" onClick={() => {this.deleteDoc()}}>
+                                    Pašalinti
                                 </Button>
                                 <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
                                     Peržiūrėti
                                 </Button>
-                                <Button variant="success" type="submit" onClick={() => {this.acceptDoc()}}>
-                                    Priimti
+                                <Button variant="success" type="submit" onClick={() => {this.send()}}>
+                                    Pateikti
                                 </Button>
                             </span>
                             <BootstrapTable 
@@ -161,14 +190,15 @@ class UserDocListGeted extends Component {
                                 style={customStyles}
                                 contentLabel="Dokumento peržiūra"
                                 >  
-                                <ModalHeaderSubmited modalIsOpen = {this.closeModal}/>                                          
-                                <TextEditor style={{"width" : "95%"}}/>                  
+                                <ModalHeader modalIsOpen = {this.closeModal}/>                                            
+                                <TextEditor className="modalTextEditor"/>    
+                                {/* editor = {userDocuments filter text}                   */}
                             </Modal>                                               
                         </div>
                         )
                     }
                 </ToolkitProvider>
-            </div>
+            </div>            
         );
     }
 
@@ -178,14 +208,15 @@ class UserDocListGeted extends Component {
 
     openModal = () => {
         this.setState({modalIsOpen: true});
+        this.showDoc();
     }
-    
+
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
-
+     
     changeSelectStatus = (rowIndex)=>{
-        const newDoc = this.state.userDocuments.map(row => {
+        const newDoc = this.state.userDocument.map(row => {
             if(row.id -1 === rowIndex){
                  console.log(rowIndex)
                  row.isChecked = !row.isChecked;
@@ -193,100 +224,101 @@ class UserDocListGeted extends Component {
             return row;
          })
          this.setState({
-            userDocuments: newDoc
+            selectedDocuments: newDoc
          })
-     }
- 
-     changeDocByCondition = (newCondition) => {
+    }
+
+    changeDocByCondition = (newCondition) => {
         let selectedDocuments = this.state.userDocuments.map(doc =>{
            if(doc.isChecked){
              return doc
            } 
            return selectedDocuments;
         });
-
         for (let doc of selectedDocuments) {
             doc.condition = newCondition;
         }
         return selectedDocuments;
     }
-
-    //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
+    
     showDoc =() => {
-        const localDoc = this.state.document;
-        for(const row of localDoc){
-            if (row.isChecked === true){
-                //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
+    const localDoc = this.state.userDocuments;
+    for(const row of localDoc){
+        if (row.isChecked === true){
+            //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
             }
         }
     };
- 
-    //Document condition changes to accepted. After that isn't shown in geted document list
-    acceptDoc =(e) => {
+  
+    //Document condition changes to submited(pateikti dok.)
+    sendDoc =(e) => {
         e.preventDefault();
-        const acceptDocList = this.changeDocByConditiont("accepted");
-        const API = 'http://localhost:8086/document/add';
-        fetch(API, {
+        const sentDocList = this.changeDocByCondition("submited");
+        const API = 'http://localhost:8086/document/';
+         fetch(API, {
             method: 'PUT',
             headers: {
                 'token': this.props.token,
                 'content-Type': 'application/json'
             },
-            body: JSON.stringify({acceptDocList}),
+            body: JSON.stringify({sentDocList}),
         }).then(response => {
             if(response.status === 200){
-                this.nextPath(`/adminboarddocs`);
+                this.nextPath(`/userboard`);
             }else{
-                alert("Patvirtinti dokumento nepavyko");
+                alert("Pateikti nepavyko");
             }
         }).catch(error => console.error(error));
     };
-    
-    //Document condition changes to rejected. After that isn't shown in geted document list
-    rejectDoc = (e) => {
+
+    //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
+    deleteDoc = (e) => {
         e.preventDefault();
-        const rejectDocList = this.changeDocByConditiont("rejected");
+        const deleteDocList = this.changeDocByCondition("deleted");
         const API = 'http://localhost:8086/document/add';
-        fetch(API, {
+          fetch(API, {
             method: 'DELETE',
             headers: {
                 'token': this.props.token,
                 'content-Type': 'application/json'
             },
-            body: JSON.stringify({rejectDocList}),
+            body: JSON.stringify({deleteDocList}),
         }).then(response => {
             if(response.status === 200){
-                //do not show document in the list;
+                this.nextPath(`/userboard`);
             }else{
-                alert("Pašalinti nepavyko");
+                alert("Pateikti nepavyko");
             }
         }).catch(error => console.error(error));
     };
-
+     
     componentDidMount(){
-        this.fetchDataDocListGeted()
+        this.fetchDataDocListUser()
     }
 
-    //Gauna visus dokumentus, kuriuos jis tuiri teisę priimti ar atmesti. O returne (130) filtruoja pagal condition = 'submited'.
-    fetchDataDocListGeted = async () => {
-        const res = await fetch("http://localhost:8086//document/get/submitedToUser", 
+    //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
+    fetchDataDocListUser = async () => {
+        console.log("man reikia šito " + this.props.token)
+        const res = await fetch("http://localhost:8086/getSaved/byUserId",
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
         {
           method: "GET",
-          headers: {
+          headers: { 
             "token": this.props.token,
-            "content-type": "application/json",
-        },
-        });
+            "content-type": "application/json"
+          },
+        })
+        console.log("man reikai šito " + this.props.token)
         if (res.status > 300) {
             alert("Fail")
         }
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
-        });             
+        });   
+                  
         return json;
-    } 
+    }
 }
-  
-export default withRouter(UserDocListGeted);
+
+export default withRouter(SelectedGroupDocs);

@@ -55,18 +55,22 @@ class UserDocListSubmited extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            // onSelect: (row, isSelect, rowIndex, e) => {
-            //     if (this.state.document.condition !== "saved") {
-            //         return false;
-            //     }
-            // }
+            onSelect: (row, isSelect, rowIndex, e) => {
+                this.changeSelectStatus(rowIndex);
+            },    
         };                
      
-        const columns = [{
+        const columns = [
+        {
             dataField: 'id',
             text: 'Nr.',
             sort: true,
             headerStyle: idStyle,
+            align: "center",
+        }, {
+            dataField: 'date',
+            text: 'Data',
+            sort: true,
             align: "center",
         }, {
             dataField: 'name',
@@ -79,6 +83,11 @@ class UserDocListSubmited extends Component {
             sort: true,
             headerStyle: bgcolor,
         }, {
+            dataField: 'recipient',
+            text: 'Gavėjas',
+            sort: true,
+            align: "center",
+        }, {
             dataField: 'template',
             text: 'Šablonas',
             sort: true,
@@ -86,6 +95,11 @@ class UserDocListSubmited extends Component {
         }, {
             dataField: 'condition',
             text: 'Būsena',
+            sort: true,
+            headerStyle: bgcolor,
+        }, {
+            dataField: 'notes',
+            text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
         }]; 
@@ -108,7 +122,7 @@ class UserDocListSubmited extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data= { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return document.status=="saved"}) }
+                    // { this.state.userDocuments.filter((document)=>{return (document.condition !=="saved") && (document.condition !== "Deleted")} ) }
                     columns= { columns }
                     search
                     >
@@ -158,7 +172,7 @@ class UserDocListSubmited extends Component {
     }
 
     changeSelectStatus = (rowIndex)=>{
-        const newDoc = this.state.document.map(row => {
+        const newDoc = this.state.userDocuments.map(row => {
             if(row.id -1 === rowIndex){
                  console.log(rowIndex)
                  row.isChecked = !row.isChecked;
@@ -166,13 +180,28 @@ class UserDocListSubmited extends Component {
             return row;
          })
          this.setState({
-             document: newDoc
+            userDocuments: newDoc
          })
-     }
+    }
+
+    changeDocByCondition = (newCondition) => {
+        let selectedDocuments = this.state.userDocuments.map(doc =>{
+           if(doc.isChecked){
+             return doc
+           } 
+           return selectedDocuments;
+        });
+
+        for (let doc of selectedDocuments) {
+            doc.condition = newCondition;
+        }
+        return selectedDocuments;
+    }
+
  
      //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
     showDoc =() => {
-        const localDoc = this.state.document;
+        const localDoc = this.state.userDocuments;
         for(const row of localDoc){
             if (row.isChecked === true){
                 //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
@@ -184,18 +213,19 @@ class UserDocListSubmited extends Component {
         this.fetchDataDocListUser()
     }
 
+    
     fetchDataDocListUser = async() => {
-        //this.props.user.id ateina iš app.js
-        const res = await fetch("http://localhost:8086/document/user/all" 
-        // + this.props.user.id
-        , {
-          
+        const res = await fetch("http://localhost:8086/document/getSubmited/byUserId", 
+        {
           method: "GET",
           headers: {
-            //  tokken: 
-            "content-type": "Application/json",
-        },
-        });
+            "token": this.props.token,
+            "content-type": "application/json",
+          },
+        })
+        if (res.status > 300) {
+            alert("Fail")
+        }
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
@@ -205,4 +235,4 @@ class UserDocListSubmited extends Component {
   
   }
   
-  export default withRouter(UserDocListSubmited );
+  export default withRouter(UserDocListSubmited);

@@ -12,6 +12,7 @@ class UserBoardGetedDoc extends Component {
             <div className="UserBoardGetedDoc">
                 <UserNavbar/>
                 <NewDocButton/>
+                <p className="headers">GAUTI DOKUMENTAI</p>
                 <GroupView/>
                 <UserDocListGeted/>
                 <Footer/>

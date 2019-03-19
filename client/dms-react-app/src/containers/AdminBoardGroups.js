@@ -8,6 +8,7 @@ class AdminBoardGroups extends Component {
         return (
             <div>
                 <AdminNavBar/> 
+                <p className="headers">GRUPĖS</p>
                 <GroupManager/>
                 <Footer/> 
             </div>

@@ -1,16 +1,16 @@
 package com.dmsproject.dms.dao;
 
 import com.dmsproject.dms.Database;
-import com.dmsproject.dms.dto.DocSelection;
-import com.dmsproject.dms.dto.DocTypes;
-import com.dmsproject.dms.dto.Document;
-import com.dmsproject.dms.dto.User;
+import com.dmsproject.dms.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 @Component
@@ -19,26 +19,42 @@ public class DocumentDAO {
     @Autowired
     private Database database;
 
+    @Autowired
+    DocStatusDAO docStatusDAO;
+
     private static final String INSERT_SQL = "INSERT INTO documents" +
             "(doc_type_id, doc_name, doc_number, doc_content) " +
             "values (?, ?, ?, ?)";
 
-    public boolean addDocument(final Document document) {
+    public Integer addDocument(Document document) {
+        Integer docId = null;
         try {
-            PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
+            PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, document.getTypeId());
             statement.setString(2, document.getName());
             statement.setString(3, document.getNumber());
             statement.setString(4, document.getContent());
 
             statement.executeUpdate();
+
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()){
+                docId = rs.getInt(1);
+            }
+
+            DocStatus docStatus = new DocStatus();
+            docStatus.setDocId(docId);
+            docStatus.setStatusId(1);
+            docStatus.setUserId(Integer.parseInt((String) SecurityContextHolder.getContext().getAuthentication().getCredentials()));
+
+            docStatusDAO.addDocStatus(docStatus);
+
             statement.close();
         } catch (java.sql.SQLException e) {
             System.out.println("Error adding to database");
             System.out.println(e);
-            return false;
         }
-        return true;
+        return docId;
     }
 
     public void editDocument(Document document) {
@@ -65,16 +81,48 @@ public class DocumentDAO {
         }
     }
 
+    public Document getDocumentById(int id) {
+
+        String query = "SELECT * FROM documents WHERE doc_id = ?";
+
+        Document document = new Document();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                document.setId(rs.getInt("doc_id"));
+                document.setTypeId(rs.getInt("doc_type_id"));
+                document.setName(rs.getString("doc_name"));
+                document.setNumber(rs.getString("doc_number"));
+                document.setContent(rs.getString("doc_content"));
+            }
+
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return document;
+    }
 
 
     public ArrayList<DocSelection> getAllDocuments() {
 
-        String query1 = "SELECT documents.doc_number, users.name, users.surname, document_types.doc_type_descr, documents.doc_name, status.status_descr, document_status.date, document_status.doc_status_descr " +
-                "FROM document_status " +
-                "INNER JOIN documents ON document_status.document_id=documents.doc_id " +
-                "INNER JOIN users ON document_status.user_id=users.user_id " +
-                "INNER JOIN status ON document_status.status_id= status.status_id " +
-                "INNER JOIN document_types ON documents.doc_type_id=document_types.doc_type_id";
+        String query1 = "SELECT documents.doc_id, documents.doc_number, CONCAT(users.name, ' ', users.surname) AS doc_owner, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, `groups`.group_name AS 'receiving group', `groups`.group_id, CONCAT(receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname) AS receiver, receiving_user.user_id " +
+                "FROM documents " +
+                "LEFT JOIN document_types ON documents.doc_type_id=document_types.doc_type_id " +
+                "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
+                "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
+                "LEFT JOIN document_receiver ON documents.doc_id=document_receiver.doc_id " +
+                "LEFT JOIN users AS receiving_user ON document_receiver.receiv_user_id=receiving_user.user_id " +
+                "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
+                "LEFT JOIN users ON document_status.user_id=users.user_id " +
+                "WHERE document_status.status_id > 1 " +
+                "ORDER BY date DESC ";
+
 
         ArrayList documentsList = new ArrayList<DocSelection>();
 
@@ -84,14 +132,17 @@ public class DocumentDAO {
             while (rs.next()) {
                 DocSelection docSelection = new DocSelection();
 
+                docSelection.setId(rs.getInt("doc_id"));
                 docSelection.setNumber(rs.getString("doc_number"));
-                docSelection.setUserName(rs.getString("name"));
-                docSelection.setUserSurname(rs.getString("surname"));
-                docSelection.setType(rs.getString("doc_type_descr"));
-                docSelection.setName(rs.getString("doc_name"));
+                docSelection.setOwner(rs.getString("doc_owner"));
+                docSelection.setDocName(rs.getString("doc_name"));
                 docSelection.setStatus(rs.getString("status_descr"));
+                docSelection.setDetails(rs.getString("details"));
                 docSelection.setDate(rs.getString("date"));
-                docSelection.setStatusDescr(rs.getString("doc_status_descr"));
+                docSelection.setReceivGroupName(rs.getString("receiving group"));
+                docSelection.setReceivGroupId(rs.getInt("group_id"));
+                docSelection.setReceiver(rs.getString("receiver"));
+                docSelection.setReceiverId(rs.getInt("user_id"));
 
 
                 documentsList.add(docSelection);
@@ -107,15 +158,19 @@ public class DocumentDAO {
     }
 
 
-    public ArrayList<Document> searchByUser(int id) {
+    public ArrayList<Document> selectSubmitedDocsByUserId(int id) {
 
-        String query2 = "SELECT documents.doc_number, users.name, users.surname, document_types.doc_type_descr, documents.doc_name, status.status_descr, document_status.date, document_status.doc_status_descr " +
-                "FROM document_status " +
-                "INNER JOIN documents ON document_status.document_id=documents.doc_id " +
-                "INNER JOIN users ON document_status.user_id=users.user_id " +
-                "INNER JOIN status ON document_status.status_id= status.status_id " +
-                "INNER JOIN document_types ON documents.doc_type_id=document_types.doc_type_id " +
-                "WHERE users.user_id = ? ";
+        String query2 = "SELECT documents.doc_id, documents.doc_number, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, `groups`.group_name AS 'receiving group', `groups`.group_id, CONCAT(receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname) AS receiver, receiving_user.user_id " +
+                "FROM documents " +
+                "LEFT JOIN document_types ON documents.doc_type_id=document_types.doc_type_id " +
+                "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
+                "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
+                "LEFT JOIN document_receiver ON documents.doc_id=document_receiver.doc_id " +
+                "LEFT JOIN users AS receiving_user ON document_receiver.receiv_user_id=receiving_user.user_id " +
+                "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
+                "LEFT JOIN users ON document_status.user_id=users.user_id " +
+                "WHERE document_status.status_id>1 AND users.user_id=? " +
+                "ORDER BY date DESC";
 
         ArrayList documentsList = new ArrayList<Document>();
 
@@ -126,14 +181,102 @@ public class DocumentDAO {
             while (rs.next()) {
                 DocSelection docSelection = new DocSelection();
 
+                docSelection.setId(rs.getInt("doc_id"));
                 docSelection.setNumber(rs.getString("doc_number"));
-                docSelection.setUserName(rs.getString("name"));
-                docSelection.setUserSurname(rs.getString("surname"));
-                docSelection.setType(rs.getString("doc_type_descr"));
-                docSelection.setName(rs.getString("doc_name"));
+                docSelection.setDocName(rs.getString("doc_name"));
+                docSelection.setStatus(rs.getString("status_descr"));
+                docSelection.setDetails(rs.getString("details"));
+                docSelection.setDate(rs.getString("date"));
+                docSelection.setReceivGroupName(rs.getString("receiving group"));
+                docSelection.setReceivGroupId(rs.getInt("group_id"));
+                docSelection.setReceiver(rs.getString("receiver"));
+                docSelection.setReceiverId(rs.getInt("user_id"));
+
+
+                documentsList.add(docSelection);
+            }
+
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return documentsList;
+    }
+
+    public ArrayList<Document> selectSavedDocsByUserId(int id) {
+
+        String query2 = "SELECT documents.doc_id, documents.doc_number, documents.doc_name, `status`.status_descr, document_status.`date` " +
+                "FROM documents " +
+                "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
+                "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
+                "LEFT JOIN users ON document_status.user_id=users.user_id " +
+                "WHERE document_status.status_id=1 AND users.user_id=? " +
+                "ORDER BY date DESC";
+
+        ArrayList documentsList = new ArrayList<Document>();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query2);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                DocSelection docSelection = new DocSelection();
+
+                docSelection.setId(rs.getInt("doc_id"));
+                docSelection.setNumber(rs.getString("doc_number"));
+                docSelection.setDocName(rs.getString("doc_name"));
                 docSelection.setStatus(rs.getString("status_descr"));
                 docSelection.setDate(rs.getString("date"));
-                docSelection.setStatusDescr(rs.getString("doc_status_descr"));
+
+
+                documentsList.add(docSelection);
+            }
+
+            statement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return documentsList;
+    }
+
+    public ArrayList<Document> selectSubmitedToUserDocs (int id) {
+
+        String query = "SELECT DISTINCT documents.doc_id, documents.doc_number, CONCAT(users.name, ' ', users.surname) AS doc_owner, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, `groups`.group_name AS 'receiving group', `groups`.group_id, CONCAT(receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname) AS receiver, receiving_user.user_id " +
+                "FROM documents " +
+                "LEFT JOIN document_types ON documents.doc_type_id=document_types.doc_type_id " +
+                "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
+                "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
+                "LEFT JOIN document_receiver ON documents.doc_id=document_receiver.doc_id " +
+                "LEFT JOIN users AS receiving_user ON document_receiver.receiv_user_id=receiving_user.user_id " +
+                "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
+                "LEFT JOIN user_groups ON receiving_user.user_id=user_groups.user_id " +
+                "LEFT JOIN users ON document_status.user_id=users.user_id " +
+                "WHERE status.status_id=2 AND (receiving_user.user_id=? OR receiv_group_id IN (SELECT user_groups.group_id FROM user_groups WHERE user_groups.user_id=?)) " +
+                "ORDER BY date DESC";
+
+        ArrayList documentsList = new ArrayList<Document>();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.setInt(2, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                DocSelection docSelection = new DocSelection();
+
+                docSelection.setId(rs.getInt("doc_id"));
+                docSelection.setNumber(rs.getString("doc_number"));
+                docSelection.setOwner(rs.getString("doc_owner"));
+                docSelection.setDocName(rs.getString("doc_name"));
+                docSelection.setDate(rs.getString("date"));
+                docSelection.setReceivGroupName(rs.getString("receiving group"));
+                docSelection.setReceivGroupId(rs.getInt("group_id"));
+                docSelection.setReceiver(rs.getString("receiver"));
+                docSelection.setReceiverId(rs.getInt("user_id"));
 
 
                 documentsList.add(docSelection);

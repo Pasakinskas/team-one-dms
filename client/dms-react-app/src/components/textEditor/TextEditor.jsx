@@ -11,7 +11,7 @@ const plugins = [
 //define the default node type
 const DEFAULT_NODE = 'paragraph'
 
-const existingValue = JSON.parse(sessionStorage.getItem('content'));
+const existingValue = JSON.parse(localStorage.getItem('content'));
 // editors data storage
 const initialValue = Value.fromJSON(
     //existingValue ||
@@ -45,17 +45,21 @@ export default class TextEditor extends Component {
         }
     }
 
+    componentDidMount(){
+        localStorage.clear();
+    }
+
     onNewVal = async () =>{
         console.log("In editor new value: " + this.props.newEditorVar);
         let newVal 
         if(typeof this.props.newEditorVar === 'undefined'){return}
-        if(JSON.stringify(newVal) !== '{}'){
+        //if(JSON.stringify(newVal) !== '{}'){
             try{
                 newVal= JSON.parse(this.props.newEditorVar);
             }catch(err){console.log(err)};
-             let deserializedVal
+            // let deserializedVal
             //create value from json object
-            deserializedVal = Value.fromJSON(newVal || 
+           const deserializedVal = Value.fromJSON(newVal || 
             {
                 document:{
                     nodes:[
@@ -80,21 +84,21 @@ export default class TextEditor extends Component {
             if(typeof newVal == "undefined"){
                 console.log("NULL")
             }else{
-                console.log("This is what i get: " + deserializedVal + " This is what it should look like: " + this.state.value)
+                console.log("This is what i get: " + deserializedVal /*+ " This is what it should look like: " + this.state.value*/)
 
                    await this.setState({"value":deserializedVal})
             }
-        }
+      //  }
     }
     //On change, update the app react state with new editor value
     onChange = ({value}) => {
         
         /* save the value to session storage ( for now.. )
         need compare or something to have it work with load    */
-        /*if(value.document !== this.state.value.document){
+        if(value.document !== this.state.value.document){
             const content = JSON.stringify(value.toJSON());
-            sessionStorage.setItem('content', content);
-        }*/
+            localStorage.setItem('content', content);
+        }
        /* if(newVal !== null){
             this.setState({newVal})
             initialValue=newVal;

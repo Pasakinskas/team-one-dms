@@ -30,7 +30,7 @@ public class UserDAO {
 
     private User getUserByField(String field, String value, boolean includePassword) {
         String statementString = "SELECT * FROM users WHERE " +
-                field + " = ? && deleted = 0";
+                field + " = ?";
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(statementString);

@@ -12,7 +12,7 @@ export default class DocumentManager extends Component{
 
         };
         this.editor = React.createRef();
-        this.handler = this.handler.bind(this);
+      //  this.handler = this.handler.bind(this);
     }
 
 //set new editor value and call children method to accept it
@@ -23,7 +23,7 @@ export default class DocumentManager extends Component{
         
     }
 
-    async handler(event, editorValue){
+   /* async handler(event, editorValue){
         //event.preventDefault();
         this.setState({
             "editorValue":editorValue
@@ -31,7 +31,7 @@ export default class DocumentManager extends Component{
         console.log("Editor value set");
         const json = JSON.stringify(this.state.editorValue)
         console.log(json);
-    }
+    }*/
 
     nextPath = (path)=>{
         this.props.history.push(path);
@@ -41,7 +41,7 @@ export default class DocumentManager extends Component{
         return(
             <div className="template-creator">
                 <TextEditor ref={this.editor} newEditorVar={this.state.newEditorVar} updateEditorValue={this.updateEditorValue}/>
-                <DocManagerForm editorValue={this.state.editorValue} />
+                <DocManagerForm newEditorVar={this.state.newEditorVar} />
                 <ViewTemplate updateEditorValue={this.updateEditorValue} newEditorVar={this.state.newEditorVar}/>
             </div>
         )

@@ -67,7 +67,7 @@ export default class AddGroup extends Component{
                   type="text" 
                   value={groupName}
                   name="groupName"
-                  placeholder="Grupės pavadinimas"
+                  placeholder="Padalinio pavadinimas"
                   onChange={this.handleChange}
               /> 
                <input 

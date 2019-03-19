@@ -17,6 +17,7 @@ class UserNavbar extends Component {
                   <li><a href="/userboard">Išsaugoti dokumentai</a></li>
                   <li><a href="/usersubmited">Pateikti dokumentai</a></li>
                   <li><a href="/usergetdoc">Gauti dokumentai</a></li>
+                  <li><a href="/usergroupdocs">Grupės dokumentai</a></li>
                 </Nav>
                 <Form inline>
                   {/* <FormControl type="text" placeholder="Dokumento paieška" className="mr-sm-2" />

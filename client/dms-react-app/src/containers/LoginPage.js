@@ -4,15 +4,27 @@ import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 
 class LoginPage extends Component {
-  
+  constructor(props) {
+    super(props);
+    this.state = {
+        user: [],
+        token:'',
+    }
+}
+
+
 render() {
     return (
       <div className="Login">
         <Header/>
-        <Login/>
+        <Login handleDatafromChild ={this.props.handleDatafromChild}/>
         <Footer/>
       </div>
     );
+  }
+
+  handleDatafromChild = () =>{
+    this.props.handleDatafromChild(this.state.user, this.state.token);
   }
 }
 

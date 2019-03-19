@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import UserSelector from './UsersSelector';
 // api - group list
 const API_TEST = 'https://reqres.in/api/users?page=2';
-const API = 'https://localhost:8086/groups'
+const API = 'http://localhost:8086/groups'
 // api_add_user adress to add user to group
-const API_ADD_USER = 'https://localhost:8086/groups';
-const API_REMOVE_USER = 'https://localhost:8086/groups';
-const API_REMOVE_GROUP = 'https://localhost:8086/group';
+const API_ADD_USER = 'http://localhost:8086/groups';
+const API_REMOVE_USER = 'http://localhost:8086/groups';
+const API_REMOVE_GROUP = 'http://localhost:8086/group';
 const DEFAULT_QUERY ='';
 
 export default class GroupManagerData extends Component {
@@ -25,6 +25,7 @@ export default class GroupManagerData extends Component {
             optionValue:"",
             show: false,
             isRemove: false,
+            togglePermission: false,
         };
     };
     handleInputChange = (newValue) => {
@@ -45,7 +46,7 @@ export default class GroupManagerData extends Component {
     componentDidMount() {
         this.setState({ isLoading: true });
 
-        fetch(API + DEFAULT_QUERY)
+        fetch(API_TEST)
         .then(response => {
             if (response.ok) {
               return response.json();
@@ -183,11 +184,54 @@ export default class GroupManagerData extends Component {
                     type="submit" 
                     onPointerDown={(e) => this.removeGroup(e, data.id)} 
                     className="btn btn-danger" 
-                    value="Pašalinti grupę"/>
+                    value="Pašalinti padalinį"/>
+                </td>
+                <td>
+                <div className="form-check">
+                <input className="form-check-input" type="checkbox" onPointerDown={(e) => this.togglePermission(e)} id="defaultCheck2"/>
+                <label className="form-check-label" for="defaultCheck2" onPointerDown={(e) => this.togglePermission(e)}>
+                Teisė dokumentą patvirtinti/atmesti
+                </label>
+                </div>
+                </td>
+                <td>
+                <input 
+                    type="submit" 
+                    onPointerDown={(e) => this.submitRights(e, data.id)} 
+                    className="btn btn-dark" 
+                    value="Išsaugoti pasirinkimą"/>
                 </td>
                 </tr>
                 )
         )}
+    }
+
+    togglePermission(e){
+        e.preventDefault();
+            if(this.state.togglePermission === false){
+                this.setState({togglePermission:true})
+                console.log("TRUE")
+            }else if(this.state.togglePermission === true){
+                this.setState({togglePermission:false})
+                console.log("FALSE")
+            }
+    }
+    submitRights = async(e, id) =>{
+        e.preventDefault();
+        const {togglePermission} = this.state;
+        try{
+            const res = await fetch( `http://localhost:8086/groups/${id}`, {
+            method: 'PATCH',
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                "isEnabled":togglePermission
+            }),
+            })
+            const statusCode = await res.status;
+            return statusCode;
+        }catch(err){console.log(err)};
     }
 
 }
