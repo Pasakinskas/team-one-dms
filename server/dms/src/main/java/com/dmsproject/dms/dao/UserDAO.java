@@ -25,7 +25,7 @@ public class UserDAO {
     }
 
     public User getUserById(int id, boolean includePassword) {
-        return getUserByField("id", Integer.toString(id), includePassword);
+        return getUserByField("user_id", Integer.toString(id), includePassword);
     }
 
     private User getUserByField(String field, String value, boolean includePassword) {
@@ -42,7 +42,6 @@ public class UserDAO {
                 statement.close();
                 return user;
             }
-            System.out.println("returning a null user object");
             return null;
         } catch (java.sql.SQLException e) {
             System.out.println("SQL error!");
@@ -60,7 +59,7 @@ public class UserDAO {
                 passwordField = null;
             }
             User user = new User(
-                    rs.getInt("id"),
+                    rs.getInt("user_id"),
                     rs.getString("name"),
                     rs.getString("surname"),
                     rs.getString("email"),

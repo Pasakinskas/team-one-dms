@@ -1,21 +1,28 @@
-package com.dmsproject.dms.service;
+package com.dmsproject.dms.dto;
 
 import javax.persistence.*;
 
 public class Role {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Column
     private String name;
+
+    public Role() {}
+
+    public Role(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

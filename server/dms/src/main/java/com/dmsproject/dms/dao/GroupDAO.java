@@ -33,11 +33,11 @@ public class GroupDAO {
 
     private ArrayList<User> getAllGroupMembers(int groupid) {
         ArrayList<User> users = new ArrayList<>();
-        String statementString = "select user_id, users.name, surname, email, position from user_assignments\n" +
-                "inner join users\n" +
-                "on user_id = users.id\n" +
-                "inner join groups\n" +
-                "on group_id = groups.id\n" +
+        String statementString = "select user_id, users.name, surname, email, position from group_users " +
+                "inner join users " +
+                "on user_id = users.id " +
+                "inner join groups " +
+                "on group_id = groups.id " +
                 "where group_id = (?) && users.deleted = 0 && groups.deleted = 0";
 
         try {
@@ -64,11 +64,19 @@ public class GroupDAO {
         }
     }
 
-    public boolean addMemberToGroup(int groupid, int userid) {
-        String statementString = "INSERT INTO user_assignments (group_id, user_id) VALUES (?, ?)";
-
+    public boolean modifyGroup(String addToGroup, int groupid, int userid) {
+        String insertStatement = "INSERT INTO group_users (group_id, user_id) VALUES (?, ?)";
+        String deleteStatement = "DELETE FROM group_users WHERE group_id = (?) && user_id = (?)";
         try {
-            PreparedStatement statement = database.connection.prepareStatement(statementString);
+            PreparedStatement statement;
+            if (addToGroup.equals("add")) {
+                statement = database.connection.prepareStatement(insertStatement);
+            } else if (addToGroup.equals("remove")) {
+                statement = database.connection.prepareStatement(deleteStatement);
+            } else {
+                throw new IllegalArgumentException("bad action provided in json");
+            }
+
             statement.setInt(1, groupid);
             statement.setInt(2, userid);
             statement.executeUpdate();

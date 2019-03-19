@@ -21,7 +21,7 @@ public class UserController {
     UserDAO userDAO;
 
     /**
-     * I need to return an error: email already registered
+     * TODO: return an error: email already registered
      */
     @RequestMapping(
             value = "/users",
@@ -51,21 +51,18 @@ public class UserController {
         return userDAO.getAllUsers(false);
     }
 
-    /**
-     * TODO: Handle string input. Return error
-     * TODO: if user is null by id I must return an error
-     * @param id
-     * @return
-     */
-
     @Secured("ROLE_ADMIN")
     @RequestMapping(
             value = "/users/{id}",
             method = RequestMethod.GET,
             produces = "Application/json"
     )
-    public User getUser(@PathVariable("id") int id) {
-        return userDAO.getUserById(id, false);
+    public ResponseEntity<?> getUser(@PathVariable("id") int id) {
+        User user = userDAO.getUserById(id, false);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<Error>(HttpStatus.BAD_REQUEST);
     }
 
     @Secured("ROLE_ADMIN")
