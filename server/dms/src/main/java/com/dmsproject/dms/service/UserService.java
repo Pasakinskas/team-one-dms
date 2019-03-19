@@ -1,5 +1,6 @@
 package com.dmsproject.dms.service;
 
+import com.dmsproject.dms.dao.RoleDAO;
 import com.dmsproject.dms.dao.UserDAO;
 import com.dmsproject.dms.dto.LoginData;
 import com.dmsproject.dms.dto.User;
@@ -21,6 +22,9 @@ public class UserService implements UserDetails, UserDetailsService {
 
     @Autowired
     UserDAO userDAO;
+
+    @Autowired
+    RoleDAO roleDAO;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -47,17 +51,27 @@ public class UserService implements UserDetails, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userDAO.getUserByEmail(email, true);
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(user.getId()));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        final String ROLE_PREFIX = "ROLE_";
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-
-        list.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-
+        list.add(new SimpleGrantedAuthority("ROLE_USER"));
         return list;
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities(int userid) {
+        ArrayList<String> roles = roleDAO.getRolesByUserId(userid);
+
+        final String ROLE_PREFIX = "ROLE_";
+        List<GrantedAuthority> roleList = new ArrayList<GrantedAuthority>();
+        for (String role : roles) {
+            String preparedRole = ROLE_PREFIX + role.toUpperCase();
+            roleList.add(new SimpleGrantedAuthority(preparedRole));
+        }
+
+        return roleList;
     }
 
     @Override
@@ -67,7 +81,7 @@ public class UserService implements UserDetails, UserDetailsService {
 
     @Override
     public String getUsername() {
-        return "bbooob";
+        return null;
     }
 
     @Override

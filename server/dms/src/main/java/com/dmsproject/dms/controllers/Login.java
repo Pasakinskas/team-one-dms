@@ -54,20 +54,13 @@ public class Login {
             final String token = jwtTokenUtil.generateToken(user.getId());
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("token", token);
+            System.out.println("jwt token:"+ token);
+
             return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
         } catch (Exception e) {
             System.err.println("Error on login route");
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    @CrossOrigin(origins = Constants.REACT_URL)
-    @RequestMapping(
-            value = "/login",
-            method = RequestMethod.GET
-    )
-    public String pleasePostHere() {
-        return "this is a test and my secret info is cowpoke";
     }
 }

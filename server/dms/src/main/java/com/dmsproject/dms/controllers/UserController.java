@@ -21,7 +21,7 @@ public class UserController {
     UserDAO userDAO;
 
     /**
-     * I need to return an error: email already registered
+     * TODO: return an error: email already registered
      */
     @RequestMapping(
             value = "/users",
@@ -50,10 +50,6 @@ public class UserController {
     public ArrayList<User> getAllUsers() {
         return userDAO.getAllUsers(false);
     }
-
-    /**
-     * TODO: Handle string input. Return error
-     */
 
     @Secured("ROLE_ADMIN")
     @RequestMapping(

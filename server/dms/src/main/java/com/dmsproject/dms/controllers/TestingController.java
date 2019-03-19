@@ -1,14 +1,10 @@
 package com.dmsproject.dms.controllers;
 
 import com.dmsproject.dms.security.TokenProvider;
-import com.dmsproject.dms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +36,7 @@ public class TestingController {
 
         // This is the username
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return SecurityContextHolder.getContext();
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
 }

@@ -2,9 +2,7 @@ package com.dmsproject.dms.security;
 
 import com.dmsproject.dms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -20,9 +18,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenProvider tokenProvider;
-
-    @Autowired
-    private JwtAuthenticationEntryPoint entryPoint;
 
     @Autowired
     UserService userService;
@@ -42,11 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 UserDetails userDetails = userService.loadUserById(userIdFromToken);
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, id, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(userDetails, id, userService.getAuthorities((Integer.parseInt(id))));
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            } catch (IllegalArgumentException e) {
+            } catch (Exception e) {
                 System.out.println("Error parsing the token:");
                 System.err.println(e);
             }
