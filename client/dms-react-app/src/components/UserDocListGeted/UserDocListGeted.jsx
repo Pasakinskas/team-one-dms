@@ -197,7 +197,7 @@ class UserDocListGeted extends Component {
          })
      }
  
-     changeDocByCondition = (newCondition) => {
+    changeDocByCondition = (newCondition) => {
         let selectedDocuments = this.state.userDocuments.map(doc =>{
            if(doc.isChecked){
              return doc

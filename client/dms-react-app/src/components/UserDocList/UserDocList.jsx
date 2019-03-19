@@ -30,6 +30,7 @@ class UserDocList extends Component {
             userDocuments:[],
             selectedDocuments: [],
             modalIsOpen: false,
+            text:[]
         }
     } 
 
@@ -169,7 +170,7 @@ class UserDocList extends Component {
                                 contentLabel="Dokumento peržiūra"
                                 >  
                                 <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="modalTextEditor"/>    
+                                <TextEditor className="modalTextEditor" newEditorVar={this.state.text}/>    
                                 {/* editor = {userDocuments filter text}                   */}
                             </Modal>                                               
                         </div>
@@ -220,10 +221,27 @@ class UserDocList extends Component {
     }
     
     showDoc =() => {
-    const localDoc = this.state.userDocuments;
+    const localDoc = this.state.userDocuments.id;
     for(const row of localDoc){
         if (row.isChecked === true){
-            //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
+            // fetchDataDocView = async () => {
+            //     const res = await fetch(`http://localhost:8086/document/${localDoc}`,
+            //     {
+            //       method: "GET",
+            //       headers: { 
+            //         "content-type": "application/json"
+            //       },
+            //     })
+            //     if (res.status > 300) {
+            //         alert("Fail")
+            //     }
+            //     const json = await res.json(); 
+            //     this.setState({ 
+            //         text: json.doc.value
+            //     });   
+                          
+            //     return json;
+            //     }
             }
         }
     };
@@ -276,9 +294,7 @@ class UserDocList extends Component {
 
     //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
     fetchDataDocListUser = async () => {
-        console.log("man reikia šito " + this.props.token)
-        const res = await fetch("http://localhost:8086/getSaved/byUserId",
-        // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
+        const res = await fetch("http://localhost:8086/document/getSaved/byUserId",
         {
           method: "GET",
           headers: { 
@@ -286,15 +302,13 @@ class UserDocList extends Component {
             "content-type": "application/json"
           },
         })
-        console.log("man reikai šito " + this.props.token)
         if (res.status > 300) {
             alert("Fail")
         }
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
-        });   
-                  
+        });           
         return json;
     }
 }

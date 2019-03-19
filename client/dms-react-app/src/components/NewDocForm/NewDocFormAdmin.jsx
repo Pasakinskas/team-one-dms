@@ -62,7 +62,7 @@ class NewDocFormAdmin extends Component {
     }
 
     //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
-    fetchDataDocTemplates = async (url) => {
+    fetchDataDocTemplates = async () => {
       const res = await fetch("http://localhost:8086/document/templates", {
         
         method: "GET",
@@ -87,7 +87,7 @@ class NewDocFormAdmin extends Component {
     handleClickSave = async (e) =>{
         e.preventDefault();
           const data = this.props.existingValue;
-          const API = 'localhost:8086/document/add';
+          const API = 'http://localhost:8086/document/add';
           fetch(API, {
             method: 'POST',
             body: JSON.stringify({template: data}),

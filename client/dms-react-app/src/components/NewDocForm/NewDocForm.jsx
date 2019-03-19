@@ -34,7 +34,7 @@ class NewDocForm extends Component {
         // <option>{label}</option> );
         return (
             <div className="form-wrapper" id="form">
-             <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
+             <Form onSubmit={(e)=>{this.handleClickSend(e)}}>
                 <div className="template"> 
                   <FormLabel>Dokumento šablonas</FormLabel>
                   <select 
@@ -74,12 +74,12 @@ class NewDocForm extends Component {
                   </select>              
                 </div>
                 <div className="docBtn">
-                  <Button variant="primary" type="submit" onClick={() =>this.handleClickSend()}>
+                  <Button variant="primary" type="submit" onSubmit={() =>this.handleClickSend()}>
                       Pateikti
                   </Button>
-                  <Button variant="success" type="submit" onClick={() =>this.handleClickSave()}>
+                  {/* <Button variant="success" type="submit" onSubmit={() =>this.handleClickSave()}>
                       Saugoti
-                  </Button>
+                  </Button> */}
                 </div> 
               </Form>
             </div>
@@ -104,7 +104,7 @@ class NewDocForm extends Component {
       return json;
     }
     //kokiu API kreiptis
-    fetchDataRecipients = async (url) => {
+    fetchDataRecipients = async () => {
       const res = await fetch("http://localhost:8086/",
       {
         method: "GET",
@@ -129,10 +129,16 @@ class NewDocForm extends Component {
     handleClickSend = async (e) =>{
       e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
-        const data = this.props.existingValue;
-        const API = 'https://localhost:8080/document/add';
+        try{
+          const data = await localStorage.getItem('content');;
+        await console.log(data)
+        const API = 'http://localhost:8086/docume+++nt/add';
         fetch(API, {
           method: 'POST',
+          headers: {
+            "token": this.props.token,
+            "content-type": "Application/json",
+          },
           body: JSON.stringify({document: data}),
         }).then(response => {
 //Kaip suformuoti būsenos pakeitimą?
@@ -142,13 +148,15 @@ class NewDocForm extends Component {
             alert("Pateikti nepavyko");
           }
         }).catch(error => console.error(error));
+        }catch(e){console.log(e)}
+        
       }
 
       handleClickSave = async (e) =>{
         e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
           const data = this.props.existingValue;
-          const API = 'https://localhost:8080/document/add';
+          const API = 'http://localhost:8086/document/add';
           fetch(API, {
             method: 'POST',
             body: JSON.stringify({document: data}),

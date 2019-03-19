@@ -12,6 +12,7 @@ class Login extends Component {
           user: [],
           token: "",
           response: "",
+          authority: "",
           email: "",
           password: "",
           formErrors: {
@@ -74,8 +75,10 @@ class Login extends Component {
       if (this.formValid()) {
         const fetchUserData = await this.fetchUserData;
         const res = await fetchUserData();
+       // const authority = await this.fetchUserAuthority();
         const status = this.state.response;
-        this.props.handleDatafromChild(this.state.user, this.state.token);
+        this.props.handleDatafromChild(this.state.user, this.state.token, this.state.authority);
+       // console.log("authority rezultatas " + authority);
         console.log("fetcho rezultatas " + res);
         console.log("response " + status);
         this.evalRes(status);
@@ -149,10 +152,29 @@ class Login extends Component {
     this.setState({
       user: json, 
       response: res.status,
-      token: token
+      token: token,
     })
     return json;
   }
+
+
+  fetchUserAuthority = async () => {
+    const res = await fetch("http://localhost:8086/roles/user", 
+    {
+      method: "GET",
+      headers: {
+        "token": this.state.token,
+        "content-type": "application/json"
+      },
+    });
+    const authority = await res.json();
+    console.log(authority);
+    this.setState({
+      authority: authority, 
+    })
+    return authority;
+  }
+
 }
 
 export default withRouter(Login);

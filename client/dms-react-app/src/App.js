@@ -35,7 +35,7 @@ class App extends Component {
       //from child
         user: [],
         token:'',
-        role:''
+        authority:''
     }
 }
   render() {
@@ -43,16 +43,14 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          {/* <Route exact path="/login" component={LoginPage} handler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/> */}
           <Route exact path="/login" render={ (props,state) => <LoginPage handleDatafromChild ={this.handleDatafromChild}/>}/>
-          {/* <Login fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response} handleDatafromChild={this.handleDatafromChild}/> */}
           <Route exact path="/registration" component={RegistrationPage} />
           {/* roles reiktų perduoti taip? 
-          {hasRole(this.state.role, ['user']) && <Route exact path="/userboard" component={UserBoard} />}  */}
+          {hasRole(this.state.authority, ['user']) && <Route exact path="/userboard" component={UserBoard} />}  */}
           {hasRole(user, ['user']) && <Route exact path="/userboard" render={ (props,state) => <UserBoard token = {this.state.token} />}/>}
-          {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} handler={ (props, state) => <UserBoardSubmitedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
-          {hasRole(user, ['user']) && <Route exact path="/newdoc" component={NewDocument} />}
-          {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} handler={ (props, state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
+          {hasRole(user, ['user']) && <Route exact path="/usersubmited" render={ (props, state) => <UserBoardSubmitedDoc token = {this.state.token} />}/>}
+          {hasRole(user, ['user']) && <Route exact path="/newdoc" render={ (props, state) => <NewDocument token = {this.state.token} />}/>}
+          {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" render={ (props, state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardgroups" component={AdminBoardGroups} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboarddocs" render = { (props,state) => <AdminBoardDocs token ={ this.state.token }/>}/>}

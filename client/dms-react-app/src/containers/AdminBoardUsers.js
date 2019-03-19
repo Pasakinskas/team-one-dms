@@ -8,7 +8,7 @@ class AdminBoardUsers extends Component {
         return (
             <div>
                 <AdminNavBar/> 
-                <p>VARTOTOJAI</p>
+                <p className="headers" >VARTOTOJAI</p>
                 <AdminUsers/>
                 <Footer/>
             </div>

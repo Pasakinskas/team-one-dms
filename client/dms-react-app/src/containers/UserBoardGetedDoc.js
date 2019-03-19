@@ -14,7 +14,7 @@ class UserBoardGetedDoc extends Component {
                 <NewDocButton/>
                 <p className="headers">GAUTI DOKUMENTAI</p>
                 <GroupView/>
-                <UserDocListGeted/>
+                <UserDocListGeted  token={ this.props.token }/>
                 <Footer/>
             </div>
         );

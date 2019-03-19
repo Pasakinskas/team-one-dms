@@ -13,7 +13,7 @@ class UserBoardSubmitedDoc extends Component {
                 <NewDocButton/>
                 <p className="headers">PATEIKTI DOKUMENTAI</p>
                 <GroupView/>
-                <UserDocListSubmited/>
+                <UserDocListSubmited token={ this.props.token }/>
                 <Footer/>
             </div>
         );

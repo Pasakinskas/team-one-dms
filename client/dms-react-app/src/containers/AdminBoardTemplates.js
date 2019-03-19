@@ -9,9 +9,9 @@ class AdminBoardTemplates extends Component {
         return (
             <div>
                 <AdminNavBar/> 
-                <p>ŠABLONAI</p>
-                <TextEditor/>
-                <NewDocFormAdmin/>
+                <p className="headers">ŠABLONAI</p>
+                <TextEditor className="tempElements"/>
+                <NewDocFormAdmin className="tempElements"/>
                 <Footer/> 
             </div>
         );
