@@ -7,6 +7,12 @@ import UserDocListGeted from '../components/UserDocListGeted/UserDocListGeted';
 
 
 class UserBoardGetedDoc extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        }
+    }
+
     render() {
         return (
             <div className="UserBoardGetedDoc">

@@ -9,17 +9,20 @@ class UserBoard extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            token: this.props.token
         }
     }
 
     render() {
+        console.log("user board")
+        console.log(this.props)
         return (
             <div className="UserBoard">
                 <UserNavbar/>
                 <NewDocButton/>
                 <p className="headers" >IŠSAUGOTI DOKUMENTAI</p>
                 <GroupView/>
-                <UserDocList token={ this.props.token }/>                
+                <UserDocList token={ this.state.token }/>                
                 <Footer/> 
             </div>
         );

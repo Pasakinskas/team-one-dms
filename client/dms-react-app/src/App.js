@@ -51,7 +51,7 @@ class App extends Component {
           {hasRole(user, ['user']) && <Route exact path="/userboard" render={ (props,state) => <UserBoard token = {this.state.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/usersubmited" render={ (props, state) => <UserBoardSubmitedDoc token = {this.state.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/newdoc" render={ (props, state) => <NewDocument token = {this.state.token} />}/>}
-          {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" render={ (props, state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
+          {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" render={ (props, state) => <UserBoardGetedDoc token = {this.state.token} />}/>}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboardgroups" component={AdminBoardGroups} />}
           {hasRole(user, ['admin']) &&<Route exact path="/adminboarddocs" render = { (props,state) => <AdminBoardDocs token ={ this.state.token }/>}/>}

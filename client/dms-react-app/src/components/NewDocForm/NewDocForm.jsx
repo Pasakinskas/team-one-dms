@@ -19,7 +19,9 @@ class NewDocForm extends Component {
     
         this.state = {
           template: [],
-          name: "",
+          docNum:"",
+          docName:"",
+          name: "",      
           recipient: [],
         }
     }
@@ -29,9 +31,11 @@ class NewDocForm extends Component {
     }
    
     render() {
-        const {template, name, recipient } = this.state;
+        const {template, docNum, docName, name, recipient } = this.state;
         const listTemplates = this.state.template.map((template) =>
         <option>{template.description}</option> );
+        const listRecipients = this.state.recipient.map((recipient) =>
+        <option>{recipient.name}</option> );
         return (
             <div className="form-wrapper" id="form">
              <Form onSubmit={(e)=>{this.handleClickSend(e)}}>
@@ -54,7 +58,7 @@ class NewDocForm extends Component {
                     <FormControl 
                         type="text" 
                         name="docNum"
-                        value={name}
+                        value={docNum}
                         placeholder="Įveskite dokumento Nr."
                         onChange={this.handleChange}
                     />                                
@@ -63,8 +67,8 @@ class NewDocForm extends Component {
                     <FormLabel>Dokumento pavadinimas</FormLabel>
                     <FormControl 
                         type="text" 
-                        name="name"
-                        value={name}
+                        name="docName"
+                        value={docName}
                         placeholder="Įveskite dokumento pavadinimą"
                         onChange={this.handleChange}
                     />                                
@@ -86,15 +90,15 @@ class NewDocForm extends Component {
                     value={recipient}
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite gavėją</option>
-                        {/* <option>{listRecipients}</option> */}
-                        <option value="A">Jonas</option>
+                        <option>{listRecipients}</option>
+                        {/* <option value="A">Jonas</option>
                         <option value="B">Paulius</option>
                         <option value="C">Petras</option>
-                        <option value="D">Someone</option>
+                        <option value="D">Someone</option> */}
                   </select>              
                 </div>
                 <div className="docBtn">
-                  <Button variant="primary" type="submit" onSubmit={() =>this.handleClickSend()}>
+                  <Button variant="primary" type="submit" onSubmit={(e)=>this.handleClickSend(e)}>
                       Pateikti
                   </Button>
                   {/* <Button variant="success" type="submit" onSubmit={() =>this.handleClickSave()}>
@@ -154,17 +158,17 @@ class NewDocForm extends Component {
     handleClickSend = async (e) =>{
       e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
-        try{
-          const data = await localStorage.getItem('content');;
-        await console.log(data)
+          const token = localStorage.getItem("token");
+          const data = await localStorage.getItem('content');
+        await console.log(JSON.stringify({content: data}))
         const API = 'http://localhost:8086/document/add';
         fetch(API, {
           method: 'POST',
           headers: {
-            "token": this.props.token,
+            "token": token,
             "content-type": "Application/json",
           },
-          body: JSON.stringify({document: data}),
+          body: JSON.stringify({content: data, typeId: 1}),
         }).then(response => {
 //Kaip suformuoti būsenos pakeitimą?
           if (response.status === 200){
@@ -172,9 +176,7 @@ class NewDocForm extends Component {
           } else {
             alert("Pateikti nepavyko");
           }
-        }).catch(error => console.error(error));
-        }catch(e){console.log(e)}
-        
+        }).catch(error => console.error(error));   
       }
 
       handleClickSave = async (e) =>{

@@ -269,6 +269,10 @@ class UserDocListGeted extends Component {
 
     //Gauna visus dokumentus, kuriuos jis tuiri teisę priimti ar atmesti. O returne (130) filtruoja pagal condition = 'submited'.
     fetchDataDocListGeted = async () => {
+        console.log("a6 veiku");
+        console.log(this.props)
+        console.log(this.props.token);
+        return;
         const res = await fetch("http://localhost:8086/document/get/submitedToUser", 
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
         {
@@ -281,10 +285,12 @@ class UserDocListGeted extends Component {
         if (res.status > 300) {
             alert("Fail")
         }
+        
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
-        });             
+        });  
+
         return json;
     } 
 }

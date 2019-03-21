@@ -6,6 +6,12 @@ import GroupView from '../components/GroupView/GroupView';
 import UserDocListSubmited from '../components/UserDocListSubmited/UserDocListSubmited';
 
 class UserBoardSubmitedDoc extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        }
+    }
+
     render() {
         return (
             <div className="UserBoardGetedDoc">

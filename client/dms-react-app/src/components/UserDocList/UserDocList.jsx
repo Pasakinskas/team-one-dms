@@ -289,22 +289,24 @@ class UserDocList extends Component {
     };
      
     componentDidMount(){
-        this.fetchDataDocListUser()
+         this.fetchDataDocListUser()
     }
 
     //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
     fetchDataDocListUser = async () => {
+        const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:8086/document/getSaved/byUserId",
         {
           method: "GET",
           headers: { 
-            "token": this.props.token,
+            "token": token,
             "content-type": "application/json"
           },
         })
         if (res.status > 300) {
             alert("Fail")
         }
+        console.log(res)
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
