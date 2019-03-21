@@ -28,10 +28,8 @@ public class DocumentController {
 
 // išsaugoti dokumentą
     @RequestMapping(value = "/document/add", method = RequestMethod.POST, consumes = "application/json")
-    public Integer add(@RequestBody String docContent) {
-        Document document = new Document();
-        document.setTypeId(1);
-        document.setContent(docContent);
+    public Integer add(@RequestBody Document document) throws Exception{
+
         return documentDAO.addDocument(document);
     }
 

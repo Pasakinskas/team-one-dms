@@ -22,41 +22,38 @@ public class DocumentDAO {
     @Autowired
     DocStatusDAO docStatusDAO;
 
-    private static final String INSERT_SQL = "INSERT INTO documents" +
-            "(doc_type_id, doc_name, doc_number, doc_content) " +
-            "values (?, ?, ?, ?)";
+// išsaugoti dokumentą
+    public Integer addDocument(Document document) throws Exception {
+        String query = "INSERT INTO documents" +
+                "(doc_type_id, doc_name, doc_number, doc_content) " +
+                "values (?, ?, ?, ?)";
 
-    public Integer addDocument(Document document) {
         Integer docId = null;
-        try {
-            PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, document.getTypeId());
-            statement.setString(2, document.getName());
-            statement.setString(3, document.getNumber());
-            statement.setString(4, document.getContent());
+        PreparedStatement statement = database.connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, document.getTypeId());
+        statement.setString(2, document.getName());
+        statement.setString(3, document.getNumber());
+        statement.setString(4, document.getContent());
 
-            statement.executeUpdate();
+        statement.executeUpdate();
 
-            ResultSet rs = statement.getGeneratedKeys();
-            if (rs.next()){
-                docId = rs.getInt(1);
-            }
-
-            DocStatus docStatus = new DocStatus();
-            docStatus.setDocId(docId);
-            docStatus.setStatusId(1);
-            docStatus.setUserId(Integer.parseInt((String) SecurityContextHolder.getContext().getAuthentication().getCredentials()));
-
-            docStatusDAO.addDocStatus(docStatus);
-
-            statement.close();
-        } catch (java.sql.SQLException e) {
-            System.out.println("Error adding to database");
-            System.out.println(e);
+        ResultSet rs = statement.getGeneratedKeys();
+        if (rs.next()) {
+            docId = rs.getInt(1);
         }
+
+        DocStatus docStatus = new DocStatus();
+        docStatus.setDocId(docId);
+        docStatus.setStatusId(1);
+        docStatus.setUserId(Integer.parseInt((String) SecurityContextHolder.getContext().getAuthentication().getCredentials()));
+
+        docStatusDAO.addDocStatus(docStatus);
+
+        statement.close();
         return docId;
     }
 
+    // redaguoti dokumentą
     public void editDocument(Document document) {
         String query = " UPDATE documents"
                 + " SET doc_type_id = ?, "
@@ -81,6 +78,7 @@ public class DocumentDAO {
         }
     }
 
+    // gauti dokumentą pagal dokumento id
     public Document getDocumentById(int id) {
 
         String query = "SELECT * FROM documents WHERE doc_id = ?";
@@ -108,7 +106,7 @@ public class DocumentDAO {
         return document;
     }
 
-
+    // gauti visų pateiktų, priimtų, atmestų dokumentų sąrašą (adminui)
     public ArrayList<DocSelection> getAllDocuments() {
 
         String query1 = "SELECT documents.doc_id, documents.doc_number, CONCAT(users.name, ' ', users.surname) AS doc_owner, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, `groups`.group_name AS 'receiving group', `groups`.group_id, CONCAT(receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname) AS receiver, receiving_user.user_id " +
@@ -120,8 +118,8 @@ public class DocumentDAO {
                 "LEFT JOIN users AS receiving_user ON document_receiver.receiv_user_id=receiving_user.user_id " +
                 "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
                 "LEFT JOIN users ON document_status.user_id=users.user_id " +
-                "WHERE document_status.status_id > 1 " +
-                "ORDER BY date DESC ";
+                "WHERE document_status.status_id > 1 and document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) " +
+                "ORDER BY date DESC";
 
 
         ArrayList documentsList = new ArrayList<DocSelection>();
@@ -157,7 +155,7 @@ public class DocumentDAO {
         return documentsList;
     }
 
-
+    // user'io pateikti, priimti, atmesti dokumentai
     public ArrayList<Document> selectSubmitedDocsByUserId(int id) {
 
         String query2 = "SELECT documents.doc_id, documents.doc_number, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, `groups`.group_name AS 'receiving group', `groups`.group_id, CONCAT(receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname) AS receiver, receiving_user.user_id " +
@@ -169,7 +167,7 @@ public class DocumentDAO {
                 "LEFT JOIN users AS receiving_user ON document_receiver.receiv_user_id=receiving_user.user_id " +
                 "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
                 "LEFT JOIN users ON document_status.user_id=users.user_id " +
-                "WHERE document_status.status_id>1 AND users.user_id=? " +
+                "WHERE document_status.status_id>1 AND users.user_id=? AND document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) " +
                 "ORDER BY date DESC";
 
         ArrayList documentsList = new ArrayList<Document>();
@@ -204,6 +202,8 @@ public class DocumentDAO {
 
         return documentsList;
     }
+
+// user'io išsaugoti dokumentai
 
     public ArrayList<Document> selectSavedDocsByUserId(int id) {
 
@@ -243,7 +243,9 @@ public class DocumentDAO {
         return documentsList;
     }
 
-    public ArrayList<Document> selectSubmitedToUserDocs (int id) {
+// Useriui pateikti dokumentai pasirašymui
+
+    public ArrayList<Document> selectSubmitedToUserDocs(int id) {
 
         String query = "SELECT DISTINCT documents.doc_id, documents.doc_number, CONCAT(users.name, ' ', users.surname) AS doc_owner, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, `groups`.group_name AS 'receiving group', `groups`.group_id, CONCAT(receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname) AS receiver, receiving_user.user_id " +
                 "FROM documents " +
