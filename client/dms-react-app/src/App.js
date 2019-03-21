@@ -35,7 +35,8 @@ class App extends Component {
       //from child
         user: [],
         token:'',
-        authority:''
+        authority:'',
+        hits: null
     }
 }
   render() {
@@ -67,6 +68,12 @@ class App extends Component {
     })
     console.log("tai turi būti iš vaiko " + this.state.user + this.state.token)
   }
+
+  // setter
+  //sessionStorage.setItem('myData', data);
+
+  // getter
+  //sessionStorage.getItem('myData');
 }
 
 export default App;

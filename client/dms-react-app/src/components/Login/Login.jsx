@@ -23,10 +23,25 @@ class Login extends Component {
     }
 
   render() {
+    //Creating Entries
+    let key = this.state.token;
+    localStorage.setItem(key, 'New Value');
+    //Reading Entries
+    let myItem = localStorage.getItem(key);
+    //Deleting Entries
+    localStorage.removeItem(key);
+    
+
+    localStorage.setItem(key, 'Value');
+    let keyUser = this.state.user.id;
+    localStorage.setItem(key, JSON.stringify(this.state.user, this.state.token));
+    let item = JSON.parse(localStorage.getItem(key)); 
+    
+    
       const { password, email, formErrors } = this.state;
       return (
           <div className="wrapperLogin">
-            <div className="form-wrapper">
+            <div className="form-wrapper-login">
               <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
                 <div className="email"> 
                   <FormLabel>El. paštas</FormLabel>
@@ -116,6 +131,8 @@ class Login extends Component {
           break;
       }
   }
+
+ 
   
   formValid = (e) => {
       const { password, email } = this.state;
@@ -174,7 +191,6 @@ class Login extends Component {
     })
     return authority;
   }
-
 }
 
 export default withRouter(Login);

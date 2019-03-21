@@ -7,7 +7,7 @@
     background-color: #9aeffa;
 }
   
-.form-wrapper {
+.form-wrapper-reg {
     width: 400px;
     display: flex;
     flex-direction: column;
@@ -15,8 +15,9 @@
     border-radius: 10px;
     box-shadow: 0px 10px 50px #555;
     background-color: #ffffff;
-    margin-top: 50px;
+    margin-top: 40px;
 }
+
 select,
 .form-label {
     text-align: left;

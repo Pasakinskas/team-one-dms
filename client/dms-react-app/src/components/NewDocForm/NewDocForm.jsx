@@ -30,8 +30,8 @@ class NewDocForm extends Component {
    
     render() {
         const {template, name, recipient } = this.state;
-        // const listTemplates = this.state.template.map((label) =>
-        // <option>{label}</option> );
+        const listTemplates = this.state.template.map((template) =>
+        <option>{template.description}</option> );
         return (
             <div className="form-wrapper" id="form">
              <Form onSubmit={(e)=>{this.handleClickSend(e)}}>
@@ -42,14 +42,34 @@ class NewDocForm extends Component {
                     value={template}
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite šabloną</option>
-                        {/* <option>{listTemplates}</option> */}
-                        <option value="A">Prašymas išleisti atostogų</option>
+                        {listTemplates}
+                        {/* <option value="A">Prašymas išleisti atostogų</option>
                         <option value="B">Prašymas priimti į darbą</option>
                         <option value="C">Prašymas atleisti iš darbo</option>
-                        <option value="D">Pasiaiškinimas</option>
+                        <option value="D">Pasiaiškinimas</option> */}
                   </select>       
                 </div>
-                <div className="sender"> 
+                <div className="input"> 
+                    <FormLabel>Dokumento numeris</FormLabel>
+                    <FormControl 
+                        type="text" 
+                        name="docNum"
+                        value={name}
+                        placeholder="Įveskite dokumento Nr."
+                        onChange={this.handleChange}
+                    />                                
+                </div>
+                <div className="input"> 
+                    <FormLabel>Dokumento pavadinimas</FormLabel>
+                    <FormControl 
+                        type="text" 
+                        name="name"
+                        value={name}
+                        placeholder="Įveskite dokumento pavadinimą"
+                        onChange={this.handleChange}
+                    />                                
+                </div>
+                <div className="input"> 
                     <FormLabel>Siuntėjas</FormLabel>
                     <FormControl 
                         type="text" 
@@ -101,8 +121,13 @@ class NewDocForm extends Component {
         },
       });
       const json = await res.json();
-      return json;
+      console.log("ar tai šablonų sąrašas " + JSON.stringify(json));
+      this.setState({
+        template: json,
+      });
+      console.log(this.state.template)
     }
+
     //kokiu API kreiptis
     fetchDataRecipients = async () => {
       const res = await fetch("http://localhost:8086/",
@@ -132,7 +157,7 @@ class NewDocForm extends Component {
         try{
           const data = await localStorage.getItem('content');;
         await console.log(data)
-        const API = 'http://localhost:8086/docume+++nt/add';
+        const API = 'http://localhost:8086/document/add';
         fetch(API, {
           method: 'POST',
           headers: {
