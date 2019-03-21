@@ -15,8 +15,8 @@ class NewDocument extends Component {
         return (
             <div>
                 <NewDocHeader/>
-                <TextEditor newEditorVar={this.props.newEditorVar}/>
-                <NewDocForm token = { this.props.token }/>
+                <TextEditor className="EditorInForm" newEditorVar={this.props.newEditorVar}/>
+                <NewDocForm className="FormInPage" token = { this.props.token }/>
                 <Footer/>
             </div>
         );

@@ -31,3 +31,16 @@ code {
   margin: 20px 0 20px 40px;
   float: left;
 }
+
+.EditorInForm {
+  float: left;
+}
+
+.FormInPage {
+  background-color: red;
+  float: right;
+}
+
+.tempElements{
+  margin-top: 0px;
+}
