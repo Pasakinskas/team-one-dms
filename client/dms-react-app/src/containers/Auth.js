@@ -5,3 +5,8 @@ export const isAllowed = (user, rights) =>
 
 export const hasRole = (user, roles) =>
   roles.some(role => user.roles.includes(role));
+
+// export const hasRole = (userRoles,  allowedRoles) => {
+//   const userRoleList = userRoles.map(userRole => userRole.authority);
+//   return allowedRoles.some(role => userRoleList.includes(role));
+// }

@@ -21,123 +21,8 @@ class AdminDocList extends Component {
         this.state = {
             documents: [],
             token:'',
-            document: [{
-                id: 1,
-                name: "Ana",
-                surname: "Kaka",
-                template: "opa",
-                condition: "dead",
-                isChecked: false,
-            }, {
-                id: 2,
-                name: "Marius",
-                surname: "Kaka",
-                template: "opka",
-                condition: "very alive",
-                actions: "do nothing",
-                isChecked: false,
-            }, {
-                id: 3,
-                name: "Birutė",
-                surname: "Kaka",
-                template: "opapa",
-                condition: "not dead",
-                isChecked: false,
-            }, {
-                id: 4,
-                name: "Šarūnas",
-                surname: "Kaka",
-                template: "opka",
-                condition: "dead",
-                actions: "do nothing",
-                isChecked: false,
-            }, {
-                id: 5,
-                name: "Dalia",
-                surname: "Kaka",
-                template: "opka",
-                condition: "good kido",
-                isChecked: false,
-            }, {
-                id: 6,
-                name: "Marius",
-                surname: "Kaka",
-                template: "opka",
-                condition: "not very alive",
-                isChecked: false,
-            }, {
-                id: 7,
-                name: "Ana",
-                surname: "Kaka",
-                template: "opa",
-                condition: "dead",
-                isChecked: false,
-            }, {
-                id: 8,
-                name: "Marius",
-                surname: "Kakaliukas",
-                template: "opka",
-                condition: "very alive",
-                isChecked: false,
-            }, {
-                id: 9,
-                name: "Birutė",
-                surname: "Kakaliukas",
-                template: "opapa",
-                condition: "not dead",
-                isChecked: false,
-            }, {
-                id: 10,
-                name: "Šarūnas",
-                surname: "Kakaliukas",
-                template: "opka",
-                condition: "dead",
-                isChecked: true,
-            }, {
-                id: 11,
-                name: "Dalia",
-                surname: "Kaka",
-                template: "opka",
-                condition: "good kido",
-                isChecked: false,
-            }, {
-                id: 12,
-                name: "Marius",
-                surname: "Kaka",
-                template: "opka",
-                condition: "not very alive",
-                isChecked: false,
-            }, {
-                id: 13,
-                name: "Ana",
-                surname: "Kaka",
-                template: "opa",
-                condition: "dead",
-                isChecked: false,
-            }, {
-                id: 14,
-                name: "Marius",
-                surname: "Kakaliukas",
-                template: "opka",
-                condition: "very alive",
-                isChecked: false,
-            }, {
-                id: 15,
-                name: "Birutė",
-                surname: "Kakaliukas",
-                template: "opapa",
-                condition: "not dead",
-                isChecked: false,
-            }, {
-                id: 16,
-                name: "Šarūnas",
-                surname: "Kakaliukas",
-                template: "opka",
-                condition: "dead",
-                isChecked: true,
-            }
-        ],
             modalIsOpen: false,
+            selectedDocuments:[],
         }
     }
 
@@ -145,6 +30,7 @@ class AdminDocList extends Component {
         const { SearchBar } = Search;
         const bgcolor = {backgroundColor: "#9ef7e8"};
         const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
+        
         
         const pageButtonRenderer = ({
             page,
@@ -173,13 +59,7 @@ class AdminDocList extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            onSelect: (row, isSelect, rowIndex, e) => {
-                this.changeSelectStatus(rowIndex);
-                console.log("row: " + row);
-                console.log("IsSelect: " + isSelect);
-                console.log("rowIndex: " + rowIndex);
-                console.log(e);
-            },    
+            onSelect: this.changeSelectStatus,
         };
 
         const columns = [
@@ -195,32 +75,27 @@ class AdminDocList extends Component {
             sort: true,
             align: "center",
         }, {
-            dataField: 'name',
-            text: 'Vardas',
+            dataField: 'owner',
+            text: 'Siuntėjas',
             sort: true,
             headerStyle: bgcolor,
         }, {
-            dataField: 'surname',
-            text: 'Pavardė',
-            sort: true,
-            headerStyle: bgcolor,
-        }, {
-            dataField: 'recipient',
+            dataField: 'receiver',
             text: 'Gavėjas',
             sort: true,
             align: "center",
         }, {
-            dataField: 'template',
-            text: 'Šablonas',
+            dataField: 'docName',
+            text: 'Dokumentas',
             sort: true,
             headerStyle: bgcolor,
         }, {
-            dataField: 'condition',
+            dataField: 'status',
             text: 'Būsena',
             sort: true,
             headerStyle: bgcolor,
         }, {
-            dataField: 'notes',
+            dataField: 'details',
             text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
@@ -239,7 +114,7 @@ class AdminDocList extends Component {
                 transform: 'translate(-50%, -50%)'
             }
         };
-
+        console.log(this.state.documents)
         return (
             <div className="AdminDocList">
                 <ToolkitProvider
@@ -301,17 +176,25 @@ class AdminDocList extends Component {
         this.setState({modalIsOpen: false});
     }
 
-    changeSelectStatus = (rowIndex)=>{
-       const newDoc = this.state.documents.map(row => {
-           if(row.id -1 === rowIndex){
-                console.log(rowIndex)
-                row.isChecked = !row.isChecked;
-           }
-           return row;
+    changeSelectStatus = (row, isSelected, e)=>{
+        const newDoc = this.state.documents.map(datarow => {
+            if(datarow.id -1 === row){
+                datarow.isChecked = !datarow.isChecked;
+            }
+        return row;
         })
-        this.setState({
-            documents: newDoc
-        })
+        if(isSelected){
+            window.setTimeout(
+                function() {
+                    this.setState({
+                    selectedDocuments: newDoc
+                });
+                    }.bind(this),
+                0
+            );
+            console.log("Spausdinu pažymėtą eilutę")
+            console.log(row);
+        }
     }
 
     changeDocByCondition = (newCondition) => {
@@ -342,7 +225,7 @@ class AdminDocList extends Component {
     letResubmitDoc =(e) => {
         e.preventDefault();
         const resubmitDocList = this.changeDocByCondition("submitted");
-        const API = 'https://localhost:8086/document/add';
+        const API = 'https://localhost:8086/status/post/change';
         fetch(API, {
             method: 'PUT',
             headers: {
@@ -394,12 +277,11 @@ class AdminDocList extends Component {
             "content-type": "application/json",
           },
         })
-        console.log(this.props.token)
         if (res.status > 300) {
             alert("Fail")
         }
         const json = await res.json();
-        console.log(json)
+        console.log(JSON.stringify(json))
         this.setState({ 
             documents: json
         });
