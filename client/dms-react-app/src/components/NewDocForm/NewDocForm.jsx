@@ -47,10 +47,6 @@ class NewDocForm extends Component {
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite šabloną</option>
                         {listTemplates}
-                        {/* <option value="A">Prašymas išleisti atostogų</option>
-                        <option value="B">Prašymas priimti į darbą</option>
-                        <option value="C">Prašymas atleisti iš darbo</option>
-                        <option value="D">Pasiaiškinimas</option> */}
                   </select>       
                 </div>
                 <div className="input"> 
@@ -91,10 +87,6 @@ class NewDocForm extends Component {
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite gavėją</option>
                         <option>{listRecipients}</option>
-                        {/* <option value="A">Jonas</option>
-                        <option value="B">Paulius</option>
-                        <option value="C">Petras</option>
-                        <option value="D">Someone</option> */}
                   </select>              
                 </div>
                 <div className="docBtn">
@@ -116,8 +108,8 @@ class NewDocForm extends Component {
     }
 
     //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
-    fetchDataDocTemplates = async (url) => {
-      const res = await fetch("http://localhost:8086/documentTypes/get", 
+    fetchDataDocTemplates = async () => {
+      const res = await fetch("http://localhost:8086/doctemplates/get/all", 
       {
         method: "GET",
         headers: {
@@ -158,8 +150,8 @@ class NewDocForm extends Component {
     handleClickSend = async (e) =>{
       e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
-          const token = localStorage.getItem("token");
-          const data = await localStorage.getItem('content');
+        const token = localStorage.getItem("token");
+        const data = await localStorage.getItem('content');
         await console.log(JSON.stringify({content: data}))
         const API = 'http://localhost:8086/document/add';
         fetch(API, {
@@ -183,7 +175,7 @@ class NewDocForm extends Component {
         e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
           const data = this.props.existingValue;
-          const API = 'http://localhost:8086/document/add';
+          const API = 'http://localhost:8086/document/post/new';
           fetch(API, {
             method: 'POST',
             body: JSON.stringify({document: data}),

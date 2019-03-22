@@ -22,22 +22,7 @@ class Login extends Component {
         };
     }
 
-  render() {
-    //Creating Entries
-    let key = this.state.token;
-    localStorage.setItem(key, 'New Value');
-    //Reading Entries
-    let myItem = localStorage.getItem(key);
-    //Deleting Entries
-    localStorage.removeItem(key);
-    
-
-    localStorage.setItem(key, 'Value');
-    let keyUser = this.state.user.id;
-    localStorage.setItem(key, JSON.stringify(this.state.user, this.state.token));
-    let item = JSON.parse(localStorage.getItem(key)); 
-    
-    
+  render() {   
       const { password, email, formErrors } = this.state;
       return (
           <div className="wrapperLogin">
@@ -91,9 +76,9 @@ class Login extends Component {
         const fetchUserData = await this.fetchUserData;
         const res = await fetchUserData();
 
-        const fetchUserAuthority = await this.fetchUserAuthority;
-        const res2 = await fetchUserAuthority();
-        console.log(res2);
+        // const fetchUserAuthority = await this.fetchUserAuthority;
+        // const res2 = await fetchUserAuthority();
+        // console.log(res2);
         console.log("authority rezultatas ");
         const status = this.state.response;
         this.props.handleDatafromChild(this.state.user, this.state.token, this.state.authority);
@@ -134,8 +119,6 @@ class Login extends Component {
           break;
       }
   }
-
- 
   
   formValid = (e) => {
       const { password, email } = this.state;
@@ -178,8 +161,7 @@ class Login extends Component {
     return json;
   }
 
-
-   fetchUserAuthority = async () => {
+  fetchUserAuthority = async () => {
     const res = await fetch("http://localhost:8086/roles/user", {
       method: "GET",
       headers: {

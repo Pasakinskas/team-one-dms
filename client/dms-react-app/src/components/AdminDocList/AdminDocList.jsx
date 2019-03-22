@@ -385,11 +385,12 @@ class AdminDocList extends Component {
     }
 
     fetchDataDocList = async () => {
+        const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:8086/document/get/all", 
         {
           method: "GET",
           headers: {
-            "token": this.props.token,
+            "token": token,
             "content-type": "application/json",
           },
         })

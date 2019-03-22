@@ -14,8 +14,6 @@ class UserBoard extends Component {
     }
 
     render() {
-        console.log("user board")
-        console.log(this.props)
         return (
             <div className="UserBoard">
                 <UserNavbar/>

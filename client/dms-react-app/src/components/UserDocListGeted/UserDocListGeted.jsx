@@ -13,10 +13,6 @@ import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
 import ModalHeaderSubmited from '../ModalHeader/ModalHeaderSubmited';
 
-//API adresai - patikslinti
-//showDoc = () => pabaigti
-//110 
-
 
 class UserDocListGeted extends Component {
     constructor(props) {
@@ -224,12 +220,13 @@ class UserDocListGeted extends Component {
     //Document condition changes to accepted. After that isn't shown in geted document list
     acceptDoc =(e) => {
         e.preventDefault();
+        const token = localStorage.getItem("token");
         const acceptDocList = this.changeDocByConditiont("accepted");
         const API = 'http://localhost:8086/document/add';
         fetch(API, {
             method: 'PUT',
             headers: {
-                'token': this.props.token,
+                'token': token,
                 'content-Type': 'application/json'
             },
             body: JSON.stringify({acceptDocList}),
@@ -245,12 +242,13 @@ class UserDocListGeted extends Component {
     //Document condition changes to rejected. After that isn't shown in geted document list
     rejectDoc = (e) => {
         e.preventDefault();
+        const token = localStorage.getItem("token");
         const rejectDocList = this.changeDocByConditiont("rejected");
         const API = 'http://localhost:8086/document/add';
         fetch(API, {
             method: 'DELETE',
             headers: {
-                'token': this.props.token,
+                'token': token,
                 'content-Type': 'application/json'
             },
             body: JSON.stringify({rejectDocList}),
@@ -269,16 +267,14 @@ class UserDocListGeted extends Component {
 
     //Gauna visus dokumentus, kuriuos jis tuiri teisę priimti ar atmesti. O returne (130) filtruoja pagal condition = 'submited'.
     fetchDataDocListGeted = async () => {
-        console.log("a6 veiku");
-        console.log(this.props)
-        console.log(this.props.token);
-        return;
-        const res = await fetch("http://localhost:8086/document/get/submitedToUser", 
+        const token = localStorage.getItem("token");
+        console.log("Geted " + token);
+        const res = await fetch("http://localhost:8086/document/get/geted", 
         // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
         {
           method: "GET",
           headers: {
-            "token": this.props.token,
+            "token": token,
             "content-type": "application/json",
         },
         });
