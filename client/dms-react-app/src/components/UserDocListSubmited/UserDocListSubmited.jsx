@@ -215,11 +215,12 @@ class UserDocListSubmited extends Component {
 
     
     fetchDataDocListUser = async() => {
-        const res = await fetch("http://localhost:8086/document/getSubmited/byUserId", 
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:8086/document/get/submited", 
         {
           method: "GET",
           headers: {
-            "token": this.props.token,
+            "token": token,
             "content-type": "application/json",
           },
         })

@@ -223,11 +223,12 @@ class AdminUsers extends Component {
     };
 
     fetchDataUserList = async (url) => {
+        const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:8086/users",
         {  
           method: "GET",
           headers: {
-            "token": this.props.token,
+            "token": token,
             "content-type": "application/json",
           },
         })

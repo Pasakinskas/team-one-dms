@@ -30,6 +30,7 @@ class UserDocList extends Component {
             userDocuments:[],
             selectedDocuments: [],
             modalIsOpen: false,
+            text:[]
         }
     } 
 
@@ -67,9 +68,7 @@ class UserDocList extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            onSelect: (row, isSelect, rowIndex, e) => {
-                this.changeSelectStatus(rowIndex);
-            },
+            onSelect: this.changeSelectStatus,
         };                
      
         const columns = [
@@ -169,7 +168,7 @@ class UserDocList extends Component {
                                 contentLabel="Dokumento peržiūra"
                                 >  
                                 <ModalHeader modalIsOpen = {this.closeModal}/>                                            
-                                <TextEditor className="modalTextEditor"/>    
+                                <TextEditor className="modalTextEditor" newEditorVar={this.state.text}/>    
                                 {/* editor = {userDocuments filter text}                   */}
                             </Modal>                                               
                         </div>
@@ -193,17 +192,19 @@ class UserDocList extends Component {
         this.setState({modalIsOpen: false});
     }
      
-    changeSelectStatus = (rowIndex)=>{
-        const newDoc = this.state.userDocument.map(row => {
-            if(row.id -1 === rowIndex){
-                 console.log(rowIndex)
-                 row.isChecked = !row.isChecked;
+    changeSelectStatus = (row, isSelected, e)=>{
+        const newDoc = this.state.userDocuments.map(datarow => {
+            if(datarow.id -1 === row){
+                datarow.isChecked = !datarow.isChecked;
             }
-            return row;
-         })
-         this.setState({
-            selectedDocuments: newDoc
-         })
+        return row;
+        })
+            if(isSelected){
+                this.setState({
+                    selectedDocuments: newDoc
+                })
+            console.log(row);
+            }
     }
 
     changeDocByCondition = (newCondition) => {
@@ -214,16 +215,33 @@ class UserDocList extends Component {
            return selectedDocuments;
         });
         for (let doc of selectedDocuments) {
-            doc.condition = newCondition;
+            doc.status = newCondition;
         }
         return selectedDocuments;
     }
     
     showDoc =() => {
-    const localDoc = this.state.userDocuments;
+    const localDoc = this.state.userDocuments.id;
     for(const row of localDoc){
         if (row.isChecked === true){
-            //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
+            // fetchDataDocView = async () => {
+            //     const res = await fetch(`http://localhost:8086/document/${localDoc}`,
+            //     {
+            //       method: "GET",
+            //       headers: { 
+            //         "content-type": "application/json"
+            //       },
+            //     })
+            //     if (res.status > 300) {
+            //         alert("Fail")
+            //     }
+            //     const json = await res.json(); 
+            //     this.setState({ 
+            //         text: json.doc.value
+            //     });   
+                          
+            //     return json;
+            //     }
             }
         }
     };
@@ -231,12 +249,13 @@ class UserDocList extends Component {
     //Document condition changes to submited(pateikti dok.)
     sendDoc =(e) => {
         e.preventDefault();
+        const token = localStorage.getItem("token");
         const sentDocList = this.changeDocByCondition("submited");
         const API = 'http://localhost:8086/document/';
          fetch(API, {
             method: 'PUT',
             headers: {
-                'token': this.props.token,
+                'token': token,
                 'content-Type': 'application/json'
             },
             body: JSON.stringify({sentDocList}),
@@ -251,13 +270,14 @@ class UserDocList extends Component {
 
     //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
-        e.preventDefault();
+        
+        const token = localStorage.getItem("token");
         const deleteDocList = this.changeDocByCondition("deleted");
         const API = 'http://localhost:8086/document/add';
           fetch(API, {
             method: 'DELETE',
             headers: {
-                'token': this.props.token,
+                'token': token,
                 'content-Type': 'application/json'
             },
             body: JSON.stringify({deleteDocList}),
@@ -271,30 +291,29 @@ class UserDocList extends Component {
     };
      
     componentDidMount(){
-        this.fetchDataDocListUser()
+         this.fetchDataDocListUser()
     }
 
     //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
     fetchDataDocListUser = async () => {
-        console.log("man reikia šito " + this.props.token)
-        const res = await fetch("http://localhost:8086/getSaved/byUserId",
-        // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
+        const token = localStorage.getItem("token");
+        console.log(token)
+        const res = await fetch("http://localhost:8086/document/get/saved",
         {
           method: "GET",
           headers: { 
-            "token": this.props.token,
+            "token": token,
             "content-type": "application/json"
           },
         })
-        console.log("man reikai šito " + this.props.token)
         if (res.status > 300) {
             alert("Fail")
         }
+        console.log(res)
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
-        });   
-                  
+        });           
         return json;
     }
 }

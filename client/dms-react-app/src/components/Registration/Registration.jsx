@@ -30,7 +30,7 @@ class Registration extends Component {
     const { name, surname, position, password, passwordrep, email, formErrors } = this.state;
     return (
       <div className="wrapper">
-        <div className="form-wrapper">
+        <div className="form-wrapper-reg">
           <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
             <div className="name" id="boxes"> 
               <FormLabel>Vardas</FormLabel>
@@ -236,7 +236,7 @@ class Registration extends Component {
   }
 
   allLetter = (name, surname) => { 
-    if ((/^[A-Za-ząčęėįšųūžĄČĘĖĮŠŲŪŽ]+$/.test(name)) && (/^[A-Za-z]+$/.test(surname))) {
+    if ((/^[A-Za-ząčęėįšųūžĄČĘĖĮŠŲŪŽ]+$/.test(name)) && (/^[A-Za-ząčęėįšųūžĄČĘĖĮŠŲŪŽ]+$/.test(surname))) {
       return true;
     } else {
       alert('Galima naudoti tik raides');

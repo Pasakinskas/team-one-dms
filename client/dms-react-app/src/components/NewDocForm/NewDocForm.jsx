@@ -19,7 +19,9 @@ class NewDocForm extends Component {
     
         this.state = {
           template: [],
-          name: "",
+          docNum:"",
+          docName:"",
+          name: "",      
           recipient: [],
         }
     }
@@ -29,12 +31,14 @@ class NewDocForm extends Component {
     }
    
     render() {
-        const {template, name, recipient } = this.state;
-        // const listTemplates = this.state.template.map((label) =>
-        // <option>{label}</option> );
+        const {template, docNum, docName, name, recipient } = this.state;
+        const listTemplates = this.state.template.map((template) =>
+        <option>{template.description}</option> );
+        const listRecipients = this.state.recipient.map((recipient) =>
+        <option>{recipient.name}</option> );
         return (
             <div className="form-wrapper" id="form">
-             <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
+             <Form onSubmit={(e)=>{this.handleClickSend(e)}}>
                 <div className="template"> 
                   <FormLabel>Dokumento šablonas</FormLabel>
                   <select 
@@ -42,14 +46,30 @@ class NewDocForm extends Component {
                     value={template}
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite šabloną</option>
-                        {/* <option>{listTemplates}</option> */}
-                        <option value="A">Prašymas išleisti atostogų</option>
-                        <option value="B">Prašymas priimti į darbą</option>
-                        <option value="C">Prašymas atleisti iš darbo</option>
-                        <option value="D">Pasiaiškinimas</option>
+                        {listTemplates}
                   </select>       
                 </div>
-                <div className="sender"> 
+                <div className="input"> 
+                    <FormLabel>Dokumento numeris</FormLabel>
+                    <FormControl 
+                        type="text" 
+                        name="docNum"
+                        value={docNum}
+                        placeholder="Įveskite dokumento Nr."
+                        onChange={this.handleChange}
+                    />                                
+                </div>
+                <div className="input"> 
+                    <FormLabel>Dokumento pavadinimas</FormLabel>
+                    <FormControl 
+                        type="text" 
+                        name="docName"
+                        value={docName}
+                        placeholder="Įveskite dokumento pavadinimą"
+                        onChange={this.handleChange}
+                    />                                
+                </div>
+                <div className="input"> 
                     <FormLabel>Siuntėjas</FormLabel>
                     <FormControl 
                         type="text" 
@@ -66,20 +86,16 @@ class NewDocForm extends Component {
                     value={recipient}
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite gavėją</option>
-                        {/* <option>{listRecipients}</option> */}
-                        <option value="A">Jonas</option>
-                        <option value="B">Paulius</option>
-                        <option value="C">Petras</option>
-                        <option value="D">Someone</option>
+                        <option>{listRecipients}</option>
                   </select>              
                 </div>
                 <div className="docBtn">
-                  <Button variant="primary" type="submit" onClick={() =>this.handleClickSend()}>
+                  <Button variant="primary" type="submit" onSubmit={(e)=>this.handleClickSend(e)}>
                       Pateikti
                   </Button>
-                  <Button variant="success" type="submit" onClick={() =>this.handleClickSave()}>
+                  {/* <Button variant="success" type="submit" onSubmit={() =>this.handleClickSave()}>
                       Saugoti
-                  </Button>
+                  </Button> */}
                 </div> 
               </Form>
             </div>
@@ -92,8 +108,8 @@ class NewDocForm extends Component {
     }
 
     //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
-    fetchDataDocTemplates = async (url) => {
-      const res = await fetch("http://localhost:8086/documentTypes/get", 
+    fetchDataDocTemplates = async () => {
+      const res = await fetch("http://localhost:8086/doctemplates/get/all", 
       {
         method: "GET",
         headers: {
@@ -101,10 +117,15 @@ class NewDocForm extends Component {
         },
       });
       const json = await res.json();
-      return json;
+      console.log("ar tai šablonų sąrašas " + JSON.stringify(json));
+      this.setState({
+        template: json,
+      });
+      console.log(this.state.template)
     }
+
     //kokiu API kreiptis
-    fetchDataRecipients = async (url) => {
+    fetchDataRecipients = async () => {
       const res = await fetch("http://localhost:8086/",
       {
         method: "GET",
@@ -129,11 +150,17 @@ class NewDocForm extends Component {
     handleClickSend = async (e) =>{
       e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
-        const data = this.props.existingValue;
-        const API = 'https://localhost:8080/document/add';
+        const token = localStorage.getItem("token");
+        const data = await localStorage.getItem('content');
+        await console.log(JSON.stringify({content: data}))
+        const API = 'http://localhost:8086/document/add';
         fetch(API, {
           method: 'POST',
-          body: JSON.stringify({document: data}),
+          headers: {
+            "token": token,
+            "content-type": "Application/json",
+          },
+          body: JSON.stringify({content: data, typeId: 1}),
         }).then(response => {
 //Kaip suformuoti būsenos pakeitimą?
           if (response.status === 200){
@@ -141,14 +168,14 @@ class NewDocForm extends Component {
           } else {
             alert("Pateikti nepavyko");
           }
-        }).catch(error => console.error(error));
+        }).catch(error => console.error(error));   
       }
 
       handleClickSave = async (e) =>{
         e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
           const data = this.props.existingValue;
-          const API = 'https://localhost:8080/document/add';
+          const API = 'http://localhost:8086/document/post/new';
           fetch(API, {
             method: 'POST',
             body: JSON.stringify({document: data}),

@@ -6,13 +6,11 @@ import AdminDocList from '../components/AdminDocList/AdminDocList';
 class AdminBoardDocs extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-         
+        this.state = {         
         }
     }
 
     render() {
-        const token = this.state.token
         return (
             <div>
                 <AdminNavBar/> 
@@ -22,8 +20,6 @@ class AdminBoardDocs extends Component {
             </div>
         );
     }
-
-
 }
 
 export default AdminBoardDocs;

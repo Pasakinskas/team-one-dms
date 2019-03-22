@@ -6,6 +6,12 @@ import GroupView from '../components/GroupView/GroupView';
 import UserDocListSubmited from '../components/UserDocListSubmited/UserDocListSubmited';
 
 class UserBoardSubmitedDoc extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        }
+    }
+
     render() {
         return (
             <div className="UserBoardGetedDoc">
@@ -13,7 +19,7 @@ class UserBoardSubmitedDoc extends Component {
                 <NewDocButton/>
                 <p className="headers">PATEIKTI DOKUMENTAI</p>
                 <GroupView/>
-                <UserDocListSubmited/>
+                <UserDocListSubmited token={ this.props.token }/>
                 <Footer/>
             </div>
         );

@@ -11,7 +11,7 @@ const plugins = [
 //define the default node type
 const DEFAULT_NODE = 'paragraph'
 
-const existingValue = JSON.parse(sessionStorage.getItem('content'));
+const existingValue = JSON.parse(localStorage.getItem('content'));
 // editors data storage
 const initialValue = Value.fromJSON(
 //existingValue ||
@@ -91,10 +91,10 @@ onChange = ({value}) => {
     
     /* save the value to session storage ( for now.. )
     need compare or something to have it work with load    */
-    /*if(value.document !== this.state.value.document){
+    if(value.document !== this.state.value.document){
         const content = JSON.stringify(value.toJSON());
-        sessionStorage.setItem('content', content);
-    }*/
+        localStorage.setItem('content', content);
+    }
    /* if(newVal !== null){
         this.setState({newVal})
         initialValue=newVal;

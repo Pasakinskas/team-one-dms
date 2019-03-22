@@ -18,9 +18,9 @@ class NewDocFormAdmin extends Component {
     }
    
     render() {
-        const {template, name, recipient } = this.state;
-        // const listTemplates = this.state.template.map((label) =>
-        // <option>{label}</option> );
+        const {template} = this.state;
+        const listTemplates = this.state.template.map((label) =>
+        <option>{label}</option> );
         return (
             <div className="form-wrapper" id="form">
             <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
@@ -30,12 +30,8 @@ class NewDocFormAdmin extends Component {
                         name="template"
                         value={template}
                         onChange={this.handleChange}>
-                            <option value="" disabled> Pasirinkite šabloną</option>
-                            {/* <option>{listTemplates}</option> */}
-                            <option value="A">Prašymas išleisti atostogų</option>
-                            <option value="B">Prašymas priimti į darbą</option>
-                            <option value="C">Prašymas atleisti iš darbo</option>
-                            <option value="D">Pasiaiškinimas</option>
+                            <option> Pasirinkite šabloną</option>
+                            {listTemplates}                        
                     </select>
                 </div>         
                 <div className="sender"> 
@@ -57,13 +53,14 @@ class NewDocFormAdmin extends Component {
             </div>
         );
     }
+    
     componentDidMount(){
         this.fetchDataDocTemplates()
     }
 
     //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
-    fetchDataDocTemplates = async (url) => {
-      const res = await fetch("http://localhost:8086/document/templates", {
+    fetchDataDocTemplates = async () => {
+      const res = await fetch("http://localhost:8086/doctemplates/get/all", {
         
         method: "GET",
         headers: {
@@ -87,7 +84,7 @@ class NewDocFormAdmin extends Component {
     handleClickSave = async (e) =>{
         e.preventDefault();
           const data = this.props.existingValue;
-          const API = 'localhost:8086/document/add';
+          const API = 'http://localhost:8086/doctemplate/post/new';
           fetch(API, {
             method: 'POST',
             body: JSON.stringify({template: data}),

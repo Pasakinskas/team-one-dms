@@ -12,6 +12,7 @@ class Login extends Component {
           user: [],
           token: "",
           response: "",
+          authority: "",
           email: "",
           password: "",
           formErrors: {
@@ -21,11 +22,11 @@ class Login extends Component {
         };
     }
 
-  render() {
+  render() {   
       const { password, email, formErrors } = this.state;
       return (
           <div className="wrapperLogin">
-            <div className="form-wrapper">
+            <div className="form-wrapper-login">
               <Form onSubmit={(e)=>{this.handleSubmit(e)}}>
                 <div className="email"> 
                   <FormLabel>El. paštas</FormLabel>
@@ -74,8 +75,13 @@ class Login extends Component {
       if (this.formValid()) {
         const fetchUserData = await this.fetchUserData;
         const res = await fetchUserData();
+
+        // const fetchUserAuthority = await this.fetchUserAuthority;
+        // const res2 = await fetchUserAuthority();
+        // console.log(res2);
+        console.log("authority rezultatas ");
         const status = this.state.response;
-        this.props.handleDatafromChild(this.state.user, this.state.token);
+        this.props.handleDatafromChild(this.state.user, this.state.token, this.state.authority);
         console.log("fetcho rezultatas " + res);
         console.log("response " + status);
         this.evalRes(status);
@@ -84,7 +90,7 @@ class Login extends Component {
     
   evalRes = (isRegGood)=>{
     isRegGood === 200
-    ? this.nextPath(`/userboard`)
+    ? this.nextPath(`/userboard`) 
     : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/`)
   }
 
@@ -141,17 +147,34 @@ class Login extends Component {
       },
       body: data
     });
-    const json = JSON.stringify (await res.json());
+    const json = await res.json();
     console.log(res.status)
-    console.log("visas useris" + json)
+    console.log("visas useris" + JSON.stringify(json))
     const token = res.headers.get("token");
     console.log(token);
+    localStorage.setItem("token", token);
     this.setState({
       user: json, 
       response: res.status,
-      token: token
+      token: token,
     })
     return json;
+  }
+
+  fetchUserAuthority = async () => {
+    const res = await fetch("http://localhost:8086/roles/user", {
+      method: "GET",
+      headers: {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyaWQiLCJpZCI6M30.N_sFZI-6YgGcoh7j_VQFHzp4VBmJhKtyoXTYZbZ9pos",
+        "content-type": "application/json"
+      }
+    });
+    const authority = await res.json();
+    console.log(authority);
+    // this.setState({
+    //   authority: authority, 
+    // })
+    // return authority;
   }
 }
 

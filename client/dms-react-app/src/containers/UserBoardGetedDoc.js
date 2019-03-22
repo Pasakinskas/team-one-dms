@@ -7,6 +7,12 @@ import UserDocListGeted from '../components/UserDocListGeted/UserDocListGeted';
 
 
 class UserBoardGetedDoc extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        }
+    }
+
     render() {
         return (
             <div className="UserBoardGetedDoc">
@@ -14,7 +20,7 @@ class UserBoardGetedDoc extends Component {
                 <NewDocButton/>
                 <p className="headers">GAUTI DOKUMENTAI</p>
                 <GroupView/>
-                <UserDocListGeted/>
+                <UserDocListGeted  token={ this.props.token }/>
                 <Footer/>
             </div>
         );

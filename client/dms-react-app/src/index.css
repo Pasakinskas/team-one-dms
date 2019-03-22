@@ -28,6 +28,19 @@ code {
   color:  #2e2e2e;
   font-size: 1.2em;
   font-weight: 400;
-  margin: 20px 0 0 40px;
+  margin: 20px 0 20px 40px;
   float: left;
+}
+
+.EditorInForm {
+  float: left;
+}
+
+.FormInPage {
+  background-color: red;
+  float: right;
+}
+
+.tempElements{
+  margin-top: 0px;
 }
