@@ -1,5 +1,6 @@
 package com.dmsproject.dms.controllers;
 
+import com.dmsproject.dms.Constants;
 import com.dmsproject.dms.dao.RoleDAO;
 import com.dmsproject.dms.dto.Role;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@CrossOrigin(origins = Constants.REACT_URL)
 @RestController
 public class RolesController {
 
@@ -72,8 +74,8 @@ public class RolesController {
     }
 
     @RequestMapping(value = "/roles/user", method = RequestMethod.GET)
-    public Collection getUserRoles() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+    public ResponseEntity<?> getUserRoles() {
+        return new ResponseEntity<>(SecurityContextHolder.getContext().getAuthentication().getAuthorities(), HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
