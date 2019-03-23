@@ -75,11 +75,9 @@ class Login extends Component {
       if (this.formValid()) {
         const fetchUserData = await this.fetchUserData;
         const res = await fetchUserData();
-
-        // const fetchUserAuthority = await this.fetchUserAuthority;
-        // const res2 = await fetchUserAuthority();
-        // console.log(res2);
-        console.log("authority rezultatas ");
+        const fetchUserAuthority = await this.fetchUserAuthority;
+        const res2 = await fetchUserAuthority();
+        console.log("authority rezultatas "+JSON.stringify(res2));
         const status = this.state.response;
         this.props.handleDatafromChild(this.state.user, this.state.token, this.state.authority);
         console.log("fetcho rezultatas " + res);
@@ -147,6 +145,9 @@ class Login extends Component {
       },
       body: data
     });
+      if (res.status > 300) {
+        alert("Prisijungimas nepavyko, neteisingas el. paštas arba slaptažodis")
+      }
     const json = await res.json();
     console.log(res.status)
     console.log("visas useris" + JSON.stringify(json))
@@ -162,19 +163,22 @@ class Login extends Component {
   }
 
   fetchUserAuthority = async () => {
+    const token = localStorage.getItem("token");
     const res = await fetch("http://localhost:8086/roles/user", {
       method: "GET",
       headers: {
-        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyaWQiLCJpZCI6M30.N_sFZI-6YgGcoh7j_VQFHzp4VBmJhKtyoXTYZbZ9pos",
+        "token": token,
         "content-type": "application/json"
       }
     });
     const authority = await res.json();
     console.log(authority);
-    // this.setState({
-    //   authority: authority, 
-    // })
-    // return authority;
+    localStorage.setItem("authority", authority);
+    console.log("Storage info " + localStorage.setItem("authority", authority))
+    this.setState({
+      authority: authority, 
+    })
+    return authority;
   }
 }
 

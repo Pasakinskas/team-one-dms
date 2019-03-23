@@ -55,9 +55,7 @@ class UserDocListSubmited extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            onSelect: (row, isSelect, rowIndex, e) => {
-                this.changeSelectStatus(rowIndex);
-            },    
+            onSelect: this.changeSelectStatus
         };                
      
         const columns = [
@@ -73,32 +71,27 @@ class UserDocListSubmited extends Component {
             sort: true,
             align: "center",
         }, {
-            dataField: 'name',
-            text: 'Vardas',
+            dataField: 'owner',
+            text: 'Siuntėjas',
             sort: true,
             headerStyle: bgcolor,
         }, {
-            dataField: 'surname',
-            text: 'Pavardė',
-            sort: true,
-            headerStyle: bgcolor,
-        }, {
-            dataField: 'recipient',
+            dataField: 'receiver',
             text: 'Gavėjas',
             sort: true,
             align: "center",
         }, {
-            dataField: 'template',
-            text: 'Šablonas',
+            dataField: 'docName',
+            text: 'Dokumentas',
             sort: true,
             headerStyle: bgcolor,
         }, {
-            dataField: 'condition',
+            dataField: 'status',
             text: 'Būsena',
             sort: true,
             headerStyle: bgcolor,
         }, {
-            dataField: 'notes',
+            dataField: 'details',
             text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
@@ -171,17 +164,25 @@ class UserDocListSubmited extends Component {
         this.setState({modalIsOpen: false});
     }
 
-    changeSelectStatus = (rowIndex)=>{
-        const newDoc = this.state.userDocuments.map(row => {
-            if(row.id -1 === rowIndex){
-                 console.log(rowIndex)
-                 row.isChecked = !row.isChecked;
+    changeSelectStatus = (row, isSelected, e)=>{
+        const newDoc = this.state.userDocuments.map(datarow => {
+            if(datarow.id -1 === row){
+                datarow.isChecked = !datarow.isChecked;
             }
-            return row;
-         })
-         this.setState({
-            userDocuments: newDoc
-         })
+        return row;
+        })
+        if(isSelected){
+            window.setTimeout(
+                function() {
+                    this.setState({
+                    selectedDocuments: newDoc
+                });
+                    }.bind(this),
+                0
+            );
+            console.log("Spausdinu pažymėtą")
+            console.log(row);
+        }
     }
 
     changeDocByCondition = (newCondition) => {
@@ -233,7 +234,6 @@ class UserDocListSubmited extends Component {
         });             
         return json;
     }
-  
   }
   
   export default withRouter(UserDocListSubmited);

@@ -27,7 +27,8 @@ const user = {
   roles: ['advancedUser', 'user', 'admin'],
   rights: ['can_view_articles']
 };
-
+// 0: {authority: "ROLE_ADMIN"}
+// 1: {authority: "ROLE_USER"}
 class App extends Component {
   constructor(props) {
     super(props);
@@ -35,19 +36,28 @@ class App extends Component {
       //from child
         user: [],
         token:'',
-        authority:'',
-        hits: null
+        authority:[
+          // {authority: "ROLE_ADMIN"},
+          // {authority: "ROLE_USER"}
+        ],
     }
 }
+
   render() {
+  const curentUserRoles = localStorage.getItem('authority') || [];
+  console.log(curentUserRoles)
+  
     return (
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/login" render={ (props,state) => <LoginPage handleDatafromChild ={this.handleDatafromChild}/>}/>
           <Route exact path="/registration" component={RegistrationPage} />
-          {/* roles reiktų perduoti taip? 
-          {hasRole(this.state.authority, ['user']) && <Route exact path="/userboard" component={UserBoard} />}  */}
+
+          {/* {hasRole(curentUserRoles, ['ROLE_USER']) && <Route exact path="/userboard" render={ (props,state) => <UserBoard token = {this.state.token} />}/>}
+          {hasRole(curentUserRoles, ['ROLE_ADMIN']) && <Route exact path="/usersubmited" render={ (props, state) => <UserBoardSubmitedDoc token = {this.state.token} />}/>}
+          {hasRole(curentUserRoles, ['ROLE_SuperADMIN']) && <Route exact path="/newdoc" render={ (props, state) => <NewDocument token = {this.state.token} />}/>} */}
+
           {hasRole(user, ['user']) && <Route exact path="/userboard" render={ (props,state) => <UserBoard token = {this.state.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/usersubmited" render={ (props, state) => <UserBoardSubmitedDoc token = {this.state.token} />}/>}
           {hasRole(user, ['user']) && <Route exact path="/newdoc" render={ (props, state) => <NewDocument token = {this.state.token} />}/>}
@@ -61,19 +71,16 @@ class App extends Component {
     );
   }
 
-  handleDatafromChild = (user, token) => {
+  handleDatafromChild = (user, token, authority) => {
+    
     this.setState({
       user: user,
-      token: token
+      token: token,
+      authority: authority
     })
     console.log("tai turi būti iš vaiko " + this.state.user + this.state.token)
+    console.log(this.state.authority)
   }
-
-  // setter
-  //sessionStorage.setItem('myData', data);
-
-  // getter
-  //sessionStorage.getItem('myData');
 }
 
 export default App;

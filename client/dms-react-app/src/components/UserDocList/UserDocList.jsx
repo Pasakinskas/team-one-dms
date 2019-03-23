@@ -84,33 +84,18 @@ class UserDocList extends Component {
             sort: true,
             align: "center",
         }, {
-            dataField: 'name',
-            text: 'Vardas',
-            sort: true,
-            headerStyle: bgcolor,
-        }, {
-            dataField: 'surname',
-            text: 'Pavardė',
-            sort: true,
-            headerStyle: bgcolor,
-        }, {
-            dataField: 'recipient',
+            dataField: 'receiver',
             text: 'Gavėjas',
             sort: true,
             align: "center",
         }, {
-            dataField: 'template',
-            text: 'Šablonas',
+            dataField: 'docName',
+            text: 'Dokumentas',
             sort: true,
             headerStyle: bgcolor,
         }, {
-            dataField: 'condition',
+            dataField: 'status',
             text: 'Būsena',
-            sort: true,
-            headerStyle: bgcolor,
-        }, {
-            dataField: 'notes',
-            text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
         }]; 
@@ -150,7 +135,7 @@ class UserDocList extends Component {
                                 <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
                                     Peržiūrėti
                                 </Button>
-                                <Button variant="success" type="submit" onClick={() => {this.send()}}>
+                                <Button variant="success" type="button" onClick={(e) => {this.sendDoc(e)}}>
                                     Pateikti
                                 </Button>
                             </span>
@@ -199,25 +184,34 @@ class UserDocList extends Component {
             }
         return row;
         })
-            if(isSelected){
-                this.setState({
+        if(isSelected){
+            window.setTimeout(
+                function() {
+                    this.setState({
                     selectedDocuments: newDoc
-                })
+                });
+                    }.bind(this),
+                0
+            );
+            console.log("Spausdinu pažymėtą")
             console.log(row);
-            }
+        }
     }
 
     changeDocByCondition = (newCondition) => {
-        let selectedDocuments = this.state.userDocuments.map(doc =>{
-           if(doc.isChecked){
-             return doc
-           } 
-           return selectedDocuments;
-        });
-        for (let doc of selectedDocuments) {
+        // let selectedDocuments = this.state.userDocuments.map(doc =>{
+        //    if(doc.isChecked){
+        //      return doc
+        //    } 
+        //    return selectedDocuments;
+        // });
+        for (let doc of this.state.selectedDocuments) {
+            console.log(doc)
             doc.status = newCondition;
         }
-        return selectedDocuments;
+        console.log("Dokumentai statuso keitimui ")
+        console.log(this.state.selectedDocuments)
+        return this.state.selectedDocuments;
     }
     
     showDoc =() => {
@@ -251,9 +245,9 @@ class UserDocList extends Component {
         e.preventDefault();
         const token = localStorage.getItem("token");
         const sentDocList = this.changeDocByCondition("submited");
-        const API = 'http://localhost:8086/document/';
+        const API = "http://localhost:8086/status/post/change?id=27&statusId=2&description='kaka'";
          fetch(API, {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'token': token,
                 'content-Type': 'application/json'
@@ -270,10 +264,9 @@ class UserDocList extends Component {
 
     //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
-        
         const token = localStorage.getItem("token");
         const deleteDocList = this.changeDocByCondition("deleted");
-        const API = 'http://localhost:8086/document/add';
+        const API = 'http://localhost:8086/status/post/change';
           fetch(API, {
             method: 'DELETE',
             headers: {
@@ -313,7 +306,8 @@ class UserDocList extends Component {
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
-        });           
+        });       
+        console.log(JSON.stringify(json))    
         return json;
     }
 }
