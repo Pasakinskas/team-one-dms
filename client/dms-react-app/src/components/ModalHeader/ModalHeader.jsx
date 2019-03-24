@@ -22,56 +22,43 @@ class ModalHeader extends Component {
             </div>
         );
     }
+
     sendDoc =(e) => {
-        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
         e.preventDefault();
-        const text = this.document.text;
-        const API = 'localhost:8080/document/add';
-        fetch(API, {
+        const token = localStorage.getItem("token");
+        const sentDocList = this.changeDocByCondition("submited");
+        const API = "http://localhost:8086/status/post/change?id=27&statusId=2&description='kaka'";
+         fetch(API, {
             method: 'POST',
-            body: JSON.stringify({document: text}),
+            headers: {
+                'token': token,
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({sentDocList}),
         }).then(response => {
-            if(response.status === 201){
-                this.nextPath(`/adminboarddocs`);
+            if(response.status === 200){
+                this.nextPath(`/userboard`);
             }else{
                 alert("Pateikti nepavyko");
             }
         }).catch(error => console.error(error));
     };
-
-    sendDoc =(e) => {
+    
+    saveDoc = (e) =>{
         e.preventDefault();
-//existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
           const data = this.props.existingValue;
-          const API = 'localhost:8080/document/add';
+          const API = 'http://localhost:8086/document/post/new';
           fetch(API, {
             method: 'POST',
             body: JSON.stringify({document: data}),
           }).then(response => {
-            if(response.status === 201){
+            if (response.status === 201){
               this.nextPath(`/userboard`);
-            }else{
+            } else {
               alert("Išsaugoti nepavyko");
             }
           }).catch(error => console.error(error));
-    };
-
-    deleteDoc = (e) => {
-        //kvieti dar vieną f-ją kuri pachina pateikto dok būseną?
-        e.preventDefault();
-        const text = this.document.text;
-        const API = 'localhost:8086/document/add';
-        fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: text}),
-        }).then(response => {
-            if(response.status === 201){
-                //do not show document in the list;
-            }else{
-                alert("Pašalinti nepavyko");
-            }
-        }).catch(error => console.error(error));
-    };
+      }
 }
 
 export default withRouter(ModalHeader);
