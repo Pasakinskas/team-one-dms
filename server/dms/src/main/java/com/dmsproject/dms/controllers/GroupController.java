@@ -1,5 +1,6 @@
 package com.dmsproject.dms.controllers;
 
+import com.dmsproject.dms.Constants;
 import com.dmsproject.dms.dao.GroupDAO;
 import com.dmsproject.dms.dto.GroupDTO;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+@CrossOrigin(origins = Constants.REACT_URL)
 @RestController
 public class GroupController {
 

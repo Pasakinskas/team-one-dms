@@ -1,11 +1,11 @@
 package com.dmsproject.dms.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 
 
 import com.dmsproject.dms.Database;
+import com.dmsproject.dms.dto.Recipient;
 import com.dmsproject.dms.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -74,6 +74,32 @@ public class UserDAO {
         }
     }
 
+    public ArrayList<Recipient> getRecipients() throws SQLException {
+        ArrayList<Recipient> recipients = new ArrayList<>();
+        String QUERY_SQL = "SELECT users.user_id, users.name, users.surname FROM users " +
+                "INNER JOIN user_roles " +
+                "ON users.user_id = user_roles.user_id " +
+                "INNER JOIN roles " +
+                "ON roles.id = user_roles.role_id " +
+                " WHERE users.deleted != 1 && can_receive_docs = 1";
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(QUERY_SQL);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Recipient recipient = new Recipient(
+                        rs.getInt("user_id"),
+                        rs.getString("name") + " " + rs.getString("surname")
+                );
+                recipients.add(recipient);
+            }
+            statement.close();
+            return recipients;
+        } catch (java.sql.SQLException e) {
+            System.out.println("SQL error on getting recipient list!");
+            throw new SQLException("Error! " + e);
+        }
+    }
+
     public ArrayList<User> getAllUsers(boolean revealPassword) {
         String statementString = "SELECT * FROM users WHERE deleted = 0";
         ArrayList<User> users = new ArrayList<>();
@@ -95,13 +121,14 @@ public class UserDAO {
         }
     }
 
-    public boolean insertUser(final User user) {
+    public int insertUser(final User user) throws SQLIntegrityConstraintViolationException {
         final String INSERT_SQL = "INSERT INTO users " +
                 "(name, surname, email, position, password) " +
                 "values (?, ?, ?, ?, ?)";
+        int id = -1;
 
         try {
-            PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
+            PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getName());
             statement.setString(2, user.getSurname());
             statement.setString(3, user.getEmail());
@@ -109,13 +136,17 @@ public class UserDAO {
             statement.setString(5, passwordEncoder.encode(user.getPassword()));
 
             statement.executeUpdate();
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
             statement.close();
         } catch (java.sql.SQLException e) {
             System.out.println("SQL error on register!");
             System.out.println(e);
-            return false;
+            throw new SQLIntegrityConstraintViolationException("email already registered");
         }
-        return true;
+        return id;
     }
 
     public boolean deleteUser(int id) {
@@ -132,6 +163,5 @@ public class UserDAO {
             return false;
         }
         return true;
-
     }
 }
