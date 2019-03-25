@@ -21,8 +21,16 @@ class NewDocForm extends Component {
           template: [],
           docNum:"",
           docName:"",
-          name: "",      
-          recipients: [],
+          name: "",     
+          recipients:{}, 
+          // recipients:  {"groups": [{"id":1,"name":"administracija"},
+          //                         {"id":2,"name":"it skyrius"},
+          //                         {"id":3,"name":"vairuotojai"}],
+          //               "users": [{"id":1,"name":"Test-user4 marius-test"},
+          //                        {"id":2,"name":"boi bestboi"},
+          //                        {"id":3,"name":"Ana Tauriene"},
+          //                        {"id":3,"name":"Ana Tauriene"}]
+          //               },
         }
     }
 
@@ -34,8 +42,9 @@ class NewDocForm extends Component {
         const {template, docNum, docName, name, recipient } = this.state;
         const listTemplates = this.state.template.map((template) =>
         <option>{template.description}</option> );
-        const listRecipients = this.state.recipients.map((recipient) =>
-        <option>{recipient.name}</option> );
+        // const listRecipients = this.state.recipients.map((recipients) => <option>{recipients.groups}, {recipients.users}</option>);
+       //const listRecipients = this.state.recipients.map((groups, users) =><p>{groups}</p>);
+       //const listRecipients = this.state.recipients.Object.keys(this.state.recipients.groups).map((groups) =>{console.log("Ar tai grupės? " + groups.groups)});
         return (
             <div className="form-wrapper" id="form">
              <Form onSubmit={(e)=>{this.handleClickSend(e)}}>
@@ -86,7 +95,7 @@ class NewDocForm extends Component {
                     value={recipient}
                     onChange={this.handleChange}>
                         <option value="" disabled> Pasirinkite gavėją</option>
-                        <option>{listRecipients}</option>
+                        {/* {listRecipients} */}
                   </select>              
                 </div>
                 <div className="docBtn">
@@ -103,8 +112,8 @@ class NewDocForm extends Component {
     }
     
     componentDidMount(){
-        this.fetchDataDocTemplates()
-        this.fetchDataRecipients()
+        this.fetchDataDocTemplates();
+        this.fetchDataRecipients();
     }
 
     //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
@@ -125,7 +134,7 @@ class NewDocForm extends Component {
     }
 
     fetchDataRecipients = async () => {
-      const res = await fetch("http://localhost:8086//recipients",
+      const res = await fetch("http://localhost:8086/recipients",
       {
         method: "GET",
         headers: {
@@ -133,7 +142,7 @@ class NewDocForm extends Component {
         },
       });
       const json = await res.json();
-      console.log("ar tai gavėjų sąrašas " + JSON.stringify(json));
+      console.log("ar tai gavėjų sąrašas " + JSON.stringify(json))
       this.setState({
         recipients: json,
       });
