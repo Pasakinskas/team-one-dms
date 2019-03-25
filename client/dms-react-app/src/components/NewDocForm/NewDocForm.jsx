@@ -22,7 +22,7 @@ class NewDocForm extends Component {
           docNum:"",
           docName:"",
           name: "",      
-          recipient: [],
+          recipients: [],
         }
     }
 
@@ -34,7 +34,7 @@ class NewDocForm extends Component {
         const {template, docNum, docName, name, recipient } = this.state;
         const listTemplates = this.state.template.map((template) =>
         <option>{template.description}</option> );
-        const listRecipients = this.state.recipient.map((recipient) =>
+        const listRecipients = this.state.recipients.map((recipient) =>
         <option>{recipient.name}</option> );
         return (
             <div className="form-wrapper" id="form">
@@ -113,7 +113,7 @@ class NewDocForm extends Component {
       {
         method: "GET",
         headers: {
-          "content-type": "Application/json",
+          "content-type": "application/json",
         },
       });
       const json = await res.json();
@@ -124,17 +124,20 @@ class NewDocForm extends Component {
       console.log(this.state.template)
     }
 
-    //kokiu API kreiptis
     fetchDataRecipients = async () => {
-      const res = await fetch("http://localhost:8086/",
+      const res = await fetch("http://localhost:8086//recipients",
       {
         method: "GET",
         headers: {
-          "content-type": "Application/json",
+          "content-type": "application/json",
         },
       });
       const json = await res.json();
-      return json;
+      console.log("ar tai gavėjų sąrašas " + JSON.stringify(json));
+      this.setState({
+        recipients: json,
+      });
+      console.log(this.state.recipients)
     }
 
     handleChange = (e) => {
