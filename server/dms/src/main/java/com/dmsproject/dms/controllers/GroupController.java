@@ -49,13 +49,13 @@ public class GroupController {
     }
 
     @Secured("ROLE_ADMIN")
-    @RequestMapping(value = "/groups", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/groups/users", method = RequestMethod.PATCH)
     public ResponseEntity<?> modGroupUserList(@RequestBody JsonNode json, Errors errors) {
         if (errors.hasErrors()) {
             System.out.println();
         }
         try {
-            boolean isActionSuccessful = groupDAO.modifyGroup(
+            boolean isActionSuccessful = groupDAO.changeGroupMembers(
                     json.get("action").toString(),
                     json.get("groupid").asInt(),
                     json.get("userid").asInt()
