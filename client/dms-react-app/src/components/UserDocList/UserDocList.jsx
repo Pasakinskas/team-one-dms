@@ -227,13 +227,13 @@ class UserDocList extends Component {
         const selectedDoc = this.state.selectedDocuments;
         let token = localStorage.getItem('token');
         selectedDoc.forEach(async (e) => {
-                const res = await fetch(`http://localhost:8086/document/get/byId?id=${e.id}`,
+            const res = await fetch(`http://localhost:8086/document/get/byId?id=${e.id}`,
             {
-            method: "GET",
-            token:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyaWQiLCJpZCI6M30.N_sFZI-6YgGcoh7j_VQFHzp4VBmJhKtyoXTYZbZ9pos',
-            }
-            )
-            
+                method: "GET",
+                headers:{
+                    'token':token,
+                }
+            })
             const json = await res.json(); 
             console.log(json.content);
     // text :value for editor to consume
@@ -241,11 +241,7 @@ class UserDocList extends Component {
                 text: json.content,
             });  
         })
-            
-                 
-          
     };
-    
   
     //Document condition changes to submited(pateikti dok.)
     sendDoc =(e) => {

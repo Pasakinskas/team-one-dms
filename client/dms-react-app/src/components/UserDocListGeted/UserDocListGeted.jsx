@@ -21,6 +21,7 @@ class UserDocListGeted extends Component {
     
         this.state = {
             userDocuments:[],
+            selectedDocuments:[],
             modalIsOpen: false,
             rejectModalIsOpen: false,
             rejectReason:"",
@@ -253,12 +254,25 @@ class UserDocListGeted extends Component {
 
     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
     showDoc =() => {
-        const localDoc = this.state.document;
-        for(const row of localDoc){
-            if (row.isChecked === true){
-                //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
-            }
-        }
+        //const localDoc = this.state.userDocuments.id;
+        console.log('showDoc initiated')
+        const selectedDoc = this.state.selectedDocuments;
+        let token = localStorage.getItem('token');
+        selectedDoc.forEach(async (e) => {
+            const res = await fetch(`http://localhost:8086/document/get/byId?id=${e.id}`,
+            {
+                method: "GET",
+                headers:{
+                    'token':token,
+                }
+            })
+            const json = await res.json(); 
+            console.log(json.content);
+    // text :value for editor to consume
+           this.setState({ 
+                text: json.content,
+            });  
+        })
     };
  
     //Document condition changes to accepted. After that isn't shown in geted document list
