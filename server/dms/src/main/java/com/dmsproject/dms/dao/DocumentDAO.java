@@ -225,7 +225,8 @@ public class DocumentDAO {
 
     public ArrayList<Document> selectSubmitedToUserDocs(int id) throws  Exception {
 
-        String query = "SELECT DISTINCT documents.doc_id, documents.doc_number, CONCAT(users.name, ' ', users.surname) AS doc_owner, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, CONCAT_WS('', receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname, ' ', `groups`.group_name) AS receiver " +
+        String query = "SELECT documents.doc_id, documents.doc_number, CONCAT(users.name, ' ', users.surname) AS doc_owner, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, CONCAT_WS('', receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname, ' ', `groups`.group_name) AS receiver " +
+                "FROM documents " +
                 "LEFT JOIN document_types ON documents.doc_type_id=document_types.doc_type_id " +
                 "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
                 "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
