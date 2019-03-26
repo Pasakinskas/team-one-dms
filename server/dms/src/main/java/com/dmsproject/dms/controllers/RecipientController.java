@@ -5,6 +5,7 @@ import com.dmsproject.dms.service.RecipientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ public class RecipientController {
     @Autowired
     RecipientService recipientService;
 
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/recipients", method = RequestMethod.GET)
     public ResponseEntity<?> getAllRecipients() {
         try {

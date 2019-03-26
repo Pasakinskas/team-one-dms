@@ -100,8 +100,8 @@ public class RoleDAO {
     }
 
     private boolean manageRoles(boolean isActionAdd, int userid, int roleid) {
-        String insertStatement = "INSERT INTO roles (role_id, user_id) VALUES (?, ?)";
-        String deleteStatement = "DELETE FROM roles WHERE role_id = (?) && user_id = (?)";
+        String insertStatement = "INSERT INTO user_roles (role_id, user_id) VALUES (?, ?)";
+        String deleteStatement = "DELETE FROM user_roles WHERE role_id = (?) && user_id = (?)";
         try {
             PreparedStatement statement;
             if (isActionAdd) {
@@ -115,7 +115,7 @@ public class RoleDAO {
             statement.executeUpdate();
             return true;
         } catch (java.sql.SQLException e) {
-            System.err.println("SQL error getting all groups!");
+            System.err.println("SQL error managing roles!");
             System.out.println(e);
             return false;
         }
