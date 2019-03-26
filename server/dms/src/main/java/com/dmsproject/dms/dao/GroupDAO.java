@@ -17,8 +17,10 @@ public class GroupDAO {
     @Autowired
     private Database database;
 
+    // todo: safeguard from adding the same user multiple times
+
     public boolean createGroup(GroupDTO group) {
-        String INSERT_SQL = "INSERT INTO groups (name) values (?)";
+        String INSERT_SQL = "INSERT INTO groups (group_name) values (?)";
         try {
             PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
             statement.setString(1, group.getName());
@@ -35,12 +37,12 @@ public class GroupDAO {
 
     private ArrayList<User> getAllGroupMembers(int groupid) {
         ArrayList<User> users = new ArrayList<>();
-        String statementString = "select user_id, users.name, surname, email, position from group_users " +
+        String statementString = "select users.user_id, users.name, surname, email, position from user_groups " +
                 "inner join users " +
-                "on user_id = users.id " +
+                "on user_groups.user_id = users.user_id " +
                 "inner join groups " +
-                "on group_id = groups.id " +
-                "where group_id = (?) && users.deleted = 0 && groups.deleted = 0";
+                "on user_groups.group_id = groups.group_id " +
+                "where user_groups.group_id = (?) && users.deleted = 0 && groups.deleted = 0";
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(statementString);
@@ -67,10 +69,11 @@ public class GroupDAO {
     }
 
     public boolean changeGroupMembers(String addToGroup, int groupid, int userid) {
-        String insertStatement = "INSERT INTO group_users (group_id, user_id) VALUES (?, ?)";
-        String deleteStatement = "DELETE FROM group_users WHERE group_id = (?) && user_id = (?)";
+        String insertStatement = "INSERT INTO user_groups (group_id, user_id) VALUES (?, ?)";
+        String deleteStatement = "DELETE FROM user_groups WHERE group_id = (?) && user_id = (?)";
         try {
             PreparedStatement statement;
+
             if (addToGroup.equals("add")) {
                 statement = database.connection.prepareStatement(insertStatement);
             } else if (addToGroup.equals("remove")) {
@@ -99,10 +102,10 @@ public class GroupDAO {
             PreparedStatement statement = database.connection.prepareStatement(statementString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                int groupId = rs.getInt("id");
+                int groupId = rs.getInt("group_id");
                 GroupDTO group = new GroupDTO(
                         groupId,
-                        rs.getString("name"),
+                        rs.getString("group_name"),
                         getAllGroupMembers(groupId)
                 );
                 groups.add(group);
@@ -118,7 +121,7 @@ public class GroupDAO {
 
     public boolean deleteGroup(String id) {
         String INSERT_SQL = "UPDATE groups SET deleted = 1" +
-                " WHERE id = (?)";
+                " WHERE group_id = (?)";
         try {
             PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
             statement.setString(1, id);

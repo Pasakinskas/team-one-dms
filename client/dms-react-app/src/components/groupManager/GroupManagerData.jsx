@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
 import UserSelector from './UsersSelector';
+import GroupUserSelector from './GroupUserSelector';
 // api - group list
 const API_TEST = 'https://reqres.in/api/users?page=2';
 const API = 'http://localhost:8086/groups'
 // api_add_user adress to add user to group
-const API_ADD_USER = 'http://localhost:8086/groups';
+const API_ADD_USER = 'http://localhost:8086/groups/users';
 const API_REMOVE_USER = 'http://localhost:8086/groups';
 const API_REMOVE_GROUP = 'http://localhost:8086/group';
 const DEFAULT_QUERY ='';
@@ -25,6 +26,7 @@ export default class GroupManagerData extends Component {
             optionValue:"",
             show: false,
             isRemove: false,
+            togglePermission: false,
         };
     };
     handleInputChange = (newValue) => {
@@ -62,7 +64,7 @@ export default class GroupManagerData extends Component {
             const statusCode = await res.status;
             console.log(res);
             const json =  await res.json();
-           // console.log(json);
+            console.log(json);
             this.setState({
                 "data":json
             })
@@ -76,16 +78,18 @@ export default class GroupManagerData extends Component {
 // adding user from selector
     addUsers = async (event) =>{
         event.preventDefault();
+        const token = localStorage.getItem('token');
         try{
             const res = await fetch(API_ADD_USER, {
             method: 'PATCH',
             headers: {
+                'token':token,
                 "content-type": "application/json"
             },
             body: JSON.stringify({
                 "userid":this.state.userId,
                 "groupid":this.state.groupId,
-                "add":true,
+                "action":'add'
             }),
             })
             const statusCode = await res.status;
@@ -95,16 +99,18 @@ export default class GroupManagerData extends Component {
 
     removeUsers = async (event) =>{
         event.preventDefault();
+        const token = localStorage.getItem('token');
         try{
             const res = await fetch(API_REMOVE_USER, {
             method: 'PATCH',
             headers: {
+                'token':token,
                 "content-type": "application/json"
             },
             body: JSON.stringify({
                 "userId":this.state.userId,
                 "groupId":this.state.groupId,
-                "add":false,
+                "action":'remove',
             }),
             })
             const statusCode = await res.status;
@@ -114,13 +120,15 @@ export default class GroupManagerData extends Component {
 
     removeGroup = async (event, groupId) =>{
         event.preventDefault();
+        const token = localStorage.getItem('token');
         //const {isRemove} = this.state;
 //placeholder for modal aditional confirmation state
         if(true){
             try{
-            const res = await fetch(`https://localhost:8086/group/${groupId}` , {
+            const res = await fetch(`http://localhost:8086/groups/${groupId}` , {
                 method: 'DELETE',
                 headers: {
+                    "token": token,
                     "content-type": "application/json"
                 },
                 /*body: JSON.stringify({
@@ -178,7 +186,8 @@ export default class GroupManagerData extends Component {
                         className="selectpicker" 
                         onChange={(e) => this.handleChange(e, data.id)}
                         >
-                        <UserSelector/>
+                        <option disabled selected="selected"> Pasirinkite vartotoją</option>
+                        {<GroupUserSelector groupMembersList={data.membersList}/>}
                         </select>
                     <input 
                     type="submit" 
@@ -194,16 +203,53 @@ export default class GroupManagerData extends Component {
                     value="Pašalinti padalinį"/>
                 </td>
                 <td>
-                <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2"/>
-                <label class="form-check-label" for="defaultCheck2">
-                Leisti gauti/pateikti
+                <div className="form-check">
+                <input className="form-check-input" type="checkbox" onPointerDown={(e) => this.togglePermission(e)} id="defaultCheck2"/>
+                <label className="form-check-label" for="defaultCheck2" onPointerDown={(e) => this.togglePermission(e)}>
+                Teisė dokumentą patvirtinti/atmesti
                 </label>
                 </div>
+                </td>
+                <td>
+                <input 
+                    type="submit" 
+                    onPointerDown={(e) => this.submitRights(e, data.id)} 
+                    className="btn btn-dark" 
+                    value="Išsaugoti pasirinkimą"/>
                 </td>
                 </tr>
                 )
         )}
+    }
+
+    togglePermission(e){
+        e.preventDefault();
+            if(this.state.togglePermission === false){
+                this.setState({togglePermission:true})
+                console.log("TRUE")
+            }else if(this.state.togglePermission === true){
+                this.setState({togglePermission:false})
+                console.log("FALSE")
+            }
+    }
+    submitRights = async(e, id) =>{
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        const {togglePermission} = this.state;
+        try{
+            const res = await fetch( `http://localhost:8086/groups/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'token':token,
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                "isEnabled":togglePermission
+            }),
+            })
+            const statusCode = await res.status;
+            return statusCode;
+        }catch(err){console.log(err)};
     }
 
 }

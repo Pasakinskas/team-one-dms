@@ -20,7 +20,7 @@ import com.dmsproject.dms.dto.LoginData;
 import com.dmsproject.dms.dto.User;
 
 // exposedHeaders = "token"
-@CrossOrigin(origins = Constants.REACT_URL)
+@CrossOrigin(origins = Constants.REACT_URL, exposedHeaders = "token")
 @RestController
 public class Login {
 

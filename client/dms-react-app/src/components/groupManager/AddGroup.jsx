@@ -22,7 +22,6 @@ export default class AddGroup extends Component{
         console.log(groupName);
         //only fetch if its all letters
         if(/^[A-Za-ząčęėįšųūžĄČĘĖĮŠŲŪŽ]+$/.test(groupName)){
-         try{ 
             const res = await fetch(API, {
             method: 'POST',
             headers: {
@@ -38,7 +37,6 @@ export default class AddGroup extends Component{
           const statusCode = await res.status;
           await console.log(statusCode).catch((err)=>{console.log(err)});
           
-         }catch(err){console.log(err)}
          
         }else{
           this.setState({ alert: true });
