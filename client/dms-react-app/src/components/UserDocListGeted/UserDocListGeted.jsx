@@ -284,6 +284,7 @@ class UserDocListGeted extends Component {
     };
     
     //Document condition changes to rejected. After that isn't shown in geted document list
+    // make method for one document, not for list, and then loop the list and apply the method
     rejectDoc = (e) => {
         e.preventDefault();
         this.openRejectModal();

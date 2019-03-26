@@ -64,7 +64,7 @@ class UserDocList extends Component {
 
         const selectRow = 
         {
-            mode: 'checkbox',
+            mode: 'radio',
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
@@ -177,17 +177,17 @@ class UserDocList extends Component {
     }
      
     changeSelectStatus = (row, isSelected, e)=>{
-        const newDoc = this.state.userDocuments.map(datarow => {
-            if(datarow.id -1 === row){
-                datarow.isChecked = !datarow.isChecked;
-            }
-        return row;
-        })
+        // const newDoc = this.state.userDocuments.map(datarow => {
+        //     if(datarow.id -1 === row){
+        //         datarow.isChecked = !datarow.isChecked;
+        //     }
+        // return row;
+        // })
         if(isSelected){
             window.setTimeout(
                 function() {
                     this.setState({
-                    selectedDocuments: newDoc
+                    selectedDocuments: row
                 });
                     }.bind(this),
                 0
@@ -242,7 +242,7 @@ class UserDocList extends Component {
     };
   
     //Document condition changes to submited(pateikti dok.)
-    sendDoc =(e) => {
+    sendDoc = (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
         const sentDocList = this.changeDocByCondition("submited");
