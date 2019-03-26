@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 @Component
@@ -67,7 +66,7 @@ public class GroupDAO {
         }
     }
 
-    public boolean modifyGroup(String addToGroup, int groupid, int userid) {
+    public boolean changeGroupMembers(String addToGroup, int groupid, int userid) {
         String insertStatement = "INSERT INTO group_users (group_id, user_id) VALUES (?, ?)";
         String deleteStatement = "DELETE FROM group_users WHERE group_id = (?) && user_id = (?)";
         try {
@@ -153,4 +152,5 @@ public class GroupDAO {
             throw new SQLException("Error! " + e);
         }
     }
+
 }

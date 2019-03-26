@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dmsproject.dms.Constants;
 import com.dmsproject.dms.dto.LoginData;
 import com.dmsproject.dms.dto.User;
 
-@CrossOrigin(origins = Constants.REACT_URL, exposedHeaders = "token")
+// exposedHeaders = "token"
+@CrossOrigin(origins = Constants.REACT_URL)
 @RestController
 public class Login {
 
@@ -30,15 +30,7 @@ public class Login {
     @Autowired
     private TokenProvider jwtTokenUtil;
 
-    @CrossOrigin("http://localhost:3000/")
-    @RequestMapping(
-            value = "/login",
-            method = RequestMethod.POST,
-            produces = "application/json",
-            consumes = "application/json"
-    )
-
-    @ResponseBody
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> authorizeUser(@RequestBody @Validated LoginData loginData, Errors errors)
             throws AuthenticationException {
 
@@ -54,7 +46,6 @@ public class Login {
             final String token = jwtTokenUtil.generateToken(user.getId());
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("token", token);
-            System.out.println("jwt token:"+ token);
 
             return new ResponseEntity<>(user, httpHeaders, HttpStatus.OK);
         } catch (Exception e) {

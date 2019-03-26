@@ -27,7 +27,7 @@ public class UserController {
     @Autowired
     RoleDAO roleDAO;
 
-    // todo: add ROLE_USER to newly created user
+    // todo: add role not by id, but by role name
 
     @RequestMapping(
             value = "/users",

@@ -29,7 +29,7 @@ public class DocumentTypesController {
     }
 
 // sukurti naują dokumento šabloną
-    @RequestMapping(value = "/doctemplate/post/new", method = RequestMethod.POST)
+    @RequestMapping(value = "/doctemplate/put/new", method = RequestMethod.PUT)
     public Boolean add(@RequestParam(name = "description") String description,
                        @RequestParam(name = "template") String template) {
         DocTypes docTypes = new DocTypes();
@@ -40,7 +40,7 @@ public class DocumentTypesController {
     }
 
 // redaguoti dokumento šabloną
-    @RequestMapping(value = "/doctemplate/post/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/doctemplate/put/edit", method = RequestMethod.PUT)
     public void edit(@RequestParam(name = "id") Integer id,
                      @RequestParam(name = "description") String description,
                      @RequestParam(name = "template") String template) {

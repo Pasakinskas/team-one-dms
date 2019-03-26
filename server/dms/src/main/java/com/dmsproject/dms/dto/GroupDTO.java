@@ -22,6 +22,9 @@ public class GroupDTO {
         this.membersList = membersList;
     }
 
+    public GroupDTO() {
+    }
+
     public int getId() {
         return id;
     }
