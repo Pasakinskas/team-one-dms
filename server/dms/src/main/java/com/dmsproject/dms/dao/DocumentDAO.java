@@ -190,7 +190,7 @@ public class DocumentDAO {
                 "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
                 "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
                 "LEFT JOIN users ON document_status.user_id=users.user_id " +
-                "WHERE document_status.status_id=1 AND users.user_id=? " +
+                "WHERE document_status.status_id=1 AND document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) AND users.user_id=? " +
                 "ORDER BY date DESC";
 
         ArrayList documentsList = new ArrayList<Document>();
