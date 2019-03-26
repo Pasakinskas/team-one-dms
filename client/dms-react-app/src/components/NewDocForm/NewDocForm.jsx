@@ -21,16 +21,13 @@ class NewDocForm extends Component {
         this.state = {
           docNum:"",
           docName:"",
-<<<<<<< HEAD
           name: "",      
           recipients: [],
           doc:[],
-=======
           name: "", 
           template: [],    
           groupRecipients:[],
           userRecipients:[], 
->>>>>>> 71b643b27e2042514ffedbe9071fe8b936528535
         }
     }
 
@@ -39,13 +36,6 @@ class NewDocForm extends Component {
     }
    
     render() {
-<<<<<<< HEAD
-        const {template, docNum, docName, name, recipient } = this.state;
-        /*const listTemplates = template.map((template) =>
-        <option>{template.description}</option> );*/
-        const listRecipients = this.state.recipients.map((recipient) =>
-        <option>{recipient.name}</option> );
-=======
         const {docNum, docName, name} = this.state;
         const listTemplates = this.state.template.map((template) =>
         <option>{template.description}</option> );
@@ -75,23 +65,16 @@ class NewDocForm extends Component {
         //   </ul>
         // ))
 
->>>>>>> 71b643b27e2042514ffedbe9071fe8b936528535
         return (
             <div className="form-wrapper" id="form">
              <Form onSubmit={(e)=>{this.handleClickSend(e)}}>
                 <div className="template"> 
                   <FormLabel>Dokumento šablonas</FormLabel>
                   <select 
-<<<<<<< HEAD
                     name="template"
                     onChange={this.handleTemplateChange}>
                         <option value="" disabled> Pasirinkite šabloną</option>
                         <TemplateSelector/>
-=======
-                    onChange={this.handleChange}>
-                        <option> Pasirinkite šabloną</option>
-                        {listTemplates}
->>>>>>> 71b643b27e2042514ffedbe9071fe8b936528535
                   </select>       
                 </div>
                 <div className="input"> 
@@ -243,11 +226,7 @@ try{
         const token = localStorage.getItem("token");
         const data = await localStorage.getItem('content');
         await console.log(JSON.stringify({content: data}))
-<<<<<<< HEAD
         const API = 'http://localhost:8086/document/post/new';
-=======
-        const API = 'http://localhost:8086/document/';
->>>>>>> 71b643b27e2042514ffedbe9071fe8b936528535
         fetch(API, {
           method: 'POST',
           headers: {
