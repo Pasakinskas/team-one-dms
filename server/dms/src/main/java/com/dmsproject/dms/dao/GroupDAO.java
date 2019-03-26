@@ -1,10 +1,11 @@
 package com.dmsproject.dms.dao;
 
 import com.dmsproject.dms.Database;
-import com.dmsproject.dms.dto.GroupDTO;
+import com.dmsproject.dms.dto.Group;
 import com.dmsproject.dms.dto.Recipient;
 import com.dmsproject.dms.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
@@ -17,7 +18,7 @@ public class GroupDAO {
     @Autowired
     private Database database;
 
-    public boolean createGroup(GroupDTO group) {
+    public boolean createGroup(Group group) {
         String INSERT_SQL = "INSERT INTO groups (name) values (?)";
         try {
             PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
@@ -90,17 +91,17 @@ public class GroupDAO {
         }
     }
 
-    public ArrayList<GroupDTO> getAllGroups() {
+    public ArrayList<Group> getAllGroups() {
         String statementString = "SELECT * FROM groups WHERE groups.deleted = 0";
 
-        ArrayList<GroupDTO> groups = new ArrayList<>();
+        ArrayList<Group> groups = new ArrayList<>();
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(statementString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 int groupId = rs.getInt("id");
-                GroupDTO group = new GroupDTO(
+                Group group = new Group(
                         groupId,
                         rs.getString("name"),
                         getAllGroupMembers(groupId)
@@ -153,4 +154,29 @@ public class GroupDAO {
         }
     }
 
+    public ArrayList<Group> getUserGroups(int id) throws SQLException  {
+        ArrayList<Group> userGroups = new ArrayList<>();
+        String SELECT_SQL = "select groups.group_id, group_name from user_groups " +
+                "inner join groups " +
+                "on groups.group_id = user_groups.group_id " +
+                "where user_id = 1 && groups.deleted != (?)";
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(SELECT_SQL);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Group group = new Group(
+                        rs.getInt("group_id"),
+                        rs.getString("group_name")
+                );
+                userGroups.add(group);
+            }
+            statement.close();
+            return userGroups;
+        } catch (java.sql.SQLException e) {
+            System.out.println("SQL error on getting recipient list!");
+            throw new SQLException("Error! " + e);
+        }
+    }
 }

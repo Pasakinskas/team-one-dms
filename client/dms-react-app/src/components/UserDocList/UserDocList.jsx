@@ -225,6 +225,7 @@ class UserDocList extends Component {
         //const localDoc = this.state.userDocuments.id;
         console.log('showDoc initiated')
         let token = localStorage.getItem('token');
+<<<<<<< HEAD
         const selectedDoc = this.state.selectedDocuments;
         const API =`http://localhost:8086/document/get/byId?id=${selectedDoc.id}`;
         const res = await fetch(API, {
@@ -239,8 +240,24 @@ class UserDocList extends Component {
                 this.setState({ 
                     text: json.content,
             });      
+=======
+        selectedDoc.forEach(async (e) => {
+            const res = await fetch(`http://localhost:8086/document/get/byId?id=${e.id}`,
+            {
+                method: "GET",
+                headers:{
+                    'token':token,
+                }
+            })
+            const json = await res.json(); 
+            console.log(json.content);
+    // text :value for editor to consume
+           this.setState({ 
+                text: json.content,
+            });  
+        })
+>>>>>>> 9a65b3cafc22d6d015d9ae632ad1a40dd5df03e3
     };
-    
   
     //Document condition changes to submited(pateikti dok.)
     sendDoc = (e) => {

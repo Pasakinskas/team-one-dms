@@ -62,10 +62,12 @@ class GroupView extends Component {
   }
   
   fetchAllGroups = async () => {
+    const token = localStorage.getItem('token');
     const res = await fetch("http://localhost:8086/recipients",
     {
       method: "GET",
       headers: {
+        token:token,
         "content-type": "application/json",
       },
     });

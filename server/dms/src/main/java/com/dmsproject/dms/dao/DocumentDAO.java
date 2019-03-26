@@ -190,7 +190,7 @@ public class DocumentDAO {
                 "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
                 "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
                 "LEFT JOIN users ON document_status.user_id=users.user_id " +
-                "WHERE document_status.status_id=1 AND users.user_id=? " +
+                "WHERE document_status.status_id=1 AND document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) AND users.user_id=? " +
                 "ORDER BY date DESC";
 
         ArrayList documentsList = new ArrayList<Document>();
@@ -225,7 +225,8 @@ public class DocumentDAO {
 
     public ArrayList<Document> selectSubmitedToUserDocs(int id) throws  Exception {
 
-        String query = "SELECT DISTINCT documents.doc_id, documents.doc_number, CONCAT(users.name, ' ', users.surname) AS doc_owner, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, CONCAT_WS('', receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname, ' ', `groups`.group_name) AS receiver " +
+        String query = "SELECT documents.doc_id, documents.doc_number, CONCAT(users.name, ' ', users.surname) AS doc_owner, documents.doc_name, `status`.status_descr, document_status.doc_status_descr AS details, document_status.`date`, CONCAT_WS('', receiving_user.position, ' ', receiving_user.name, ' ', receiving_user.surname, ' ', `groups`.group_name) AS receiver " +
+                "FROM documents " +
                 "LEFT JOIN document_types ON documents.doc_type_id=document_types.doc_type_id " +
                 "LEFT JOIN document_status ON documents.doc_id=document_status.document_id " +
                 "LEFT JOIN status ON document_status.status_id=`status`.status_id " +
@@ -234,7 +235,7 @@ public class DocumentDAO {
                 "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
                 "LEFT JOIN user_groups ON receiving_user.user_id=user_groups.user_id " +
                 "LEFT JOIN users ON document_status.user_id=users.user_id " +
-                "WHERE status.status_id=2 AND (receiving_user.user_id=? OR receiv_group_id IN (SELECT user_groups.group_id FROM user_groups WHERE user_groups.user_id=?)) " +
+                "WHERE status.status_id=2 AND (receiving_user.user_id=? OR receiv_group_id IN (SELECT user_groups.group_id FROM user_groups WHERE user_groups.user_id=?)) AND document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) " +
                 "ORDER BY date DESC";
 
         ArrayList documentsList = new ArrayList<Document>();
