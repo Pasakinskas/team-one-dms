@@ -235,7 +235,7 @@ public class DocumentDAO {
                 "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
                 "LEFT JOIN user_groups ON receiving_user.user_id=user_groups.user_id " +
                 "LEFT JOIN users ON document_status.user_id=users.user_id " +
-                "WHERE status.status_id=2 AND (receiving_user.user_id=? OR receiv_group_id IN (SELECT user_groups.group_id FROM user_groups WHERE user_groups.user_id=?)) " +
+                "WHERE status.status_id=2 AND (receiving_user.user_id=? OR receiv_group_id IN (SELECT user_groups.group_id FROM user_groups WHERE user_groups.user_id=?)) AND document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) " +
                 "ORDER BY date DESC";
 
         ArrayList documentsList = new ArrayList<Document>();
