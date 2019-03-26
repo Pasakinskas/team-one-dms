@@ -2,12 +2,14 @@ package com.dmsproject.dms.dao;
 
 import com.dmsproject.dms.Database;
 import com.dmsproject.dms.dto.GroupDTO;
+import com.dmsproject.dms.dto.Recipient;
 import com.dmsproject.dms.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Component
@@ -64,7 +66,7 @@ public class GroupDAO {
         }
     }
 
-    public boolean modifyGroup(String addToGroup, int groupid, int userid) {
+    public boolean changeGroupMembers(String addToGroup, int groupid, int userid) {
         String insertStatement = "INSERT INTO group_users (group_id, user_id) VALUES (?, ?)";
         String deleteStatement = "DELETE FROM group_users WHERE group_id = (?) && user_id = (?)";
         try {
@@ -129,4 +131,26 @@ public class GroupDAO {
         }
         return true;
     }
+
+    public ArrayList<Recipient> getRecipients() throws SQLException {
+        ArrayList<Recipient> recipients = new ArrayList<>();
+        String QUERY_SQL = "SELECT group_id, group_name FROM groups WHERE deleted != 1 && can_receive_docs = 1";
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(QUERY_SQL);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Recipient recipient = new Recipient(
+                        rs.getInt("group_id"),
+                        rs.getString("group_name")
+                );
+                recipients.add(recipient);
+            }
+            statement.close();
+            return recipients;
+        } catch (java.sql.SQLException e) {
+            System.out.println("SQL error on getting recipient list!");
+            throw new SQLException("Error! " + e);
+        }
+    }
+
 }

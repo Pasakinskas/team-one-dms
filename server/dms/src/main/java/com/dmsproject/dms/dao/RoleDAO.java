@@ -1,7 +1,6 @@
 package com.dmsproject.dms.dao;
 
 import com.dmsproject.dms.Database;
-import com.dmsproject.dms.dto.GroupDTO;
 import com.dmsproject.dms.dto.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
