@@ -8,10 +8,10 @@ public class DocSelection {
     private String status;
     private String details;
     private String date;
-    private String receivGroupName;
-    private Integer receivGroupId;
+    //private String receivGroupName;
+    //private Integer receivGroupId;
     private String receiver;
-    private Integer receiverId;
+    //private Integer receiverId;
 
     public Integer getId() {
         return Id;
@@ -69,21 +69,21 @@ public class DocSelection {
         this.date = date;
     }
 
-    public String getReceivGroupName() {
-        return receivGroupName;
-    }
-
-    public void setReceivGroupName(String receivGroupName) {
-        this.receivGroupName = receivGroupName;
-    }
-
-    public Integer getReceivGroupId() {
-        return receivGroupId;
-    }
-
-    public void setReceivGroupId(Integer receivGroupId) {
-        this.receivGroupId = receivGroupId;
-    }
+//    public String getReceivGroupName() {
+//        return receivGroupName;
+//    }
+//
+//    public void setReceivGroupName(String receivGroupName) {
+//        this.receivGroupName = receivGroupName;
+//    }
+//
+//    public Integer getReceivGroupId() {
+//        return receivGroupId;
+//    }
+//
+//    public void setReceivGroupId(Integer receivGroupId) {
+//        this.receivGroupId = receivGroupId;
+//    }
 
     public String getReceiver() {
         return receiver;
@@ -93,11 +93,11 @@ public class DocSelection {
         this.receiver = receiver;
     }
 
-    public Integer getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Integer receiverId) {
-        this.receiverId = receiverId;
-    }
+//    public Integer getReceiverId() {
+//        return receiverId;
+//    }
+//
+//    public void setReceiverId(Integer receiverId) {
+//        this.receiverId = receiverId;
+//    }
 }

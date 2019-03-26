@@ -20,7 +20,7 @@ public class DocStatusController {
 
 
     // Įrašyti dokumento statusą
-    @RequestMapping(value = "/status/post/change", method = RequestMethod.POST)
+    @RequestMapping(value = "/status/put/change", method = RequestMethod.PUT)
     public void add(@RequestParam Integer docId,
                     @RequestParam Integer statusId,
                     @RequestParam String description) {

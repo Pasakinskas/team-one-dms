@@ -27,19 +27,19 @@ public class DocumentController {
     private DocumentDAO documentDAO;
 
 // išsaugoti dokumentą
-    @RequestMapping(value = "/document/post/new", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/document/put/new", method = RequestMethod.PUT, consumes = "application/json")
     public Integer add(@RequestBody Document document) throws Exception{
 
         return documentDAO.addDocument(document);
     }
 
 // redaguoti dokumentą
-    @RequestMapping(value = "/document/post/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/document/put/edit", method = RequestMethod.PUT)
     public void edit(@RequestParam(name = "doc_id") Integer id,
                      @RequestParam(name = "doc_type_id") Integer TypeId,
                      @RequestParam(name = "doc_name") String name,
                      @RequestParam(name = "doc_number") String number,
-                     @RequestParam(name = "doc_content") String content) {
+                     @RequestParam(name = "doc_content") String content) throws Exception {
         Document document = new Document();
         document.setId(id);
         document.setTypeId(TypeId);
@@ -58,7 +58,7 @@ public class DocumentController {
 
 // ištraukti visiems dokumentams (admin)
     @RequestMapping (value = "/document/get/all", method = RequestMethod.GET, produces = "application/json")
-    public List<DocSelection> getAll() {
+    public List<DocSelection> getAll() throws Exception{
         return documentDAO.getAllDocuments();
     }
 
@@ -66,7 +66,7 @@ public class DocumentController {
 
 // ištraukti userio pateiktus, priimtus ir atmestus dokumentus
     @RequestMapping (value = "/document/get/submited", method = RequestMethod.GET, produces = "application/json")
-    public List<Document> getSubmitedByUserId(){
+    public List<Document> getSubmitedByUserId()throws Exception{
         String userId = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         return documentDAO.selectSubmitedDocsByUserId(Integer.parseInt (userId));
     }
@@ -81,7 +81,7 @@ public class DocumentController {
 
     // ištraukti useriui pateiktus dokumentus
     @RequestMapping (value = "/document/get/geted", method = RequestMethod.GET, produces = "application/json")
-    public List<Document> getSubmitedToUserDocs(){
+    public List<Document> getSubmitedToUserDocs() throws Exception {
         String userId = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         return documentDAO.selectSubmitedToUserDocs(Integer.parseInt (userId));
     }
