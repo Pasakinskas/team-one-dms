@@ -118,7 +118,6 @@ class UserDocList extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data=  { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return document.condition == "saved"}) }
                     columns= { columns }
                     search
                     >
@@ -129,7 +128,7 @@ class UserDocList extends Component {
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />
                             <span id="btn">
-                                <Button variant="danger" type="submit" onClick={() => {this.deleteDoc()}}>
+                                <Button variant="danger" type="submit" onClick={(e) => {this.deleteDoc(e)}}>
                                     Pašalinti
                                 </Button>
                                 <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
@@ -193,8 +192,10 @@ class UserDocList extends Component {
                     }.bind(this),
                 0
             );
-            console.log("Spausdinu pažymėtą")
+            console.log("Spausdinu pažymėtą");
             console.log(row);
+            console.log("Pažymėtas dok. nusetintas į state " );
+            console.log(this.state.selectedDocuments);
         }
     }
 
@@ -210,7 +211,7 @@ class UserDocList extends Component {
             doc.status = newCondition;
         }
         console.log("Dokumentai statuso keitimui ")
-        console.log(this.state.selectedDocuments)
+        console.log(JSON.stringify(this.state.selectedDocuments));
         return this.state.selectedDocuments;
     }
     
@@ -245,7 +246,9 @@ class UserDocList extends Component {
         e.preventDefault();
         const token = localStorage.getItem("token");
         const sentDocList = this.changeDocByCondition("submited");
-        const API = "http://localhost:8086/status/post/change?id=27&statusId=2&description='kaka'";
+        const selectedDoc = this.state.selectedDocuments;
+        selectedDoc.forEach((e)=>{
+        const API = `http://localhost:8086/status/post/change?docId=${e.id}&statusId=2&description=''`;
          fetch(API, {
             method: 'POST',
             headers: {
@@ -260,27 +263,32 @@ class UserDocList extends Component {
                 alert("Pateikti nepavyko");
             }
         }).catch(error => console.error(error));
+    });
+
     };
 
     //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
         const token = localStorage.getItem("token");
         const deleteDocList = this.changeDocByCondition("deleted");
-        const API = 'http://localhost:8086/status/post/change';
-          fetch(API, {
-            method: 'DELETE',
-            headers: {
-                'token': token,
-                'content-Type': 'application/json'
-            },
-            body: JSON.stringify({deleteDocList}),
-        }).then(response => {
-            if(response.status === 200){
-                this.nextPath(`/userboard`);
-            }else{
-                alert("Pateikti nepavyko");
-            }
-        }).catch(error => console.error(error));
+        const selectedDoc = this.state.selectedDocuments;
+        selectedDoc.forEach((e)=>{
+        const API = `http://localhost:8086/status/post/change?docId=${e.id}&statusId=5&description=''`;
+            fetch(API, {
+                method: 'POST',
+                headers: {
+                    'token': token,
+                    'content-Type': 'application/json'
+                },
+                body: JSON.stringify({deleteDocList}),
+            }).then(response => {
+                if(response.status === 200){
+                    this.nextPath(`/userboard`);
+                }else{
+                    alert("Pateikti nepavyko");
+                }
+            }).catch(error => console.error(error));
+        });
     };
      
     componentDidMount(){

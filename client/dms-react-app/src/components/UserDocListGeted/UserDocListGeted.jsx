@@ -106,11 +106,6 @@ class UserDocListGeted extends Component {
             text: 'Būsena',
             sort: true,
             headerStyle: bgcolor,
-        }, {
-            dataField: 'details',
-            text: 'Pastabos',
-            sort: true,
-            headerStyle: bgcolor,
         }]; 
 
         const customStyles = {
@@ -143,7 +138,7 @@ class UserDocListGeted extends Component {
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />                                             
                              <span id="btn">
-                                <Button variant="danger" type="button" onClick={(e) => {this.openRejectModal()}}>
+                                <Button variant="danger" type="button" onClick={(e) => {this.rejectDoc()}}>
                                     Atmesti
                                 </Button>
                                 <Button variant="secondary" type="button" onClick={() => {this.openModal()}}>
@@ -291,6 +286,7 @@ class UserDocListGeted extends Component {
     //Document condition changes to rejected. After that isn't shown in geted document list
     rejectDoc = (e) => {
         e.preventDefault();
+        this.openRejectModal();
         const token = localStorage.getItem("token");
         const rejectDocList = this.changeDocByConditiont("rejected");
         const API = 'http://localhost:8086/status/post/change';
@@ -319,7 +315,6 @@ class UserDocListGeted extends Component {
         const token = localStorage.getItem("token");
         console.log("Geted " + token);
         const res = await fetch("http://localhost:8086/document/get/geted", 
-        // + this.props.user.id šito nereiki, nes už tai atsako tokenas.
         {
           method: "GET",
           headers: {
