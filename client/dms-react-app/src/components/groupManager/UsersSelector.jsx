@@ -15,6 +15,7 @@ class UserSelector extends Component{
     }
     componentDidMount() {
         this.setState({ isLoading: true });
+
         fetch(API + DEFAULT_QUERY)
         .then(response => {
             if (response.ok) {
@@ -30,7 +31,7 @@ class UserSelector extends Component{
           .catch(error => this.setState({ error, isLoading: false }));
     }
     render() {
-        const { data, isLoading, error } = this.state;
+        const { data, isLoading, error} = this.state;
         if(error){
           return <option>{error.message}</option>;
         }

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import {FormControl, Form} from 'react-bootstrap';
 
-const API = "https://localhost:8086/group/add"
+const API = "http://localhost:8086/groups"
 
 export default class AddGroup extends Component{
     constructor(props) {
@@ -17,6 +17,7 @@ export default class AddGroup extends Component{
 
     addGroup = async (event) =>{
         event.preventDefault();
+        const token = localStorage.getItem("token");
         const {groupName} = this.state;
         console.log(groupName);
         //only fetch if its all letters
@@ -25,10 +26,12 @@ export default class AddGroup extends Component{
             const res = await fetch(API, {
             method: 'POST',
             headers: {
-                "content-type": "application/json"
+                authority:'admin',
+                token:token,
+                "content-type": "application/json",
             },
             body: JSON.stringify({
-              "groupName": groupName,
+              "name": groupName,
             }),
           })
           await console.log("You want to add group ",groupName);
@@ -67,11 +70,10 @@ export default class AddGroup extends Component{
                   type="text" 
                   value={groupName}
                   name="groupName"
-                  placeholder="Grupės pavadinimas"
+                  placeholder="Padalinio pavadinimas"
                   onChange={this.handleChange}
               /> 
                <input 
-                    className="table-button" 
                     type="submit" 
                     className="btn btn-success" 
                     value="Pridėti grupę"/>

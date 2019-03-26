@@ -164,14 +164,15 @@ class Login extends Component {
 
   fetchUserAuthority = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:8086/roles/user", {
+    /*const res = await fetch("http://localhost:8086/roles/user", {
       method: "GET",
       headers: {
         "token": token,
         "content-type": "application/json"
       }
-    });
-    const authority = await res.json();
+    });*/
+//set authority that you need
+    const authority = "admin"//await res.json();
     console.log(authority);
     localStorage.setItem("authority", authority);
     console.log("Storage info " + localStorage.setItem("authority", authority))

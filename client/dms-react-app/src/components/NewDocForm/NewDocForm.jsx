@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
 import './NewDocForm.css';
+import TemplateSelector from '../documentTypesUI/TemplateSelector';
 import { withRouter } from 'react-router-dom';
 
 // get req to BE šablonų sąrašui
@@ -20,6 +21,9 @@ class NewDocForm extends Component {
         this.state = {
           docNum:"",
           docName:"",
+          name: "",      
+          recipients: [],
+          doc:[],
           name: "", 
           template: [],    
           groupRecipients:[],
@@ -67,9 +71,10 @@ class NewDocForm extends Component {
                 <div className="template"> 
                   <FormLabel>Dokumento šablonas</FormLabel>
                   <select 
-                    onChange={this.handleChange}>
-                        <option> Pasirinkite šabloną</option>
-                        {listTemplates}
+                    name="template"
+                    onChange={this.handleTemplateChange}>
+                        <option value="" disabled> Pasirinkite šabloną</option>
+                        <TemplateSelector/>
                   </select>       
                 </div>
                 <div className="input"> 
@@ -123,6 +128,10 @@ class NewDocForm extends Component {
             </div>
         );
     }
+
+    updateEditorValue = (value) =>{
+      this.props.updateEditorValue(value);
+  }
     
     componentDidMount(){
         this.fetchDataDocTemplates();
@@ -146,6 +155,33 @@ class NewDocForm extends Component {
       console.log(this.state.template)
     }
 
+    // on submit GET template json using id
+    onSubmit  = async (id) =>{
+      console.log("Select option selected");
+// text editor on change saves to session storage
+try{
+  const res = await fetch(`http://localhost:8086/doctemplates/get/byId?id=${id}`, {
+
+  content:'application/x-www-form-urlencoded; charset=UTF-8',
+  method: 'GET',
+  token:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyaWQiLCJpZCI6M30.N_sFZI-6YgGcoh7j_VQFHzp4VBmJhKtyoXTYZbZ9pos',
+})
+  const statusCode = await res.status;
+  const json =  await res.json();
+  this.setState({
+      "doc":json.template,
+  })
+  this.updateEditorValue(this.state.doc);
+  return statusCode;
+
+      }catch(err){console.log(err)};
+      try{
+          const document = (this.state.doc)
+          console.log(document);
+          
+      }catch(err){console.log(err);};
+    }
+
     fetchDataRecipients = async () => {
       const res = await fetch("http://localhost:8086/recipients",
       {
@@ -165,6 +201,15 @@ class NewDocForm extends Component {
       console.log("users " + JSON.stringify(this.state.userRecipients));
     }
 
+    handleTemplateChange = (e) => {
+      const {value, name } = e.target;
+      console.log("SELECTED DOC: "+ value);
+      this.setState({
+        "doc_id":value
+      });
+      this.onSubmit(value);
+    } 
+
     handleChange = (e) => {
       const { name, value } = e.target;
       let formErrors = { ...this.state.formErrors };
@@ -181,12 +226,13 @@ class NewDocForm extends Component {
         const token = localStorage.getItem("token");
         const data = await localStorage.getItem('content');
         await console.log(JSON.stringify({content: data}))
-        const API = 'http://localhost:8086/document/';
+        const API = 'http://localhost:8086/document/post/new';
         fetch(API, {
           method: 'POST',
           headers: {
-            "token": token,
             "content-type": "Application/json",
+            "token": token,
+            
           },
           body: JSON.stringify({content: data, typeId: 1}),
         }).then(response => {
