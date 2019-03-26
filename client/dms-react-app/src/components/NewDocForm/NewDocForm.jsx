@@ -19,12 +19,18 @@ class NewDocForm extends Component {
         super(props);
     
         this.state = {
-          template: [],
           docNum:"",
           docName:"",
+<<<<<<< HEAD
           name: "",      
           recipients: [],
           doc:[],
+=======
+          name: "", 
+          template: [],    
+          groupRecipients:[],
+          userRecipients:[], 
+>>>>>>> 71b643b27e2042514ffedbe9071fe8b936528535
         }
     }
 
@@ -33,21 +39,59 @@ class NewDocForm extends Component {
     }
    
     render() {
+<<<<<<< HEAD
         const {template, docNum, docName, name, recipient } = this.state;
         /*const listTemplates = template.map((template) =>
         <option>{template.description}</option> );*/
         const listRecipients = this.state.recipients.map((recipient) =>
         <option>{recipient.name}</option> );
+=======
+        const {docNum, docName, name} = this.state;
+        const listTemplates = this.state.template.map((template) =>
+        <option>{template.description}</option> );
+        
+        const groupRecipients = this.state.groupRecipients.map((groups) =>
+        <option key={groups.name}>{groups.name}</option>);
+
+        const userRecipients = this.state.userRecipients.map((users) =>
+        <option key={users.name}>{users.name}</option>);
+
+        // const listRecipients = this.state.recipients.map((recipients) => <option>{recipients.groups}, {recipients.users}</option>);
+        //const listRecipients = this.state.recipients.map((groups, users) =><p>{groups}</p>);
+        //const listRecipients = this.state.recipients.Object.keys(this.state.recipients.groups).map((groups) =>{console.log("Ar tai grupės? " + groups.groups)});
+        // const listRecipients = this.state.recipients.map(())
+        // const data = this.state.recipients;
+        // const parsintas = JSON.parse(data);
+        // console.log(parsintas);
+        //const listRecipients = this.state.recipients.map(recipient =><option>{recipient.users}</option> );
+        // const listRecipients = this.state.recipients.map(fe => (
+        //   <ul>
+        //     {fe.groups.map(li => (
+        //       <li>{li.name}</li>
+        //     ))}
+        //     {fe.users.map(lili => (
+        //       <li>{lili.name}</li>
+        //     ))}
+        //   </ul>
+        // ))
+
+>>>>>>> 71b643b27e2042514ffedbe9071fe8b936528535
         return (
             <div className="form-wrapper" id="form">
              <Form onSubmit={(e)=>{this.handleClickSend(e)}}>
                 <div className="template"> 
                   <FormLabel>Dokumento šablonas</FormLabel>
                   <select 
+<<<<<<< HEAD
                     name="template"
                     onChange={this.handleTemplateChange}>
                         <option value="" disabled> Pasirinkite šabloną</option>
                         <TemplateSelector/>
+=======
+                    onChange={this.handleChange}>
+                        <option> Pasirinkite šabloną</option>
+                        {listTemplates}
+>>>>>>> 71b643b27e2042514ffedbe9071fe8b936528535
                   </select>       
                 </div>
                 <div className="input"> 
@@ -83,11 +127,10 @@ class NewDocForm extends Component {
                 <div className="recipient"> 
                   <FormLabel>Kam išsiųsti</FormLabel>
                   <select 
-                    name="recipient"
-                    value={recipient}
                     onChange={this.handleChange}>
-                        <option value="" disabled> Pasirinkite gavėją</option>
-                        <option>{listRecipients}</option>
+                        <option> Pasirinkite gavėją</option>
+                        {groupRecipients},
+                        {userRecipients}
                   </select>              
                 </div>
                 <div className="docBtn">
@@ -108,11 +151,11 @@ class NewDocForm extends Component {
   }
     
     componentDidMount(){
-        this.fetchDataDocTemplates()
-        this.fetchDataRecipients()
+        this.fetchDataDocTemplates();
+        this.fetchDataRecipients();
     }
 
-    //užklausa dokumentų šablonų sąrašui gauti. Ant ko kviesti?
+    //užklausa dokumentų šablonų sąrašui gauti
     fetchDataDocTemplates = async () => {
       const res = await fetch("http://localhost:8086/doctemplates/get/all", 
       {
@@ -157,7 +200,7 @@ try{
     }
 
     fetchDataRecipients = async () => {
-      const res = await fetch("http://localhost:8086//recipients",
+      const res = await fetch("http://localhost:8086/recipients",
       {
         method: "GET",
         headers: {
@@ -165,11 +208,14 @@ try{
         },
       });
       const json = await res.json();
-      console.log("ar tai gavėjų sąrašas " + JSON.stringify(json));
+      console.log("ar tai gavėjų sąrašas " + JSON.stringify(json))
       this.setState({
-        recipients: json,
+        groupRecipients:json.groups,
+        userRecipients:json.users,
+        
       });
-      console.log(this.state.recipients)
+      console.log("groups " + JSON.stringify(this.state.groupRecipients)); 
+      console.log("users " + JSON.stringify(this.state.userRecipients));
     }
 
     handleTemplateChange = (e) => {
@@ -197,7 +243,11 @@ try{
         const token = localStorage.getItem("token");
         const data = await localStorage.getItem('content');
         await console.log(JSON.stringify({content: data}))
+<<<<<<< HEAD
         const API = 'http://localhost:8086/document/post/new';
+=======
+        const API = 'http://localhost:8086/document/';
+>>>>>>> 71b643b27e2042514ffedbe9071fe8b936528535
         fetch(API, {
           method: 'POST',
           headers: {
@@ -216,22 +266,22 @@ try{
         }).catch(error => console.error(error));   
       }
 
-      handleClickSave = async (e) =>{
-        e.preventDefault();
+    handleClickSave = async (e) =>{
+      e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
-          const data = this.props.existingValue;
-          const API = 'http://localhost:8086/document/post/new';
-          fetch(API, {
-            method: 'POST',
-            body: JSON.stringify({document: data}),
-          }).then(response => {
-            if (response.status === 201){
-              this.nextPath(`/userboard`);
-            } else {
-              alert("Išsaugoti nepavyko");
-            }
-          }).catch(error => console.error(error));
-      }
+        const data = this.props.existingValue;
+        const API = 'http://localhost:8086/document/post/new';
+        fetch(API, {
+          method: 'POST',
+          body: JSON.stringify({document: data}),
+        }).then(response => {
+          if (response.status === 201){
+            this.nextPath(`/userboard`);
+          } else {
+            alert("Išsaugoti nepavyko");
+          }
+        }).catch(error => console.error(error));
+    }
  }
 
 export default withRouter(NewDocForm);

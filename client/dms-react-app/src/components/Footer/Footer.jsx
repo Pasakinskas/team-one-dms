@@ -6,7 +6,7 @@ class Footer extends Component {
   render() {
     return (
       <div>
-        <footer>Copyright © 2019 Pirma grupė - J18/1T</footer>
+        <footer>"Per kodą į žvaigždes" © 2019</footer>
       </div>
     );
   }
