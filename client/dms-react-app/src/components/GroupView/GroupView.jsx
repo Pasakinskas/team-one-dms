@@ -8,23 +8,23 @@ class GroupView extends Component {
         super(props);
     
         this.state = {
-          groups: {},
-          myGroups: {},
+          groupRecipients: [],
+          myGroups: [],
         }
     }
     render() {
-        // const listGroups = this.state.groups.map((label) =>
-        // <option>{label}</option> );
+        const listGroups = this.state.groupRecipients.map((groups) =>
+        <li className="list-group-item">{groups.name}</li> );
         
-        // const listMyGroups = this.state.myGroups.map((label) =>
-        // <option>{label}</option> );
+        // const listMyGroups = this.state.myGroups.map((mg) =>
+        // <li className="list-group-item">{mg.name}</li> );
 
         return (
             <div className="group">
                 <Card className="allGroups">
                 <FormLabel className="GroupLabel">Mano padaliniai</FormLabel>
                 <ListGroup variant="flush">
-                    {/* <li className="list-group-item">{listMyGroups}</li> */}
+                    {/* {listMyGroups}*/}
                     <li className="list-group-item">aaa</li>
                     <li className="list-group-item">sss</li>
                     <li className="list-group-item">ddd</li>
@@ -34,63 +34,48 @@ class GroupView extends Component {
                 <Card className="myGroups">
                 <FormLabel className="GroupLabel">Visi padaliniai</FormLabel>
                 <ListGroup variant="flush">
-                    {/* <li className="list-group-item" key={groups.id}>{listGroups}</li> */}
-                    <li className="list-group-item">aaa</li>
-                    <li className="list-group-item">sss</li>
-                    <li className="list-group-item">ddd</li>
-                    <li className="list-group-item">fff</li>
-                    <li className="list-group-item">aaa</li>
-                    <li className="list-group-item">sss</li>
-                    <li className="list-group-item">ddd</li>
-                    <li className="list-group-item">fff</li>
-                    <li className="list-group-item">aaa</li>
-                    <li className="list-group-item">sss</li>
-                    <li className="list-group-item">ddd</li>
-                    <li className="list-group-item">fff</li>
-                    <li className="list-group-item">aaa</li>
-                    <li className="list-group-item">sss</li>
-                    <li className="list-group-item">ddd</li>
-                    <li className="list-group-item">fff</li>
+                    {listGroups}
                 </ListGroup>
                 </Card>
             </div>
         );
     }
 
-    fetchAllGroups = async (url) => {
-        const res = await fetch("http://localhost:8086/groups", 
-        {
-          method: "GET",
-          headers: {
-            "token": this.props.token,
-            "content-type": "Application/json",
-          },
-        });
-        if (res.status > 300) {
-          alert("Fail")
-        }
-        const groupsJson = await res.groupsJson();
-        this.setState({ 
-          groups: groupsJson
-        });
-        return groupsJson;
-    }
-
-    fetchMyGroups = async (url) => {
-        const res = await fetch("http://localhost:8086/groups/",  
-        // + this.props.user.id, 
-        {
-          method: "GET",
-          headers: {
-            "content-type": "Application/json",
-          },
-        });
-        const myGroupsJson = await res.myGroupsJson();
-        this.setState({ 
-          groups: myGroupsJson
-        });
-        return myGroupsJson;
-    }
+  componentDidMount(){
+      this.fetchAllGroups()
+  }
+    
+  fetchMyGroups = async () => {
+    const token = localStorage.getItem("token");
+    const res = await fetch("http://localhost:8086/recipients",
+    {
+      method: "GET",
+      headers: {
+        "token" : token,
+        "content-type": "application/json",
+      },
+    });
+    const json = await res.json();
+    this.setState({
+      myGroups:json.groups,       
+    });
+  }
+  
+  fetchAllGroups = async () => {
+    const token = localStorage.getItem('token');
+    const res = await fetch("http://localhost:8086/recipients",
+    {
+      method: "GET",
+      headers: {
+        token:token,
+        "content-type": "application/json",
+      },
+    });
+    const json = await res.json();
+    this.setState({
+      groupRecipients:json.groups,       
+    });
+  }
 }
 
 export default GroupView;

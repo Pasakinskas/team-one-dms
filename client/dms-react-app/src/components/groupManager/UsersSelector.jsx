@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const API = 'https://reqres.in/api/users?page=2';
+const API = 'http://localhost:8086/users';
 const DEFAULT_QUERY = 'redux';
 
 class UserSelector extends Component{
@@ -15,22 +15,28 @@ class UserSelector extends Component{
     }
     componentDidMount() {
         this.setState({ isLoading: true });
-        fetch(API + DEFAULT_QUERY)
-        .then(response => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              throw new Error("Coudn't connect to API ...");
-            }
-          })
-        .then(json => this.setState({
-          data: json.data,  
-          isLoading:false
-        }))
-          .catch(error => this.setState({ error, isLoading: false }));
+        this.fetchAllUsers();
+        
+
     }
+
+    fetchAllUsers = async() =>{
+
+      const token = localStorage.getItem('token');
+      const res = await fetch( `http://localhost:8086/users`, {
+          method: 'GET',
+          headers: {
+              'token':token,
+              "content-type": "application/json"
+          },
+          })
+      const json = await res.json();
+      console.log(json);
+      this.setState({isLoading: false , data : json});
+  }
+
     render() {
-        const { data, isLoading, error } = this.state;
+        const { data, isLoading, error} = this.state;
         if(error){
           return <option>{error.message}</option>;
         }
@@ -43,9 +49,9 @@ class UserSelector extends Component{
                key={data.id}
                  value={data.id}
                  >
-                 {data.first_name}
+                 {data.name}
                  &nbsp;
-                 {data.last_name}
+                 {data.surname}
                  </option>
             )
         );
