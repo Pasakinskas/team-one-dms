@@ -28,9 +28,9 @@
 }
 .groups-table .table-form{
     display: inline-flex;
-    width: 10rem;
+    min-width: 10rem;
 }
-.user-selector, .user-selector-g{
+.user-selector, .user-selector-g, .basic-multi-select{
     display: inline-flex;
     width:200px;
 }

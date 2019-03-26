@@ -24,7 +24,7 @@ class AdminNavBar extends Component {
                     <li><a href="/adminboardgroups">Padaliniai</a></li>
                     <li><a href="/adminboarddocs">Dokumentai</a></li>
                     <li><a href="/adminboardusers">Vartotojai</a></li>
-                    <li><a href="/adminboardtemplates">Dokumentų šablonai</a></li>
+                    <li><a href="/newtemplate">Dokumentų šablonai</a></li>
                 </Nav>
                 <Form inline>
                     <Button className="SignOut" variant="outline-info" onClick={() =>this.nextPath(`/login`)}>Atsijungti</Button>

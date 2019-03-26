@@ -12,6 +12,7 @@ import { withRouter } from 'react-router-dom';
 import Modal from 'react-modal';
 import {TextEditor} from '../textEditor/index';
 import ModalHeaderSubmited from '../ModalHeader/ModalHeaderSubmited';
+import ModalHeaderGeted from '../ModalHeader/ModalHeaderGeted';
 
 
 class UserDocListGeted extends Component {
@@ -19,8 +20,10 @@ class UserDocListGeted extends Component {
         super(props);
     
         this.state = {
-            userDocuments:[{}],
+            userDocuments:[],
             modalIsOpen: false,
+            rejectModalIsOpen: false,
+            rejectReason:"",
         }
     } 
 
@@ -50,6 +53,17 @@ class UserDocListGeted extends Component {
         const options = {
             pageButtonRenderer
         };
+
+        const documents = [{
+            id: 1,
+            date: 2019,
+            owner: 'Ana',
+            receiver: 'Kažkas',
+            docName: "atostogos",
+            status:'pateiktas',
+            details: "",
+
+        }];
 
         const selectRow = 
         {
@@ -113,11 +127,12 @@ class UserDocListGeted extends Component {
         };
 
           return (
+              console.log(documents),
               <div className="toolkit">
                 <ToolkitProvider
                     keyField="id"
-                    data= { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return document.condition == "submited"}) }
+                    //data= { this.state.userDocuments }
+                    data= { documents }
                     columns= { columns }
                     search
                     >
@@ -128,13 +143,13 @@ class UserDocListGeted extends Component {
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />                                             
                              <span id="btn">
-                                <Button variant="danger" type="submit" onClick={() => { this.rejectDoc()}}>
+                                <Button variant="danger" type="button" onClick={(e) => {this.openRejectModal()}}>
                                     Atmesti
                                 </Button>
-                                <Button variant="secondary" type="submit" onClick={() => {this.openModal()}}>
+                                <Button variant="secondary" type="button" onClick={() => {this.openModal()}}>
                                     Peržiūrėti
                                 </Button>
-                                <Button variant="success" type="submit" onClick={() => {this.acceptDoc()}}>
+                                <Button variant="success" type="button" onClick={(e) => {this.acceptDoc(e)}}>
                                     Priimti
                                 </Button>
                             </span>
@@ -153,7 +168,21 @@ class UserDocListGeted extends Component {
                                 >  
                                 <ModalHeaderSubmited modalIsOpen = {this.closeModal}/>                                          
                                 <TextEditor style={{"width" : "95%"}}/>                  
-                            </Modal>                                               
+                            </Modal> 
+                            <Modal 
+                                isOpen={this.state.rejectModalIsOpen}
+                                onAfterOpen={this.afterOpenModal}
+                                onRequestClose={this.closeRejectModal}
+                                style={customStyles}
+                                contentLabel="Atmetimo priežastis"
+                                >  
+                                <ModalHeaderGeted rejectModalIsOpen = {this.closeRejectModal}/> 
+                                <textarea  name ="rejectReason"
+                                            value ={ this.state.rejectReason }
+                                onChange={this.handleChange} 
+                                          style={{"marginTop": "40px", "marginLeft": "20px", 
+                                                "width" : "95%", "height": "100px"}}></textarea>                  
+                            </Modal>    
                         </div>
                         )
                     }
@@ -169,9 +198,17 @@ class UserDocListGeted extends Component {
     openModal = () => {
         this.setState({modalIsOpen: true});
     }
+
+    openRejectModal = () => {
+        this.setState({rejectModalIsOpen: true});
+    }
     
     closeModal = () => {
         this.setState({modalIsOpen: false});
+    }
+
+    closeRejectModal = () => {
+        this.setState({rejectModalIsOpen: false});
     }
 
     changeSelectStatus = (row, isSelected, e)=>{
@@ -207,6 +244,16 @@ class UserDocListGeted extends Component {
             doc.condition = newCondition;
         }
         return selectedDocuments;
+    }
+
+    handleChange = (e) => {
+        e.preventDefault();
+        const { name, value } = e.target;
+        this.setState({
+          [name]:value,       
+        });
+        console.log("Atmetimo priežastis " + this.state.rejectReason) 
+        console.log(localStorage.setItem("rejectReason", this.state.rejectReason));       
     }
 
     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
@@ -256,7 +303,7 @@ class UserDocListGeted extends Component {
             body: JSON.stringify({rejectDocList}),
         }).then(response => {
             if(response.status === 200){
-                //do not show document in the list;
+                alert("Dokumentas pašalintas sėkmingai");
             }else{
                 alert("Pašalinti nepavyko");
             }

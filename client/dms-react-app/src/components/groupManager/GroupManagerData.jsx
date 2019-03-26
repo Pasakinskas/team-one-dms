@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 
 import UserSelector from './UsersSelector';
 // api - group list
-const API = 'https://reqres.in/api/users?page=2';
+const API_TEST = 'https://reqres.in/api/users?page=2';
+const API = 'http://localhost:8086/groups'
 // api_add_user adress to add user to group
-const API_ADD_USER = 'https://localhost:8086/group/user/add';
-const API_REMOVE_USER = 'https://localhost:8086/group/user/remove';
-const API_REMOVE_GROUP = 'https://localhost:8086/group/remove';
+const API_ADD_USER = 'http://localhost:8086/groups';
+const API_REMOVE_USER = 'http://localhost:8086/groups';
+const API_REMOVE_GROUP = 'http://localhost:8086/group';
 const DEFAULT_QUERY ='';
 
 export default class GroupManagerData extends Component {
@@ -21,11 +22,16 @@ export default class GroupManagerData extends Component {
             isLoading: false,
             error: null,
             selectedOption: null,
+            optionValue:"",
             show: false,
             isRemove: false,
         };
     };
-  
+    handleInputChange = (newValue) => {
+        const optionValue = newValue.replace(/\W/g, '');
+        this.setState({optionValue});
+        return optionValue;
+    };
     handleChange = (event,groupId) =>{
         this.setState({
             userId: event.target.value,
@@ -38,34 +44,48 @@ export default class GroupManagerData extends Component {
 //showing groups table with opions
     componentDidMount() {
         this.setState({ isLoading: true });
-
-        fetch(API + DEFAULT_QUERY)
-        .then(response => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              throw new Error("Coudn't connect to API ...");
-            }
-          })
-        .then(response => this.setState({
-          data: response.data,  
-          isLoading:false
-        }))
-          .catch(error => this.setState({ error, isLoading: false }));
+//setting auth for testing
+        localStorage.setItem("authority","admin")
+          this.fetchGroups();
+          
     }
+
+    fetchGroups = async () =>{
+        const token = localStorage.getItem('token');
+        const res = await fetch(API, {
+            method: 'GET',
+            headers:{
+                    'content-type':'Application/json',
+                    token:token,
+            },
+            })
+            const statusCode = await res.status;
+            console.log(res);
+            const json =  await res.json();
+           // console.log(json);
+            this.setState({
+                "data":json
+            })
+            this.setState({ isLoading: false });
+            return statusCode;
+    }
+
+//options for selector
+    
 
 // adding user from selector
     addUsers = async (event) =>{
         event.preventDefault();
         try{
             const res = await fetch(API_ADD_USER, {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 "content-type": "application/json"
             },
             body: JSON.stringify({
-                "userId":this.state.userId,
-                "groupId":this.state.groupId,
+                "userid":this.state.userId,
+                "groupid":this.state.groupId,
+                "add":true,
             }),
             })
             const statusCode = await res.status;
@@ -84,6 +104,7 @@ export default class GroupManagerData extends Component {
             body: JSON.stringify({
                 "userId":this.state.userId,
                 "groupId":this.state.groupId,
+                "add":false,
             }),
             })
             const statusCode = await res.status;
@@ -93,18 +114,18 @@ export default class GroupManagerData extends Component {
 
     removeGroup = async (event, groupId) =>{
         event.preventDefault();
-        const {isRemove} = this.state;
+        //const {isRemove} = this.state;
 //placeholder for modal aditional confirmation state
         if(true){
             try{
-            const res = await fetch(API_REMOVE_GROUP, {
-                method: 'PATCH',
+            const res = await fetch(`https://localhost:8086/group/${groupId}` , {
+                method: 'DELETE',
                 headers: {
                     "content-type": "application/json"
                 },
-                body: JSON.stringify({
+                /*body: JSON.stringify({
                     "groupId":groupId,
-                }),
+                }),*/
               })
       //remove console.log for testing
               console.log("You want to remove group with id: ",groupId);
@@ -116,7 +137,7 @@ export default class GroupManagerData extends Component {
       }
 
     render(){
-        const { data, isLoading, error, isRemove } = this.state;
+        const { data, isLoading, error } = this.state;
         let i =1;
         function row(){
         return i++;
@@ -136,14 +157,14 @@ export default class GroupManagerData extends Component {
             data.map(data => 
                 <tr key={data.id}>
                     <th scope='row'>{row()}</th>
-                    <td>{data.first_name}</td>
+                    <td>{data.name}</td>
                     <td><form className="table-form" onSubmit={this.addUsers}>
-                        <select 
+                        <select
                         name="user"
                         className="selectpicker" 
                         onChange={(e) => this.handleChange(e, data.id)}
                         >
-                        <UserSelector/>
+                        {<UserSelector/>}
                         </select>
                     <input 
                     type="submit" 
@@ -170,7 +191,15 @@ export default class GroupManagerData extends Component {
                     type="submit" 
                     onPointerDown={(e) => this.removeGroup(e, data.id)} 
                     className="btn btn-danger" 
-                    value="Pašalinti grupę"/>
+                    value="Pašalinti padalinį"/>
+                </td>
+                <td>
+                <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="defaultCheck2"/>
+                <label class="form-check-label" for="defaultCheck2">
+                Leisti gauti/pateikti
+                </label>
+                </div>
                 </td>
                 </tr>
                 )

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
 import '../ModalHeader/ModalHeader.css'
 
-class ModalHeader extends Component {
+class ModalHeaderGeted extends Component {
     render() {
         return (
             <div>
-                <h4>Dokumento peržiūra</h4>
+                 <h4>Dokumento atmetimo priežastis</h4>
             <span className="modalBtn">
-                <Button variant="danger" type="submit" onClick={this.props.modalIsOpen}>
+                <Button variant="danger" type="submit" onClick={this.props.rejectModalIsOpen}>
                      X
                 </Button>
             </span>    
@@ -18,4 +17,4 @@ class ModalHeader extends Component {
     }
 }
 
-export default withRouter(ModalHeader);
+export default ModalHeaderGeted;
