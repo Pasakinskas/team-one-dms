@@ -29,7 +29,7 @@ class UserDocList extends Component {
     
         this.state = {
             userDocuments:[],
-            selectedDocuments: [],
+            selectedDocuments: {},
             modalIsOpen: false,
             text:[]
         }
@@ -171,7 +171,6 @@ class UserDocList extends Component {
     }
 
     openModal = async() => {
-      await this.showDoc()
       await this.setState({modalIsOpen: true});
       await this.showDoc()
         
@@ -184,7 +183,7 @@ class UserDocList extends Component {
      
     changeSelectStatus = (row, isSelected, e)=>{
         // const newDoc = this.state.userDocuments.map(datarow => {
-        //     if(datarow.id -1 === row){
+        //     if(datarow.id === row){
         //         datarow.isChecked = !datarow.isChecked;
         //     }
         // return row;
@@ -195,55 +194,51 @@ class UserDocList extends Component {
                     this.setState({
                     selectedDocuments: row
                 });
+                console.log("šiuo metu state " );
+                console.log(this.state.selectedDocuments);
                     }.bind(this),
                 0
             );
             console.log("Spausdinu pažymėtą");
             console.log(row);
-            console.log("Pažymėtas dok. nusetintas į state " );
-            console.log(this.state.selectedDocuments);
+            
         }
     }
 
-    changeDocByCondition = (newCondition) => {
-        // let selectedDocuments = this.state.userDocuments.map(doc =>{
-        //    if(doc.isChecked){
-        //      return doc
-        //    } 
-        //    return selectedDocuments;
-        // });
-        for (let doc of this.state.selectedDocuments) {
-            console.log(doc)
-            doc.status = newCondition;
-        }
-        console.log("Dokumentai statuso keitimui ")
-        console.log(JSON.stringify(this.state.selectedDocuments));
-        return this.state.selectedDocuments;
-    }
+    // changeDocByCondition = (newCondition) => {
+    //     // let selectedDocuments = this.state.userDocuments.map(doc =>{
+    //     //    if(doc.isChecked){
+    //     //      return doc
+    //     //    } 
+    //     //    return selectedDocuments;
+    //     // });
+    //     for (let doc of this.state.selectedDocuments) {
+    //         console.log(doc)
+    //         doc.status = newCondition;
+    //     }
+    //     console.log("Dokumentai statuso keitimui ")
+    //     console.log(JSON.stringify(this.state.selectedDocuments));
+    //     return this.state.selectedDocuments;
+    // }
     
-    showDoc =() => {
+    showDoc = async () => {
         //const localDoc = this.state.userDocuments.id;
         console.log('showDoc initiated')
-        const selectedDoc = this.state.selectedDocuments;
         let token = localStorage.getItem('token');
-        selectedDoc.forEach(async (e) => {
-                const res = await fetch(`http://localhost:8086/document/get/byId?id=${e.id}`,
-            {
-            method: "GET",
-            token:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyaWQiLCJpZCI6M30.N_sFZI-6YgGcoh7j_VQFHzp4VBmJhKtyoXTYZbZ9pos',
-            }
-            )
-            
-            const json = await res.json(); 
-            console.log(json.content);
-    // text :value for editor to consume
-           this.setState({ 
-                text: json.content,
-            });  
-        })
-            
-                 
-          
+        const selectedDoc = this.state.selectedDocuments;
+        const API =`http://localhost:8086/document/get/byId?id=${selectedDoc.id}`;
+        const res = await fetch(API, {
+                method: "GET",
+                headers: {
+                    'token': token,
+                },
+                })           
+                const json = await res.json(); 
+                console.log(json.content);
+                // text :value for editor to consume
+                this.setState({ 
+                    text: json.content,
+            });      
     };
     
   
@@ -251,17 +246,16 @@ class UserDocList extends Component {
     sendDoc = (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
-        const sentDocList = this.changeDocByCondition("submited");
+        // const sentDocList = this.changeDocByCondition("submited");
         const selectedDoc = this.state.selectedDocuments;
-        selectedDoc.forEach((e)=>{
-        const API = `http://localhost:8086/status/post/change?docId=${e.id}&statusId=2&description=''`;
-         fetch(API, {
-            method: 'POST',
+        const API = `http://localhost:8086/status/post/change?docId=${selectedDoc.id}&statusId=2&description=''`;
+       fetch(API, {
+            method: 'PUT',
             headers: {
                 'token': token,
                 'content-Type': 'application/json'
             },
-            body: JSON.stringify({sentDocList}),
+            body: JSON.stringify({selectedDoc}),
         }).then(response => {
             if(response.status === 200){
                 this.nextPath(`/userboard`);
@@ -269,24 +263,21 @@ class UserDocList extends Component {
                 alert("Pateikti nepavyko");
             }
         }).catch(error => console.error(error));
-    });
-
     };
 
     //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
         const token = localStorage.getItem("token");
-        const deleteDocList = this.changeDocByCondition("deleted");
+        // const deleteDocList = this.changeDocByCondition("deleted");
         const selectedDoc = this.state.selectedDocuments;
-        selectedDoc.forEach((e)=>{
-        const API = `http://localhost:8086/status/post/change?docId=${e.id}&statusId=5&description=''`;
-            fetch(API, {
-                method: 'POST',
+        const API = `http://localhost:8086/status/put/change?docId=${selectedDoc.id}&statusId=5&description=''`; 
+        fetch(API, {
+                method: 'PUT',
                 headers: {
                     'token': token,
                     'content-Type': 'application/json'
                 },
-                body: JSON.stringify({deleteDocList}),
+                body: JSON.stringify({selectedDoc}),
             }).then(response => {
                 if(response.status === 200){
                     this.nextPath(`/userboard`);
@@ -294,7 +285,6 @@ class UserDocList extends Component {
                     alert("Pateikti nepavyko");
                 }
             }).catch(error => console.error(error));
-        });
     };
      
     componentDidMount(){
