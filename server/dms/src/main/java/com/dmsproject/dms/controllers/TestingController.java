@@ -3,6 +3,7 @@ package com.dmsproject.dms.controllers;
 import com.dmsproject.dms.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import com.dmsproject.dms.Constants;
 
 @CrossOrigin(origins = Constants.REACT_URL)
 
+@Secured("ROLE_SUPERADMIN")
 @RestController
 public class TestingController {
 
