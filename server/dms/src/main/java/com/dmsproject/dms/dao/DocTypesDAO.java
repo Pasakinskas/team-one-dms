@@ -56,30 +56,25 @@ public class DocTypesDAO {
         }
     }
 
-    public void deleteTemplate(int id) {
+    public void deleteTemplate(int id) throws Exception {
 
         String query = "DELETE FROM document_types WHERE doc_type_id = ? ";
 
-        try {
             PreparedStatement statement = database.connection.prepareStatement(query);
             statement.setInt(1, id);
 
             statement.executeUpdate();
             statement.close();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 
-    public DocTypes getDocTemplateByType(int id) {
+    public DocTypes getDocTemplateByType(int id) throws  Exception {
 
         String query = "SELECT * FROM document_types WHERE doc_type_Id = ?";
 
         DocTypes docTypes = new DocTypes();
 
-        try {
             PreparedStatement statement = database.connection.prepareStatement(query);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
@@ -91,20 +86,15 @@ public class DocTypesDAO {
 
                 statement.close();
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
             return docTypes;
         }
 
-    public ArrayList<DocTypes> getDocTypes() {
+    public ArrayList<DocTypes> getDocTypes() throws  Exception {
 
         String query = "SELECT doc_type_Id, doc_type_descr FROM document_types";
 
         ArrayList docTypesList = new ArrayList<DocTypes>();
 
-        try {
             PreparedStatement statement = database.connection.prepareStatement(query);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
@@ -117,10 +107,6 @@ public class DocTypesDAO {
             }
 
             statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         return docTypesList;
     }

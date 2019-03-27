@@ -75,13 +75,12 @@ public class DocumentDAO {
     }
 
     // gauti dokumentą pagal dokumento id
-    public Document getDocumentById(int id) {
+    public Document getDocumentById(int id) throws Exception {
 
         String query = "SELECT * FROM documents WHERE doc_id = ?";
 
         Document document = new Document();
 
-        try {
             PreparedStatement statement = database.connection.prepareStatement(query);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
@@ -94,10 +93,6 @@ public class DocumentDAO {
             }
 
             statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         return document;
     }
@@ -114,7 +109,7 @@ public class DocumentDAO {
                 "LEFT JOIN users AS receiving_user ON document_receiver.receiv_user_id=receiving_user.user_id " +
                 "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
                 "LEFT JOIN users ON document_status.user_id=users.user_id " +
-                "WHERE document_status.status_id  IN (2, 3, 4, 5) and document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) " +
+                "WHERE document_status.status_id  IN (2, 3, 4) and document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) " +
                 "ORDER BY date DESC";
 
 
@@ -183,7 +178,7 @@ public class DocumentDAO {
 
 // user'io išsaugoti dokumentai
 
-    public ArrayList<Document> selectSavedDocsByUserId(int id) {
+    public ArrayList<Document> selectSavedDocsByUserId(int id) throws Exception {
 
         String query2 = "SELECT documents.doc_id, documents.doc_number, documents.doc_name, `status`.status_descr, document_status.`date` " +
                 "FROM documents " +
@@ -195,7 +190,6 @@ public class DocumentDAO {
 
         ArrayList documentsList = new ArrayList<Document>();
 
-        try {
             PreparedStatement statement = database.connection.prepareStatement(query2);
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
@@ -213,10 +207,6 @@ public class DocumentDAO {
             }
 
             statement.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         return documentsList;
     }
@@ -260,5 +250,18 @@ public class DocumentDAO {
             statement.close();
 
         return documentsList;
+    }
+
+
+    // dokumentui ištrinti
+    public void deleteDocument(int id) throws Exception {
+
+        String query = "DELETE FROM documents WHERE doc_id = ?";
+
+        PreparedStatement statement = database.connection.prepareStatement(query);
+        statement.setInt(1, id);
+
+        statement.executeUpdate();
+        statement.close();
     }
 }
