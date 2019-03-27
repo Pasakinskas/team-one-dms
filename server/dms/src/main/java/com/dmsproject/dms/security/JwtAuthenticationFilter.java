@@ -42,11 +42,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (Exception e) {
-                System.out.println("Error parsing the token:");
+                System.out.println("Error parsing the jwt token:");
                 System.err.println(e);
             }
         } else {
-            System.out.println("Request was without authentication");
+            System.out.println("No token present in header");
         }
 
         try {

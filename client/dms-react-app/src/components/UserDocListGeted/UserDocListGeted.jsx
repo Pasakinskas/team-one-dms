@@ -68,7 +68,7 @@ class UserDocListGeted extends Component {
 
         const selectRow = 
         {
-            mode: 'checkbox',
+            mode: 'radio',
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
@@ -123,7 +123,6 @@ class UserDocListGeted extends Component {
         };
 
           return (
-              console.log(documents),
               <div className="toolkit">
                 <ToolkitProvider
                     keyField="id"
@@ -139,7 +138,7 @@ class UserDocListGeted extends Component {
                                 { ...props.searchProps } 
                                 placeholder='Paieška...' />                                             
                              <span id="btn">
-                                <Button variant="danger" type="button" onClick={(e) => {this.rejectDoc()}}>
+                                <Button variant="danger" type="button" onClick={(e) => {this.rejectDoc(e)}}>
                                     Atmesti
                                 </Button>
                                 <Button variant="secondary" type="button" onClick={() => {this.openModal()}}>
@@ -177,7 +176,8 @@ class UserDocListGeted extends Component {
                                             value ={ this.state.rejectReason }
                                 onChange={this.handleChange} 
                                           style={{"marginTop": "40px", "marginLeft": "20px", 
-                                                "width" : "95%", "height": "100px"}}></textarea>                  
+                                                "width" : "95%", "height": "100px"}}></textarea> 
+                                <button type="button" onClick={(e)=>{this.sendRejection()}}>Tvirtinti šalinimą</button>                 
                             </Modal>    
                         </div>
                         )
@@ -208,39 +208,41 @@ class UserDocListGeted extends Component {
     }
 
     changeSelectStatus = (row, isSelected, e)=>{
-        const newDoc = this.state.userDocuments.map(datarow => {
-            if(datarow.id -1 === row){
-                datarow.isChecked = !datarow.isChecked;
-            }
-        return row;
-        })
+        // const newDoc = this.state.userDocuments.map(datarow => {
+        //     if(datarow.id === row){
+        //         datarow.isChecked = !datarow.isChecked;
+        //     }
+        // return row;
+        // })
         if(isSelected){
             window.setTimeout(
                 function() {
                     this.setState({
-                    selectedDocuments: newDoc
+                    selectedDocuments: row
                 });
+                console.log("šiuo metu state " );
+                console.log(this.state.selectedDocuments);
                     }.bind(this),
                 0
             );
-            console.log("Spausdinu pažymėtą")
-            console.log(row);
+            console.log("Spausdinu pažymėtą");
+            console.log(row);           
         }
     }
  
-    changeDocByCondition = (newCondition) => {
-        let selectedDocuments = this.state.userDocuments.map(doc =>{
-           if(doc.isChecked){
-             return doc
-           } 
-           return selectedDocuments;
-        });
+    // changeDocByCondition = (newCondition) => {
+    //     let selectedDocuments = this.state.userDocuments.map(doc =>{
+    //        if(doc.isChecked){
+    //          return doc
+    //        } 
+    //        return selectedDocuments;
+    //     });
 
-        for (let doc of selectedDocuments) {
-            doc.condition = newCondition;
-        }
-        return selectedDocuments;
-    }
+    //     for (let doc of selectedDocuments) {
+    //         doc.condition = newCondition;
+    //     }
+    //     return selectedDocuments;
+    // }
 
     handleChange = (e) => {
         e.preventDefault();
@@ -248,8 +250,8 @@ class UserDocListGeted extends Component {
         this.setState({
           [name]:value,       
         });
-        console.log("Atmetimo priežastis " + this.state.rejectReason) 
-        console.log(localStorage.setItem("rejectReason", this.state.rejectReason));       
+        console.log("Atmetimo priežastis " + this.state.rejectReason);
+        console.log(this.state.rejectReason); 
     }
 
     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
@@ -298,14 +300,20 @@ class UserDocListGeted extends Component {
     };
     
     //Document condition changes to rejected. After that isn't shown in geted document list
+    // make method for one document, not for list, and then loop the list and apply the method
     rejectDoc = (e) => {
         e.preventDefault();
-        this.openRejectModal();
+        this.openRejectModal();  
+    };
+
+    sendRejection = () =>{
         const token = localStorage.getItem("token");
-        const rejectDocList = this.changeDocByConditiont("rejected");
-        const API = 'http://localhost:8086/status/post/change';
+        // const rejectDocList = this.changeDocByConditiont("rejected");
+        const rejectReason = this.state.rejectReason
+        const rejectDocList = this.state.selectedDocuments;
+        const API =  `http://localhost:8086/status/put/change?docId=${rejectDocList.id}&statusId=5&description=${rejectReason}`;
         fetch(API, {
-            method: 'DELETE',
+            method: 'PUT',
             headers: {
                 'token': token,
                 'content-Type': 'application/json'
@@ -318,10 +326,11 @@ class UserDocListGeted extends Component {
                 alert("Pašalinti nepavyko");
             }
         }).catch(error => console.error(error));
-    };
+    }
+
 
     componentDidMount(){
-        this.fetchDataDocListGeted()
+        //this.fetchDataDocListGeted()
     }
 
     //Gauna visus dokumentus, kuriuos jis tuiri teisę priimti ar atmesti. O returne (130) filtruoja pagal condition = 'submited'.

@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
-public class GroupDTO {
+public class Group {
     @GeneratedValue
     private int id;
 
@@ -13,16 +13,20 @@ public class GroupDTO {
     @NotEmpty
     private String name;
 
-    @NotNull
     private ArrayList<User> membersList;
 
-    public GroupDTO(int id, @NotNull @NotEmpty String name, ArrayList<User> membersList) {
+    public Group(int id, @NotNull @NotEmpty String name, ArrayList<User> membersList) {
         this.id = id;
         this.name = name;
         this.membersList = membersList;
     }
 
-    public GroupDTO() {
+    public Group(int id, @NotNull @NotEmpty String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Group() {
     }
 
     public int getId() {

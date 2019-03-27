@@ -1,10 +1,11 @@
 package com.dmsproject.dms.dao;
 
 import com.dmsproject.dms.Database;
-import com.dmsproject.dms.dto.GroupDTO;
+import com.dmsproject.dms.dto.Group;
 import com.dmsproject.dms.dto.Recipient;
 import com.dmsproject.dms.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
@@ -17,10 +18,8 @@ public class GroupDAO {
     @Autowired
     private Database database;
 
-    // todo: safeguard from adding the same user multiple times
-
-    public boolean createGroup(GroupDTO group) {
-        String INSERT_SQL = "INSERT INTO groups (group_name) values (?)";
+    public boolean createGroup(Group group) {
+        String INSERT_SQL = "INSERT INTO groups (name) values (?)";
         try {
             PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
             statement.setString(1, group.getName());
@@ -37,12 +36,12 @@ public class GroupDAO {
 
     private ArrayList<User> getAllGroupMembers(int groupid) {
         ArrayList<User> users = new ArrayList<>();
-        String statementString = "select users.user_id, users.name, surname, email, position from user_groups " +
+        String statementString = "select user_id, users.name, surname, email, position from group_users " +
                 "inner join users " +
-                "on user_groups.user_id = users.user_id " +
+                "on user_id = users.id " +
                 "inner join groups " +
-                "on user_groups.group_id = groups.group_id " +
-                "where user_groups.group_id = (?) && users.deleted = 0 && groups.deleted = 0";
+                "on group_id = groups.id " +
+                "where group_id = (?) && users.deleted = 0 && groups.deleted = 0";
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(statementString);
@@ -69,11 +68,10 @@ public class GroupDAO {
     }
 
     public boolean changeGroupMembers(String addToGroup, int groupid, int userid) {
-        String insertStatement = "INSERT INTO user_groups (group_id, user_id) VALUES (?, ?)";
-        String deleteStatement = "DELETE FROM user_groups WHERE group_id = (?) && user_id = (?)";
+        String insertStatement = "INSERT INTO group_users (group_id, user_id) VALUES (?, ?)";
+        String deleteStatement = "DELETE FROM group_users WHERE group_id = (?) && user_id = (?)";
         try {
             PreparedStatement statement;
-
             if (addToGroup.equals("add")) {
                 statement = database.connection.prepareStatement(insertStatement);
             } else if (addToGroup.equals("remove")) {
@@ -93,19 +91,19 @@ public class GroupDAO {
         }
     }
 
-    public ArrayList<GroupDTO> getAllGroups() {
+    public ArrayList<Group> getAllGroups() {
         String statementString = "SELECT * FROM groups WHERE groups.deleted = 0";
 
-        ArrayList<GroupDTO> groups = new ArrayList<>();
+        ArrayList<Group> groups = new ArrayList<>();
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(statementString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                int groupId = rs.getInt("group_id");
-                GroupDTO group = new GroupDTO(
+                int groupId = rs.getInt("id");
+                Group group = new Group(
                         groupId,
-                        rs.getString("group_name"),
+                        rs.getString("name"),
                         getAllGroupMembers(groupId)
                 );
                 groups.add(group);
@@ -121,7 +119,7 @@ public class GroupDAO {
 
     public boolean deleteGroup(String id) {
         String INSERT_SQL = "UPDATE groups SET deleted = 1" +
-                " WHERE group_id = (?)";
+                " WHERE id = (?)";
         try {
             PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
             statement.setString(1, id);
@@ -156,4 +154,29 @@ public class GroupDAO {
         }
     }
 
+    public ArrayList<Group> getUserGroups(int id) throws SQLException  {
+        ArrayList<Group> userGroups = new ArrayList<>();
+        String SELECT_SQL = "select groups.group_id, group_name from user_groups " +
+                "inner join groups " +
+                "on groups.group_id = user_groups.group_id " +
+                "where user_id = 1 && groups.deleted != (?)";
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(SELECT_SQL);
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Group group = new Group(
+                        rs.getInt("group_id"),
+                        rs.getString("group_name")
+                );
+                userGroups.add(group);
+            }
+            statement.close();
+            return userGroups;
+        } catch (java.sql.SQLException e) {
+            System.out.println("SQL error on getting recipient list!");
+            throw new SQLException("Error! " + e);
+        }
+    }
 }

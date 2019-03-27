@@ -25,10 +25,10 @@ import UserBoardGroupDocs from './containers/UserBoardGroupDocs';
 //cookiai. 
 //rolės, kur jas man paimti?
 
-const user = {
-  roles: ['advancedUser', 'user', 'admin'],
-  rights: ['can_view_articles']
-};
+// const user = {
+//   roles: ['advancedUser', 'user', 'admin'],
+//   rights: ['can_view_articles']
+// };
 
 class App extends Component {
   constructor(props) {
@@ -37,36 +37,28 @@ class App extends Component {
       //from child
         user: [],
         token:'',
-        authority:[
-          // {authority: "ROLE_ADMIN"},
-          // {authority: "ROLE_USER"}
-        ],
+        authority:[],
     }
 }
   render() {
-    const curentUserRoles = localStorage.getItem('authority') || [];
-    console.log(curentUserRoles)
+    const curentUserRoles = localStorage.getItem('authority').split(",");
 
     return (
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          {/* <Route exact path="/login" component={LoginPage} handler={ (props,state) => <Login fetchUserData ={this.fetchUserData} text={this.state.text} />}/> */}
-          <Route exact path="/login" render={ (props,state) => <LoginPage handleDatafromChild ={this.handleDatafromChild}/>}/>
-          {/* <Login fetchUserData ={this.fetchUserData} text={this.state.text} response={this.state.response} handleDatafromChild={this.handleDatafromChild}/> */}
+          <Route exact path="/login" component={LoginPage} />
           <Route exact path="/registration" component={RegistrationPage} />
-          {/* roles reiktų perduoti taip? 
-          {hasRole(this.state.role, ['user']) && <Route exact path="/userboard" component={UserBoard} />}  */}
-          {hasRole(user, ['user']) && <Route exact path="/userboard" render={ (props,state) => <UserBoard token = {this.state.token} />}/>}
-          {hasRole(user, ['user']) && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} handler={ (props, state) => <UserBoardSubmitedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
-          {hasRole(user, ['user']) && <Route exact path="/newdoc" component={NewDocument} />}
-          {hasRole(user, ['advancedUser']) && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} handler={ (props, state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
-          {hasRole(user, ['admin']) &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
-          {hasRole(user, ['admin']) &&<Route exact path="/adminboardgroups" component={AdminBoardGroups} />}
-          {hasRole(user, ['admin']) &&<Route exact path="/adminboarddocs" render = { (props,state) => <AdminBoardDocs token ={ this.state.token }/>}/>}
-          {hasRole(user, ['admin']) &&<Route exact path="/adminboardtemplates" component={AdminBoardTemplates} />}
-          {hasRole(user, ['admin']) &&<Route exact path="/newtemplate" component={newTemplate} />}
-          {hasRole(user, ['admin']) &&<Route exact path="/usergroupdocs" component={UserBoardGroupDocs} />}
+          {curentUserRoles.includes("ROLE_USER") && <Route exact path="/userboard" render={ (props,state) => <UserBoard token = {this.state.token} />}/>}
+          {curentUserRoles.includes("ROLE_USER") && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} handler={ (props, state) => <UserBoardSubmitedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
+          {curentUserRoles.includes("ROLE_USER") && <Route exact path="/newdoc" component={NewDocument} />}
+          {curentUserRoles.includes("ROLE_ADMIN") && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} handler={ (props, state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
+          {curentUserRoles.includes("ROLE_ADMIN") &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
+          {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/adminboardgroups" component={AdminBoardGroups} />}
+          {curentUserRoles.includes("ROLE_ADMIN") &&<Route exact path="/adminboarddocs" render = { (props,state) => <AdminBoardDocs token ={ this.state.token }/>}/>}
+          {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/adminboardtemplates" component={AdminBoardTemplates} />}
+          {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/newtemplate" component={newTemplate} />}
+          {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/usergroupdocs" component={UserBoardGroupDocs} />}
           
         </Switch>
       </Router>
@@ -78,10 +70,10 @@ class App extends Component {
     this.setState({
       user: user,
       token: token,
-      authority: authority
+      //authority: authority
     })
     console.log("tai turi būti iš vaiko " + this.state.user + this.state.token)
-    console.log(this.state.authority)
+    //console.log(this.state.authority)
   }
 }
 

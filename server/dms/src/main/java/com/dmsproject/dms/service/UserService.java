@@ -45,7 +45,7 @@ public class UserService implements UserDetails, UserDetailsService {
 
     public UserDetails loadUserById(int id) throws UsernameNotFoundException {
         User user = userDAO.getUserById(id, true);
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities());
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), getAuthorities(id));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UserService implements UserDetails, UserDetailsService {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
-        list.add(new SimpleGrantedAuthority("ROLE_USER"));
+        list.add(new SimpleGrantedAuthority("ROLE_ANONYMOUS"));
         return list;
     }
 
