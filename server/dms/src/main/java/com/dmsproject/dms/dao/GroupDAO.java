@@ -5,7 +5,6 @@ import com.dmsproject.dms.dto.Group;
 import com.dmsproject.dms.dto.Recipient;
 import com.dmsproject.dms.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
@@ -19,7 +18,7 @@ public class GroupDAO {
     private Database database;
 
     public boolean createGroup(Group group) {
-        String INSERT_SQL = "INSERT INTO groups (name) values (?)";
+        String INSERT_SQL = "INSERT INTO groups (group_name) values (?)";
         try {
             PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
             statement.setString(1, group.getName());
@@ -36,12 +35,12 @@ public class GroupDAO {
 
     private ArrayList<User> getAllGroupMembers(int groupid) {
         ArrayList<User> users = new ArrayList<>();
-        String statementString = "select user_id, users.name, surname, email, position from group_users " +
+        String statementString = "select users.user_id, users.name, surname, email, position from user_groups " +
                 "inner join users " +
-                "on user_id = users.id " +
+                "on user_groups.user_id = users.user_id " +
                 "inner join groups " +
-                "on group_id = groups.id " +
-                "where group_id = (?) && users.deleted = 0 && groups.deleted = 0";
+                "on user_groups.group_id = groups.group_id " +
+                "where user_groups.group_id = (?) && users.deleted = 0 && groups.deleted = 0";
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(statementString);
@@ -67,17 +66,39 @@ public class GroupDAO {
         }
     }
 
+    private boolean isUserInGroup(int userid, int groupid) {
+        String countStatement = "select count(*) from user_groups where user_id = (?) && group_id = (?)";
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(countStatement);
+            statement.setInt(1, userid);
+            statement.setInt(2, groupid);
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                int count = rs.getInt("count(*)");
+                return (count > 0);
+            }
+            statement.close();
+            return true;
+        } catch (java.sql.SQLException e) {
+            System.err.println("SQL error!");
+            System.out.println(e.getLocalizedMessage());
+            return true;
+        }
+    }
+
     public boolean changeGroupMembers(String addToGroup, int groupid, int userid) {
-        String insertStatement = "INSERT INTO group_users (group_id, user_id) VALUES (?, ?)";
-        String deleteStatement = "DELETE FROM group_users WHERE group_id = (?) && user_id = (?)";
+        String insertStatement = "INSERT INTO user_groups (group_id, user_id) VALUES (?, ?)";
+        String deleteStatement = "DELETE FROM user_groups WHERE group_id = (?) && user_id = (?)";
         try {
             PreparedStatement statement;
-            if (addToGroup.equals("add")) {
+
+            if (addToGroup.equals("add") && !isUserInGroup(userid, groupid)) {
                 statement = database.connection.prepareStatement(insertStatement);
             } else if (addToGroup.equals("remove")) {
                 statement = database.connection.prepareStatement(deleteStatement);
             } else {
-                throw new IllegalArgumentException("bad action provided in json");
+                throw new IllegalArgumentException("bad action provided in json or user already in this group");
             }
 
             statement.setInt(1, groupid);
@@ -85,8 +106,8 @@ public class GroupDAO {
             statement.executeUpdate();
             return true;
         } catch (java.sql.SQLException e) {
-            System.err.println("SQL error getting all groups!");
-            System.out.println(e);
+            System.err.println("SQL error!");
+            System.out.println(e.getLocalizedMessage());
             return false;
         }
     }
@@ -100,11 +121,12 @@ public class GroupDAO {
             PreparedStatement statement = database.connection.prepareStatement(statementString);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                int groupId = rs.getInt("id");
+                int groupId = rs.getInt("group_id");
                 Group group = new Group(
                         groupId,
-                        rs.getString("name"),
-                        getAllGroupMembers(groupId)
+                        rs.getString("group_name"),
+                        getAllGroupMembers(groupId),
+                        rs.getInt("can_receive_docs")
                 );
                 groups.add(group);
             }
@@ -112,14 +134,14 @@ public class GroupDAO {
         return groups;
         } catch (java.sql.SQLException e) {
             System.err.println("SQL error getting all groups!");
-            System.out.println(e);
+            System.out.println(e.getLocalizedMessage());
             return null;
         }
     }
 
     public boolean deleteGroup(String id) {
         String INSERT_SQL = "UPDATE groups SET deleted = 1" +
-                " WHERE id = (?)";
+                " WHERE group_id = (?)";
         try {
             PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
             statement.setString(1, id);
@@ -127,7 +149,7 @@ public class GroupDAO {
             statement.close();
         } catch (java.sql.SQLException e) {
             System.out.println("SQL error on delete group!");
-            System.out.println(e);
+            System.out.println(e.getLocalizedMessage());
             return false;
         }
         return true;
@@ -174,6 +196,21 @@ public class GroupDAO {
             }
             statement.close();
             return userGroups;
+        } catch (java.sql.SQLException e) {
+            System.out.println("SQL error on getting recipient list!");
+            throw new SQLException("Error! " + e);
+        }
+    }
+
+    public void toggleRights(int groupId, int status) throws SQLException {
+        String UPDATE_SQL = "UPDATE groups set can_receive_docs=(?) where group_id=(?)";
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(UPDATE_SQL);
+            statement.setInt(1, status);
+            statement.setInt(2, groupId);
+            statement.executeUpdate();
+            statement.close();
+
         } catch (java.sql.SQLException e) {
             System.out.println("SQL error on getting recipient list!");
             throw new SQLException("Error! " + e);
