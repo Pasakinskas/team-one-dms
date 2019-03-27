@@ -5,6 +5,7 @@ import com.dmsproject.dms.dao.DocStatusDAO;
 import com.dmsproject.dms.dao.EventsDAO;
 import com.dmsproject.dms.dto.DocStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class DocStatusController {
 
 
     // Įrašyti dokumento statusą
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/status/put/change", method = RequestMethod.PUT)
     public void add(@RequestParam Integer docId,
                     @RequestParam Integer statusId,
