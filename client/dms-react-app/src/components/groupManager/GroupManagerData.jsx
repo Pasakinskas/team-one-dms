@@ -64,11 +64,11 @@ export default class GroupManagerData extends Component {
                     'token':token,
             },
             })
-            const statusCode = await res.status;
+           // const statusCode = await res.status;
             const json =  await res.json();
             console.log(json);
            this.setState({
-                data: json
+                data: json,
             })
             this.setState({ isLoading: false });
     }
@@ -208,8 +208,8 @@ export default class GroupManagerData extends Component {
                 </td>
                 <td>
                 <div className="form-check">
-                <input className="form-check-input" type="checkbox" onPointerDown={(e) => this.togglePermission(e)} id="defaultCheck2"/>
-                <label className="form-check-label" for="defaultCheck2" onPointerDown={(e) => this.togglePermission(e)}>
+                <input id={data.id} key={data.id.toString()}className="form-check-input" type="checkbox" checked={this.togglePermission(data.canReceiveDocs)}  id="defaultCheck2"/>
+                <label className="form-check-label" for="defaultCheck2">
                 Teisė dokumentą patvirtinti/atmesti
                 </label>
                 </div>
@@ -217,40 +217,46 @@ export default class GroupManagerData extends Component {
                 <td>
                 <input 
                     type="submit" 
-                    onPointerDown={(e) => this.submitRights(e, data.id)} 
+                    onPointerDown={(e) => this.submitRights(e, data.id,data.canReceiveDocs)} 
                     className="btn btn-dark" 
-                    value="Išsaugoti pasirinkimą"/>
+                    value="Pakeisti"/>
                 </td>
                 </tr>
                 )
         )}
     }
 
-    togglePermission(e){
-        e.preventDefault();
-            if(this.state.togglePermission === false){
-                this.setState({togglePermission:true})
-                console.log("TRUE")
-            }else if(this.state.togglePermission === true){
-                this.setState({togglePermission:false})
-                console.log("FALSE")
-            }
+    togglePermission= (permission) =>{
+        
+        if(permission === 1){
+            return true
+        }else{
+            return false
+        }
     }
-    submitRights = async(e, id) =>{
+    
+    submitRights = async(e, id, currentPermission) =>{
         e.preventDefault();
         const token = localStorage.getItem('token');
-        const {togglePermission} = this.state;
+        let setPermission;
+        if(currentPermission === 0){
+            setPermission = 1;
+        }else if(currentPermission === 1){
+            setPermission = 0;
+        }
         try{
-            const res = await fetch( `http://localhost:8086/groups/${id}`, {
+            const res = await fetch( `http://localhost:8086/groups/status`, {
             method: 'PATCH',
             headers: {
                 'token':token,
                 "content-type": "application/json"
             },
             body: JSON.stringify({
-                "isEnabled":togglePermission
+                'groupid':id,
+                "canReceiveDocs":setPermission,
             }),
             })
+            await console.log('group'+ id + 'asked for '+ setPermission);
             const statusCode = await res.status;
             return statusCode;
         }catch(err){console.log(err)};
