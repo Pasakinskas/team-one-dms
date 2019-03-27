@@ -5,6 +5,7 @@ import com.dmsproject.dms.dto.DocStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 
 @Component
@@ -13,11 +14,11 @@ public class DocStatusDAO {
     @Autowired
     private Database database;
 
-    public void addDocStatus(DocStatus docStatus) {
+    public void addDocStatus(DocStatus docStatus) throws  Exception {
          String query = "INSERT INTO document_status" +
                 "(status_id, document_id, user_id, doc_status_descr) " +
                 "values (?, ?, ?, ?)";
-        try {
+
             PreparedStatement statement = database.connection.prepareStatement(query);
             statement.setInt(1, docStatus.getStatusId());
             statement.setInt( 2, docStatus.getDocId());
@@ -26,9 +27,16 @@ public class DocStatusDAO {
 
             statement.executeUpdate();
             statement.close();
-        } catch (java.sql.SQLException e) {
-            System.out.println("Error adding to database");
-            System.out.println(e);
-        }
+    }
+
+    public void deleteStatus(int id) throws Exception {
+
+        String query = "DELETE FROM document_status WHERE document_id = ?";
+
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setInt(1, id);
+
+            statement.executeUpdate();
+            statement.close();
     }
 }

@@ -2,29 +2,26 @@ package com.dmsproject.dms.controllers;
 
 
 import com.dmsproject.dms.Constants;
+import com.dmsproject.dms.dao.DocStatusDAO;
 import com.dmsproject.dms.dao.DocumentDAO;
 import com.dmsproject.dms.dto.DocSelection;
-import com.dmsproject.dms.dto.DocTypes;
 import com.dmsproject.dms.dto.Document;
-import com.dmsproject.dms.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
 @RestController()
 @CrossOrigin(origins = Constants.REACT_URL)
 public class DocumentController {
-//    @Autowired
-//    private TokenProvider tokenProvider;
 
     @Autowired
     private DocumentDAO documentDAO;
+
+    @Autowired
+    private DocStatusDAO docStatusDAO;
 
 // išsaugoti dokumentą
     @RequestMapping(value = "/document/put/new", method = RequestMethod.PUT, consumes = "application/json")
@@ -52,7 +49,7 @@ public class DocumentController {
 
 // gauti dokumentą pagal dokumento id
     @RequestMapping(value = "/document/get/byId", method = RequestMethod.GET, produces = "application/json")
-    public Document getDocument(@RequestParam(name = "id") Integer id) {
+    public Document getDocument(@RequestParam(name = "id") Integer id) throws  Exception {
         return documentDAO.getDocumentById(id);
     }
 
@@ -74,7 +71,7 @@ public class DocumentController {
 
     // ištraukti userio išsaugotus dokumentus
     @RequestMapping (value = "/document/get/saved", method = RequestMethod.GET, produces = "application/json")
-    public List<Document> getSavedByUserId(){
+    public List<Document> getSavedByUserId() throws  Exception {
         String userId = (String) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         return documentDAO.selectSavedDocsByUserId(Integer.parseInt (userId));
     }
@@ -86,6 +83,12 @@ public class DocumentController {
         return documentDAO.selectSubmitedToUserDocs(Integer.parseInt (userId));
     }
 
+    @RequestMapping(value = "/document/delete", method = RequestMethod.DELETE)
+    public void deleteDoc(@RequestParam ("id") Integer id) throws Exception{
+
+        docStatusDAO.deleteStatus(id);
+        documentDAO.deleteDocument(id);
+    }
 }
 
 

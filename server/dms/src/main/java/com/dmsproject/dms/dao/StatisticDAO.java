@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 @Component
 public class StatisticDAO {
@@ -15,18 +14,22 @@ public class StatisticDAO {
     @Autowired
     private Database database;
 
-    public Statistic countDocuments() throws Exception {
+    // suskaičiuoti visiems pateiktiems, priimtiems ir atmestiems dokumentams
+    public Statistic countAllDocuments() throws Exception {
 
-        String query = "SELECT * FROM document_types WHERE doc_type_Id = ?";
+        String query = "SELECT COUNT(IF(document_status.status_id=2, 1, null)) 'submited', COUNT(IF(document_status.status_id=3, 1, null)) 'accepted', COUNT(IF(document_status.status_id=4, 1, null)) 'declined' " +
+                "FROM documents " +
+                "LEFT JOIN document_status ON document_status.document_id=documents.doc_id " +
+                "WHERE document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id)";
 
         Statistic statistic = new Statistic();
 
         PreparedStatement statement = database.connection.prepareStatement(query);
         ResultSet rs = statement.executeQuery();
         while (rs.next()) {
-            statistic.setSubmited(rs.getInt("doc_type_Id"));
-            statistic.setAccepted(rs.getInt("doc_type_descr"));
-            statistic.setDeclined(rs.getInt("doc_template"));
+            statistic.setSubmited(rs.getInt("submited"));
+            statistic.setAccepted(rs.getInt("accepted"));
+            statistic.setDeclined(rs.getInt("declined"));
         }
 
         statement.close();

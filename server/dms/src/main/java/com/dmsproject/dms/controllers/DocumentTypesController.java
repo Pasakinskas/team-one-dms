@@ -18,20 +18,20 @@ public class DocumentTypesController {
 
 // gauti dokumento šabloną pagal dokumento tipo id
     @RequestMapping(value = "/doctemplates/get/byId", method = RequestMethod.GET, produces = "application/json")
-    public DocTypes getDocTemplate(@RequestParam(name = "id") Integer id) {
+    public DocTypes getDocTemplate(@RequestParam(name = "id") Integer id) throws  Exception {
         return docTypesDAO.getDocTemplateByType(id);
     }
 
 // gauti dokumentų šablonų sąrašą
     @RequestMapping(value = "/doctemplates/get/all", method = RequestMethod.GET, produces = "application/json")
-    public List<DocTypes> getDocTypes() {
+    public List<DocTypes> getDocTypes() throws  Exception {
         return docTypesDAO.getDocTypes();
     }
 
 // sukurti naują dokumento šabloną
     @RequestMapping(value = "/doctemplate/put/new", method = RequestMethod.PUT)
     public Boolean add(@RequestParam(name = "description") String description,
-                       @RequestParam(name = "template") String template) {
+                       @RequestParam(name = "template") String template) throws  Exception {
         DocTypes docTypes = new DocTypes();
         docTypes.setDescription(description);
         docTypes.setTemplate(template);
@@ -43,7 +43,7 @@ public class DocumentTypesController {
     @RequestMapping(value = "/doctemplate/put/edit", method = RequestMethod.PUT)
     public void edit(@RequestParam(name = "id") Integer id,
                      @RequestParam(name = "description") String description,
-                     @RequestParam(name = "template") String template) {
+                     @RequestParam(name = "template") String template) throws Exception {
         DocTypes docTypes = new DocTypes();
         docTypes.setId(id);
         docTypes.setDescription(description);
@@ -54,7 +54,7 @@ public class DocumentTypesController {
 
 // ištrinti dokumento šabloną
     @RequestMapping(value = "/doctemplate/delete", method = RequestMethod.DELETE)
-    public void delete(@RequestParam(name = "docTypeId") Integer docTypeId) {
+    public void delete(@RequestParam(name = "docTypeId") Integer docTypeId) throws Exception {
         docTypesDAO.deleteTemplate(docTypeId);
     }
 }
