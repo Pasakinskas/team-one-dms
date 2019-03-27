@@ -18,13 +18,9 @@ public class DocReceiversController {
     @Autowired
     private DocReceiversDAO docReceiversDAO;
 
-    // Įrašyti dokumento statusą
+// Įrašyti dokumento gavęją
     @Secured("ROLE_USER")
-    @RequestMapping(value = "/receivers/put/change", method = RequestMethod.PUT)
-//    public void add(@RequestBody DocReceivers docReceivers) throws Exception{
-//
-//        docReceiversDAO.addDocReceiver(docReceivers);
-//    }
+    @RequestMapping(value = "/receivers/put", method = RequestMethod.PUT)
 
     public void add(@RequestParam Integer docId,
                     @RequestParam (required = false) Integer recUserId,

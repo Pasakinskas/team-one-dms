@@ -18,8 +18,8 @@ public class DocReceiversDAO {
 
         PreparedStatement statement = database.connection.prepareStatement(query);
         statement.setInt ( 1, docReceivers.getDocId());
-        statement.setInt( 2, docReceivers.getRecUserId());
-        statement.setInt(3, docReceivers.getRecGroupId());
+        statement.setObject( 2, docReceivers.getRecUserId());
+        statement.setObject(3, docReceivers.getRecGroupId());
 
         statement.executeUpdate();
         statement.close();
