@@ -3,7 +3,6 @@ import {Button, Form, FormLabel, FormControl } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import './Login.css';
 
-//jei fecho responsas 400 tai nulūžta
 
 class Login extends Component {
     constructor(props) {
@@ -80,37 +79,23 @@ class Login extends Component {
             const roleList = authority.map(role => {
               return role.authority;
             })
+            console.log("Login role list")
+            console.log(roleList);
             localStorage.setItem("authority", roleList);
-            if (roleList.includes("ROLE_ADMIN")) {
-              this.nextPath(`/adminboarddocs`);
-            } else {
-              this.nextPath(`/userboard`);
-            }
+            // if (roleList.includes("ROLE_ADMIN")) {
+            //   console.log("Nukreipia į adminbordą")
+            //   this.nextPath(`/adminboarddocs`);
+            // } else {
+            //   this.nextPath(`/userboard`);
+            // }
           }
         }
       } else {
         alert("Prisijungimas nepavyko, bandykite vėliau dar kartą");
         this.nextPath(`/`);
       }
-
-        // const fetchUserData = await this.fetchUserData;
-        // const res = await fetchUserData();
-
-        // const fetchUserAuthority = await this.fetchUserAuthority;
-        // const res2 = await fetchUserAuthority();
-
-        // const status = this.state.response;
-        // this.props.handleDatafromChild(this.state.user, this.state.token, this.state.authority);
-        // console.log("fetcho rezultatas " + res);
-        // this.evalRes(status);
-      // } 
   };
-    
-  // evalRes = (isRegGood)=>{
-  //   isRegGood === 200
-  //   ? this.nextPath(`/userboard`) 
-  //   : alert("Prisijungimas nepavyko, bandykite vėliau dar kartą")&& this.nextPath(`/`)
-  // }
+  
 
   handleChange = (e) => {
       e.preventDefault();
@@ -183,6 +168,10 @@ class Login extends Component {
     return json;
   }
 
+  handleDatafromChild = (authority) => {
+    this.props.handleDatafromChild(authority)    
+  }
+
   fetchUserAuthority = async () => {
     const token = localStorage.getItem("token");
     const res = await fetch("http://localhost:8086/roles/user", {
@@ -192,11 +181,21 @@ class Login extends Component {
         "content-type": "application/json"
       }
     });
+    const json = await res.json();
+    const roleList = json.map(role => {
+      console.log("Rolės iš authority" + role.authority)
+      return role.authority;
+    });
     if (res.status == 200) {
-      return res.json();
+      this.setState({
+        authority: roleList,
+      })
+      this.handleDatafromChild(this.state.authority);
+      return json;
     } else {
       console.error("asked for roles and got bad status")
     }
+
   }
 }
 export default withRouter(Login);

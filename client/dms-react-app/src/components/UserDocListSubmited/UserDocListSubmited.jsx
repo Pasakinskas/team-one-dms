@@ -18,12 +18,15 @@ class UserDocListSubmited extends Component {
         super(props);
     
         this.state = {
-            userDocuments:[{}],
+            userDocuments:[],
+            selectedDocuments: {},
             modalIsOpen: false,
+            text:[]
         }
     } 
 
     render() {
+        const {text} = this.state;
         const { SearchBar } = Search;
         const bgcolor = {backgroundColor: "#9ef7e8"};
         const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
@@ -51,7 +54,7 @@ class UserDocListSubmited extends Component {
         };
 
         const selectRow = {
-            mode: 'checkbox',
+            mode: 'radio',
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
@@ -115,7 +118,6 @@ class UserDocListSubmited extends Component {
                 <ToolkitProvider
                     keyField="id"
                     data= { this.state.userDocuments }
-                    // { this.state.userDocuments.filter((document)=>{return (document.condition !=="saved") && (document.condition !== "Deleted")} ) }
                     columns= { columns }
                     search
                     >
@@ -140,9 +142,10 @@ class UserDocListSubmited extends Component {
                                 onRequestClose={this.closeModal}
                                 style={customStyles}
                                 contentLabel="Dokumento peržiūra"
+                                autoFocus={false}
                                 >  
                                 <ModalHeaderSubmited modalIsOpen = {this.closeModal}/>                                          
-                                <TextEditor style={{"width" : "95%"}}/>                  
+                                <TextEditor newEditorVar={text}/>                  
                             </Modal>                                               
                         </div>
                         )
@@ -156,58 +159,72 @@ class UserDocListSubmited extends Component {
         this.props.history.push(path);
     }
 
-    openModal = () => {
-        this.setState({modalIsOpen: true});
+    openModal = async () => {
+        await this.setState({modalIsOpen: true});
+        await this.showDoc();   
     }
+  
     
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
 
     changeSelectStatus = (row, isSelected, e)=>{
-        const newDoc = this.state.userDocuments.map(datarow => {
-            if(datarow.id -1 === row){
-                datarow.isChecked = !datarow.isChecked;
-            }
-        return row;
-        })
+        // const newDoc = this.state.userDocuments.map(datarow => {
+        //     if(datarow.id === row){
+        //         datarow.isChecked = !datarow.isChecked;
+        //     }
+        // return row;
+        // })
         if(isSelected){
             window.setTimeout(
                 function() {
                     this.setState({
-                    selectedDocuments: newDoc
+                    selectedDocuments: row
                 });
+                console.log("šiuo metu state " );
+                console.log(this.state.selectedDocuments);
                     }.bind(this),
                 0
             );
-            console.log("Spausdinu pažymėtą")
-            console.log(row);
+            console.log("Spausdinu pažymėtą");
+            console.log(row);           
         }
     }
 
-    changeDocByCondition = (newCondition) => {
-        let selectedDocuments = this.state.userDocuments.map(doc =>{
-           if(doc.isChecked){
-             return doc
-           } 
-           return selectedDocuments;
-        });
+    // changeDocByCondition = (newCondition) => {
+    //     let selectedDocuments = this.state.userDocuments.map(doc =>{
+    //        if(doc.isChecked){
+    //          return doc
+    //        } 
+    //        return selectedDocuments;
+    //     });
 
-        for (let doc of selectedDocuments) {
-            doc.condition = newCondition;
-        }
-        return selectedDocuments;
-    }
+    //     for (let doc of selectedDocuments) {
+    //         doc.condition = newCondition;
+    //     }
+    //     return selectedDocuments;
+    // }
 
  
      //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
-    showDoc =() => {
-        const localDoc = this.state.userDocuments;
-        for(const row of localDoc){
-            if (row.isChecked === true){
-                //nusetinti teksto reikšmę ir atvaizduoti į editorių modaliniam lange.
-            }
-        }
+     showDoc = async () => {
+        let token = localStorage.getItem('token');
+        const selectedDoc = this.state.selectedDocuments;
+        const API =`http://localhost:8086/document/get/byId?id=${selectedDoc.id}`;
+        const res = await fetch(API, {
+            method: "GET",
+            headers: {
+                'token': token,
+                "content-type": "application/json"
+            },
+        })           
+            const json = await res.json(); 
+            console.log(json.content);
+        // text :value for editor to consume
+            this.setState({ 
+                text: json.content,
+        });      
     };
 
     componentDidMount(){
@@ -215,7 +232,7 @@ class UserDocListSubmited extends Component {
     }
 
     
-    fetchDataDocListUser = async() => {
+    fetchDataDocListUser = async () => {
         const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:8086/document/get/submited", 
         {

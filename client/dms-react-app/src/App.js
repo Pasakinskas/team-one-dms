@@ -14,6 +14,7 @@ import newTemplate from './containers/NewTemplate';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { hasRole } from './containers/Auth';
 import UserBoardGroupDocs from './containers/UserBoardGroupDocs';
+import { withRouter } from 'react-router-dom';
 
 // kai turėsiu json iš BE tai pas mane bus tik const user = json ir iš vidaus matysis
 // kokias roles jis turi ir ką gali daryti. kol kas tai yra statiška, nežinau kaip padryti kad JIS ŽINOTŲ kas aš. 
@@ -40,14 +41,20 @@ class App extends Component {
         authority:[],
     }
 }
+
+
   render() {
-    const curentUserRoles = localStorage.getItem('authority').split(",");
+    let curentUserRoles = [];
+    if (localStorage.getItem('authority'))  {
+      curentUserRoles = localStorage.getItem('authority').split(",");
+    }
+  
 
     return (
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/login" render={ (props,state) => <LoginPage handleDatafromChild = {this.handleDatafromChild} />}/>
           <Route exact path="/registration" component={RegistrationPage} />
           {curentUserRoles.includes("ROLE_USER") && <Route exact path="/userboard" render={ (props,state) => <UserBoard token = {this.state.token} />}/>}
           {curentUserRoles.includes("ROLE_USER") && <Route exact path="/usersubmited" component={UserBoardSubmitedDoc} handler={ (props, state) => <UserBoardSubmitedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
@@ -55,8 +62,8 @@ class App extends Component {
           {curentUserRoles.includes("ROLE_ADMIN") && <Route exact path="/usergetdoc" component={UserBoardGetedDoc} handler={ (props, state) => <UserBoardGetedDoc id = {this.state.user.id} token = {this.state.user.token} />}/>}
           {curentUserRoles.includes("ROLE_ADMIN") &&<Route exact path="/adminboardusers" component={AdminBoardUsers} />}
           {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/adminboardgroups" component={AdminBoardGroups} />}
-          {curentUserRoles.includes("ROLE_ADMIN") &&<Route exact path="/adminboarddocs" render = { (props,state) => <AdminBoardDocs token ={ this.state.token }/>}/>}
-          {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/adminboardtemplates" component={AdminBoardTemplates} />}
+          {this.getUserRoles().includes("ROLE_ADMIN") &&<Route exact path="/adminboarddocs" render = { (props,state) => <AdminBoardDocs token ={ this.state.token }/>}/>}
+          {/* {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/adminboardtemplates" component={AdminBoardTemplates} />} */}
           {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/newtemplate" component={newTemplate} />}
           {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/usergroupdocs" component={UserBoardGroupDocs} />}
           
@@ -65,14 +72,33 @@ class App extends Component {
     );
   }
 
-  handleDatafromChild = (user, token, authority) => {
+  nextPath = (path)=>{
+    this.props.history.push(path);
+  }
 
-    this.setState({
-      user: user,
-      token: token,
-      //authority: authority
+  getUserRoles = () => {
+    let curentUserRoles = [];
+    if (localStorage.getItem('authority'))  {
+      curentUserRoles = localStorage.getItem('authority').split(",");
+    }
+    console.log("appjs is taking roles from localstorage")
+    console.log(curentUserRoles)
+    return curentUserRoles;
+  }
+
+  handleDatafromChild = (authority) => {
+      this.setState({
+      authority: authority
     })
-    console.log("tai turi būti iš vaiko " + this.state.user + this.state.token)
+    console.log("tai turi būti iš vaiko " + authority)
+    if (this.state.authority.includes("ROLE_ADMIN")) {
+      console.log("Nukreipia į adminbordą")
+      
+      //this.nextPath(`/adminboarddocs`);
+    } else {
+      console.log("aš useris")
+     // this.nextPath(`/userboard`);
+    }
     //console.log(this.state.authority)
   }
 }

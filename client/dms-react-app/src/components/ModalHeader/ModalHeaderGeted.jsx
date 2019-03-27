@@ -8,8 +8,11 @@ class ModalHeaderGeted extends Component {
             <div>
                  <h4>Dokumento atmetimo priežastis</h4>
             <span className="modalBtn">
-                <Button variant="danger" type="submit" onClick={this.props.rejectModalIsOpen}>
+                <Button variant="danger" type="button" onClick={this.props.rejectModalIsOpen}>
                      X
+                </Button>
+                <Button variant="success" type="button" onClick={()=>{this.props.sendRejection()}}>
+                    Tvirtinti šalinimą
                 </Button>
             </span>    
             </div>

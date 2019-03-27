@@ -46,25 +46,6 @@ class NewDocForm extends Component {
         const userRecipients = this.state.userRecipients.map((users) =>
         <option key={users.name}>{users.name}</option>);
 
-        // const listRecipients = this.state.recipients.map((recipients) => <option>{recipients.groups}, {recipients.users}</option>);
-        //const listRecipients = this.state.recipients.map((groups, users) =><p>{groups}</p>);
-        //const listRecipients = this.state.recipients.Object.keys(this.state.recipients.groups).map((groups) =>{console.log("Ar tai grupės? " + groups.groups)});
-        // const listRecipients = this.state.recipients.map(())
-        // const data = this.state.recipients;
-        // const parsintas = JSON.parse(data);
-        // console.log(parsintas);
-        //const listRecipients = this.state.recipients.map(recipient =><option>{recipient.users}</option> );
-        // const listRecipients = this.state.recipients.map(fe => (
-        //   <ul>
-        //     {fe.groups.map(li => (
-        //       <li>{li.name}</li>
-        //     ))}
-        //     {fe.users.map(lili => (
-        //       <li>{lili.name}</li>
-        //     ))}
-        //   </ul>
-        // ))
-
         return (
             <div className="form-wrapper" id="form">
              <Form onSubmit={(e)=>{this.handleClickSend(e)}}>
@@ -130,20 +111,22 @@ class NewDocForm extends Component {
     }
 
     updateEditorValue = (value) =>{
-      this.props.updateEditorValue(value);
-  }
-    
+        this.props.updateEditorValue(value);
+    }
+      
     componentDidMount(){
         this.fetchDataDocTemplates();
         this.fetchDataRecipients();
     }
 
-    //užklausa dokumentų šablonų sąrašui gauti
+      //užklausa dokumentų šablonų sąrašui gauti
     fetchDataDocTemplates = async () => {
+      const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:8086/doctemplates/get/all", 
       {
         method: "GET",
         headers: {
+          "token" : token,
           "content-type": "application/json",
         },
       });
@@ -155,38 +138,14 @@ class NewDocForm extends Component {
       console.log(this.state.template)
     }
 
-    // on submit GET template json using id
-    onSubmit  = async (id) =>{
-      console.log("Select option selected");
-// text editor on change saves to session storage
-try{
-  const res = await fetch(`http://localhost:8086/doctemplates/get/byId?id=${id}`, {
-
-  content:'application/x-www-form-urlencoded; charset=UTF-8',
-  method: 'GET',
-  token:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyaWQiLCJpZCI6M30.N_sFZI-6YgGcoh7j_VQFHzp4VBmJhKtyoXTYZbZ9pos',
-})
-  const statusCode = await res.status;
-  const json =  await res.json();
-  this.setState({
-      "doc":json.template,
-  })
-  this.updateEditorValue(this.state.doc);
-  return statusCode;
-
-      }catch(err){console.log(err)};
-      try{
-          const document = (this.state.doc)
-          console.log(document);
-          
-      }catch(err){console.log(err);};
-    }
-
+      
     fetchDataRecipients = async () => {
+      const token = localStorage.getItem("token");
       const res = await fetch("http://localhost:8086/recipients",
       {
         method: "GET",
         headers: {
+          "token": token,
           "content-type": "application/json",
         },
       });
@@ -210,6 +169,35 @@ try{
       this.onSubmit(value);
     } 
 
+    // on submit GET template json using id
+    onSubmit  = async (id) =>{
+      const token = localStorage.getItem("token");
+      console.log("Select option selected");
+    // text editor on change saves to session storage
+    try{
+      const res = await fetch(`http://localhost:8086/doctemplates/get/byId?id=${id}`, {
+  
+      method: 'GET',
+      headers:{
+        "token": token,
+        "content-type": 'application/x-www-form-urlencoded; charset=UTF-8',
+      }      
+    })
+      const statusCode = await res.status;
+      const json =  await res.json();
+      this.setState({
+          "doc":json.template,
+      })
+    this.updateEditorValue(this.state.doc);
+    return statusCode;
+        }catch(err){console.log(err)};
+        try{
+            const document = (this.state.doc)
+            console.log(document);
+            
+        }catch(err){console.log(err);};
+    }
+
     handleChange = (e) => {
       const { name, value } = e.target;
       let formErrors = { ...this.state.formErrors };
@@ -223,18 +211,19 @@ try{
     handleClickSend = async (e) =>{
       e.preventDefault();
 //existing value turi ateiti iš text editoriaus. Kur ten padėti this.state.?
+        const docName = this.state.docName;
         const token = localStorage.getItem("token");
         const data = await localStorage.getItem('content');
         await console.log(JSON.stringify({content: data}))
-        const API = 'http://localhost:8086/document/post/new';
+        const API = 'http://localhost:8086/document/put/new';
         fetch(API, {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             "content-type": "Application/json",
             "token": token,
             
           },
-          body: JSON.stringify({content: data, typeId: 1}),
+          body: JSON.stringify({content: data, typeId: 1, name: docName }),
         }).then(response => {
 //Kaip suformuoti būsenos pakeitimą?
           if (response.status === 200){

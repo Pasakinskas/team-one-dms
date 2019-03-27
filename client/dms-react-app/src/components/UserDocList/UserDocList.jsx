@@ -155,8 +155,6 @@ class UserDocList extends Component {
                                 >  
                                 <ModalHeader modalIsOpen = {this.closeModal}/>       
                                 <TextEditor newEditorVar={text}/>                                       
-                                
-                                {/* editor = {userDocuments filter text}                   */}
                             </Modal>                                               
                         </div>
                         )
@@ -172,9 +170,7 @@ class UserDocList extends Component {
 
     openModal = async() => {
       await this.setState({modalIsOpen: true});
-      await this.showDoc()
-        
-        
+      await this.showDoc();   
     }
 
     closeModal = () => {
@@ -200,8 +196,7 @@ class UserDocList extends Component {
                 0
             );
             console.log("Spausdinu pažymėtą");
-            console.log(row);
-            
+            console.log(row);           
         }
     }
 
@@ -222,41 +217,22 @@ class UserDocList extends Component {
     // }
     
     showDoc = async () => {
-        //const localDoc = this.state.userDocuments.id;
-        console.log('showDoc initiated')
         let token = localStorage.getItem('token');
-<<<<<<< HEAD
         const selectedDoc = this.state.selectedDocuments;
         const API =`http://localhost:8086/document/get/byId?id=${selectedDoc.id}`;
         const res = await fetch(API, {
-                method: "GET",
-                headers: {
-                    'token': token,
-                },
-                })           
-                const json = await res.json(); 
-                console.log(json.content);
-                // text :value for editor to consume
-                this.setState({ 
-                    text: json.content,
-            });      
-=======
-        selectedDoc.forEach(async (e) => {
-            const res = await fetch(`http://localhost:8086/document/get/byId?id=${e.id}`,
-            {
-                method: "GET",
-                headers:{
-                    'token':token,
-                }
-            })
+            method: "GET",
+            headers: {
+                'token': token,
+                "content-type": "application/json"
+            },
+        })           
             const json = await res.json(); 
             console.log(json.content);
-    // text :value for editor to consume
-           this.setState({ 
+        // text :value for editor to consume
+            this.setState({ 
                 text: json.content,
-            });  
-        })
->>>>>>> 9a65b3cafc22d6d015d9ae632ad1a40dd5df03e3
+        });      
     };
   
     //Document condition changes to submited(pateikti dok.)
@@ -265,8 +241,8 @@ class UserDocList extends Component {
         const token = localStorage.getItem("token");
         // const sentDocList = this.changeDocByCondition("submited");
         const selectedDoc = this.state.selectedDocuments;
-        const API = `http://localhost:8086/status/post/change?docId=${selectedDoc.id}&statusId=2&description=''`;
-       fetch(API, {
+        const API = `http://localhost:8086/status/put/change?docId=${selectedDoc.id}&statusId=2&description=''`;
+        fetch(API, {
             method: 'PUT',
             headers: {
                 'token': token,
@@ -285,23 +261,24 @@ class UserDocList extends Component {
     //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
         const token = localStorage.getItem("token");
+        console.log("Deletinu")
         // const deleteDocList = this.changeDocByCondition("deleted");
-        const selectedDoc = this.state.selectedDocuments;
-        const API = `http://localhost:8086/status/put/change?docId=${selectedDoc.id}&statusId=5&description=''`; 
+        const deleteDoc = this.state.selectedDocuments;
+        const API = `http://localhost:8086/status/put/change?docId=${deleteDoc.id}&statusId=5&description=''`; 
         fetch(API, {
-                method: 'PUT',
-                headers: {
-                    'token': token,
-                    'content-Type': 'application/json'
-                },
-                body: JSON.stringify({selectedDoc}),
-            }).then(response => {
-                if(response.status === 200){
-                    this.nextPath(`/userboard`);
-                }else{
-                    alert("Pateikti nepavyko");
-                }
-            }).catch(error => console.error(error));
+            method: 'PUT',
+            headers: {
+                'token': token,
+                'content-Type': 'application/json'
+            },
+            body: JSON.stringify({deleteDoc}),
+        }).then(response => {
+            if(response.status === 200){
+                this.nextPath(`/userboard`);
+            }else{
+                alert("Pateikti nepavyko");
+            }
+        }).catch(error => console.error(error));
     };
      
     componentDidMount(){

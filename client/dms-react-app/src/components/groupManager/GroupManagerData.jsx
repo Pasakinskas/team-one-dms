@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 
 import UserSelector from './UsersSelector';
 import GroupUserSelector from './GroupUserSelector';
+
+
+
 // api - group list
 const API_TEST = 'https://reqres.in/api/users?page=2';
 const API = 'http://localhost:8086/groups'
 // api_add_user adress to add user to group
 const API_ADD_USER = 'http://localhost:8086/groups/users';
-const API_REMOVE_USER = 'http://localhost:8086/groups';
+const API_REMOVE_USER = 'http://localhost:8086/groups/users';
 const API_REMOVE_GROUP = 'http://localhost:8086/group';
 const DEFAULT_QUERY ='';
 
@@ -35,6 +38,7 @@ export default class GroupManagerData extends Component {
         return optionValue;
     };
     handleChange = (event,groupId) =>{
+        const data = this.fetchGroups;
         this.setState({
             userId: event.target.value,
             groupId:groupId,
@@ -47,29 +51,26 @@ export default class GroupManagerData extends Component {
     componentDidMount() {
         this.setState({ isLoading: true });
 //setting auth for testing
-        localStorage.setItem("authority","admin")
-          this.fetchGroups();
-          
+        this.fetchGroups();    
     }
 
     fetchGroups = async () =>{
+        console.log('ACTIVE');
         const token = localStorage.getItem('token');
         const res = await fetch(API, {
             method: 'GET',
             headers:{
                     'content-type':'Application/json',
-                    token:token,
+                    'token':token,
             },
             })
             const statusCode = await res.status;
-            console.log(res);
             const json =  await res.json();
             console.log(json);
-            this.setState({
-                "data":json
+           this.setState({
+                data: json
             })
             this.setState({ isLoading: false });
-            return statusCode;
     }
 
 //options for selector
@@ -95,6 +96,7 @@ export default class GroupManagerData extends Component {
             const statusCode = await res.status;
             return statusCode;
         }catch(err){console.log(err)};
+        await this.fetchGroups();
       }
 
     removeUsers = async (event) =>{
@@ -108,8 +110,8 @@ export default class GroupManagerData extends Component {
                 "content-type": "application/json"
             },
             body: JSON.stringify({
-                "userId":this.state.userId,
-                "groupId":this.state.groupId,
+                "userid":this.state.userId,
+                "groupid":this.state.groupId,
                 "action":'remove',
             }),
             })
@@ -121,11 +123,12 @@ export default class GroupManagerData extends Component {
     removeGroup = async (event, groupId) =>{
         event.preventDefault();
         const token = localStorage.getItem('token');
+        console.log(token);
         //const {isRemove} = this.state;
 //placeholder for modal aditional confirmation state
         if(true){
             try{
-            const res = await fetch(`http://localhost:8086/groups/${groupId}` , {
+            const res = await fetch(`http://localhost:8086/groups/` +groupId , {
                 method: 'DELETE',
                 headers: {
                     "token": token,
@@ -141,14 +144,15 @@ export default class GroupManagerData extends Component {
               return statusCode;
             }catch(err){console.log(err)};
         }
-        
       }
 
     render(){
         const { data, isLoading, error } = this.state;
-        let i =1;
+        const randomKeys = [];
+        for (let i = 0; i < 50; i++) {
+            randomKeys.push(Math.floor(Math.random() * 10000));
+        }
         function row(){
-        return i++;
         }
         if(error){
         return <tr><td><p>{error.message}</p></td></tr>;
@@ -163,7 +167,7 @@ export default class GroupManagerData extends Component {
         }else{
         return(
             data.map(data => 
-                <tr key={data.id}>
+                <tr>
                     <th scope='row'>{row()}</th>
                     <td>{data.name}</td>
                     <td><form className="table-form" onSubmit={this.addUsers}>
@@ -180,7 +184,7 @@ export default class GroupManagerData extends Component {
                     value="Pridėti narį"/>
                     </form>
                 </td>
-                <td><form className="table-form" onSubmit={this.removeUsers}>
+                <td><form className="table-form" onSubmit={(e) => this.removeUsers(e)}>
                 <select 
                         name="user"
                         className="selectpicker" 
