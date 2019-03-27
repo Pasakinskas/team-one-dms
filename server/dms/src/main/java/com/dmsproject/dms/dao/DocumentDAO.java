@@ -109,7 +109,7 @@ public class DocumentDAO {
                 "LEFT JOIN users AS receiving_user ON document_receiver.receiv_user_id=receiving_user.user_id " +
                 "LEFT JOIN `groups` ON `groups`.group_id=document_receiver.receiv_group_id " +
                 "LEFT JOIN users ON document_status.user_id=users.user_id " +
-                "WHERE document_status.status_id  IN (2, 3, 4, 5) and document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) " +
+                "WHERE document_status.status_id  IN (2, 3, 4) and document_status.`date` = (select max(`date`) from document_status where document_id = documents.doc_id) " +
                 "ORDER BY date DESC";
 
 
