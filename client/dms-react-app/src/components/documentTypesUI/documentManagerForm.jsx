@@ -13,10 +13,13 @@ class DocManagerForm extends Component {
           doc_name: "",
         }
     }
+
 // save template
     onSubmit  = async (event, editorValue) =>{
 //setting auth for testing
-        localStorage.setItem("authority","admin")
+        localStorage.setItem("authority","admin");
+       
+       
         event.preventDefault();
         console.log(this.state.doc_name);
 //editorValue broken
@@ -26,17 +29,22 @@ class DocManagerForm extends Component {
         const data2 = localStorage.getItem('content');
         let description = this.state.doc_name;
         try{
-            const res = await fetch(`http://localhost:8086/doctemplate/post/new`, {
-            method: 'POST',
-            headers: {
+            const token = localStorage.getItem("token");
+            console.log(token);
+            console.log(data2);
+            console.log(description);
+            const res = await fetch(`http://localhost:8086/doctemplate/put/new`, {
+           // content: "application/x-www-form-urlencoded; charset=UTF-8",
+            method: 'PUT',
+            headers:{
                 "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-                "token":'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyaWQiLCJpZCI6M30.N_sFZI-6YgGcoh7j_VQFHzp4VBmJhKtyoXTYZbZ9pos',
-              },
+                'token': token
+            },           
            /* body: JSON.stringify({
                 description:this.state.doc_name,
                 template:data2,
             }),*/
-            body:`description=${this.state.doc_name}&template=${data2}`
+           body:`description=${this.state.doc_name}&template=${data2}`
             })
             const statusCode = await res.status;
             const json =  await res.json();
@@ -54,7 +62,7 @@ class DocManagerForm extends Component {
         const {name} = this.state;
         return (
             <div className="form-wrapper" id="form">
-             <Form onSubmit={(e)=>{this.onSubmit(e,this.props.newEditorVar)}}>
+             <Form onSubmit={(e)=>{this.onSubmit(e, this.props.newEditorVar)}}>
                 <div className="name"> 
                     <FormLabel>Šablono pavadinimas</FormLabel>
                     <FormControl 

@@ -16,19 +16,15 @@ class GroupView extends Component {
         const listGroups = this.state.groupRecipients.map((groups) =>
         <li className="list-group-item">{groups.name}</li> );
         
-        // const listMyGroups = this.state.myGroups.map((mg) =>
-        // <li className="list-group-item">{mg.name}</li> );
+        const listMyGroups = this.state.myGroups.map((mg) =>
+        <li className="list-group-item">{mg.name}</li> );
 
         return (
             <div className="group">
                 <Card className="allGroups">
                 <FormLabel className="GroupLabel">Mano padaliniai</FormLabel>
                 <ListGroup variant="flush">
-                    {/* {listMyGroups}*/}
-                    <li className="list-group-item">aaa</li>
-                    <li className="list-group-item">sss</li>
-                    <li className="list-group-item">ddd</li>
-                    <li className="list-group-item">fff</li>
+                    {listMyGroups}
                 </ListGroup>
                 </Card>
                 <Card className="myGroups">
@@ -47,7 +43,7 @@ class GroupView extends Component {
     
   fetchMyGroups = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:8086/users/mygroups",
+    const res = await fetch("http://localhost:8086/groups/mygroups",
     {
       method: "GET",
       headers: {
@@ -57,7 +53,7 @@ class GroupView extends Component {
     });
     const json = await res.json();
     this.setState({
-      myGroups:json.groups,       
+      myGroups: json,       
     });
   }
   

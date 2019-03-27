@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin(origins = Constants.REACT_URL)
 @RestController
@@ -51,6 +53,27 @@ public class GroupController {
     }
 
     @Secured("ROLE_ADMIN")
+    @RequestMapping(value = "/groups/status", method = RequestMethod.PATCH)
+    public ResponseEntity<?> changeGroupRights(@RequestBody JsonNode json, Errors errors) {
+        if (errors.hasErrors()) {
+            System.out.println();
+        }
+        try {
+            int groupid = json.get("groupid").asInt();
+            int status = json.get("canReceiveDocs").asInt();
+
+            groupDAO.toggleRights(groupid, status);
+            Map<String, String> resMsg = new HashMap<>();
+            resMsg.put("message", "Status changed for group " + groupid + " successfully");
+            return new ResponseEntity<>(resMsg, HttpStatus.OK);
+        } catch (SQLException e) {
+            Map<String, String> resMsg = new HashMap<>();
+            resMsg.put("message",e.getLocalizedMessage());
+            return new ResponseEntity<>(resMsg, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/groups/users", method = RequestMethod.PATCH)
     public ResponseEntity<?> modGroupUserList(@RequestBody JsonNode json, Errors errors) {
         System.out.println(json);
@@ -69,9 +92,10 @@ public class GroupController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         } catch (IllegalArgumentException | NullPointerException e) {
-            System.out.println("error parsing json");
-            System.out.println(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            System.out.println("error, bad json, bad action or user in group");
+            Map<String, String> resMsg = new HashMap<>();
+            resMsg.put("message",e.getLocalizedMessage());
+            return new ResponseEntity<>(resMsg, HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -16,7 +16,9 @@ class AdminUsers extends Component {
         super(props);
     
         this.state = {
-            users: [{}],
+            users: [],
+            selectedUser:[],
+
             user:[
             {
                 id: 1,
@@ -111,12 +113,10 @@ class AdminUsers extends Component {
         };      
         
         const selectRow = {
-            mode: 'checkbox',
+            mode: 'radio',
             clickToSelect: true,
             headerStyle: bgcolor,
-            onSelect: (row, isSelect, rowIndex, e) => {
-                this.changeSelectStatus(rowIndex);  
-            }, 
+            onSelect: this.changeSelectStatus,
         };
 
         const columns = [
@@ -156,7 +156,7 @@ class AdminUsers extends Component {
                         <SearchBar
                             { ...props.searchProps } 
                             placeholder='Paieška...' />
-                        <Button id="btn" variant="danger" type="submit" onClick={() =>this.deleteUser()}>
+                        <Button id="btn" variant="danger" type="submit" onClick={(e) =>this.deleteUser(e)}>
                             Pašalinti
                         </Button>
                         <BootstrapTable 
@@ -176,44 +176,56 @@ class AdminUsers extends Component {
         this.props.history.push(path);
     };
 
-    changeSelectStatus = (rowIndex)=>{
-        const newUsers = this.state.documents.map(row => {
-            if(row.id -1 === rowIndex){
-                 console.log(rowIndex)
-                 row.isChecked = !row.isChecked;
-            }
-            return row;
-        })
-        this.setState({
-            users: newUsers
-        })
-    }
+    changeSelectStatus = (row, isSelected, e)=>{
+        // const newDoc = this.state.userDocuments.map(datarow => {
+        //     if(datarow.id === row){
+        //         datarow.isChecked = !datarow.isChecked;
+        //     }
+        // return row;
+        // })
+        if(isSelected){
+            window.setTimeout(
+                function() {
+                    this.setState({
+                    selectedUser: row
+                });
+                console.log("šiuo metu state " );
+                console.log(this.state.selectedUser);
+                    }.bind(this),
+                0
+            );
+            console.log("Spausdinu pažymėtą");
+            console.log(row);           
+        }
+    }    
 
-    selectedUsers = () => {
-        let selectedUsers= this.state.users.filter(doc =>{
-           if(doc.isChecked){
-             return doc
-           } 
-           return selectedUsers;
-        });
-        return selectedUsers;
-    }
+    // selectedUsers = () => {
+    //     let selectedUsers= this.state.users.filter(doc =>{
+    //        if(doc.isChecked){
+    //          return doc
+    //        } 
+    //        return selectedUsers;
+    //     });
+    //     return selectedUsers;
+    // }
 
     deleteUser = (e) => {
         e.preventDefault();
-        const deleteUserList = this.selectedUsers();
-        const API = 'https://localhost:8086/document/add';
+        const token = localStorage.getItem("token");
+        const deleteUser = this.state.selectedUser;
+        const API = `http://localhost:8086/users/${deleteUser.id}`;
         fetch(API, {
             method: 'DELETE',
             headers: {
+                'token': token,
                 'content-Type': 'application/json'
             },
-            body: JSON.stringify({deleteUserList}),
+            body: JSON.stringify({deleteUser}),
         }).then(response => {
             if(response.status === 200){
                 this.nextPath('/adminboarddocs')
             }else{
-                alert("Pašalinti dokumento nepavyko");
+                alert("Pašalinti vartotojo nepavyko");
             }
         }).catch(error => console.error(error));
     }; 
@@ -222,7 +234,7 @@ class AdminUsers extends Component {
         this.fetchDataUserList()
     };
 
-    fetchDataUserList = async (url) => {
+    fetchDataUserList = async () => {
         const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:8086/users",
         {  

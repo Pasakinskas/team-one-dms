@@ -8,6 +8,7 @@ class NewTemplate extends Component {
         return (
             <div>
                 <NewDocHeader/>
+                <p className="headers">ŠABLONAI</p>
                 <DocumentManager/>
                 <Footer/>
             </div>

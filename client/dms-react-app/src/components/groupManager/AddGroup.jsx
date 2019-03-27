@@ -25,8 +25,7 @@ export default class AddGroup extends Component{
             const res = await fetch(API, {
             method: 'POST',
             headers: {
-                authority:'admin',
-                token:token,
+                'token':token,
                 "content-type": "application/json",
             },
             body: JSON.stringify({

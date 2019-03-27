@@ -13,11 +13,14 @@ public class Group {
     @NotEmpty
     private String name;
 
+    private int canReceiveDocs;
+
     private ArrayList<User> membersList;
 
-    public Group(int id, @NotNull @NotEmpty String name, ArrayList<User> membersList) {
+    public Group(int id, @NotNull @NotEmpty String name, ArrayList<User> membersList, int canReceiveDocuments) {
         this.id = id;
         this.name = name;
+        this.canReceiveDocs = canReceiveDocuments;
         this.membersList = membersList;
     }
 
@@ -43,6 +46,14 @@ public class Group {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getCanReceiveDocs() {
+        return canReceiveDocs;
+    }
+
+    public void setCanReceiveDocs(int canReceiveDocs) {
+        this.canReceiveDocs = canReceiveDocs;
     }
 
     public ArrayList<User> getMembersList() {

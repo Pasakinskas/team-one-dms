@@ -25,10 +25,12 @@ class UserDocListGeted extends Component {
             modalIsOpen: false,
             rejectModalIsOpen: false,
             rejectReason:"",
+            text:[]
         }
     } 
 
     render() {
+        const {text} = this.state;
         const { SearchBar } = Search;
         const bgcolor = {backgroundColor: "#9ef7e8"};
         const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
@@ -72,7 +74,7 @@ class UserDocListGeted extends Component {
             clickToSelect: true,
             bgColor: "#edeeeebe",
             headerStyle: bgcolor,
-            onSelect: this.changeSelectStatus         
+            onSelect: this.changeSelectStatus,         
         };                
      
         const columns = [
@@ -126,8 +128,7 @@ class UserDocListGeted extends Component {
               <div className="toolkit">
                 <ToolkitProvider
                     keyField="id"
-                    //data= { this.state.userDocuments }
-                    data= { documents }
+                    data= { this.state.userDocuments }
                     columns= { columns }
                     search
                     >
@@ -162,7 +163,7 @@ class UserDocListGeted extends Component {
                                 contentLabel="Dokumento peržiūra"
                                 >  
                                 <ModalHeaderSubmited modalIsOpen = {this.closeModal}/>                                          
-                                <TextEditor style={{"width" : "95%"}}/>                  
+                                <TextEditor newEditorVar={text}/>                  
                             </Modal> 
                             <Modal 
                                 isOpen={this.state.rejectModalIsOpen}
@@ -177,7 +178,7 @@ class UserDocListGeted extends Component {
                                 onChange={this.handleChange} 
                                           style={{"marginTop": "40px", "marginLeft": "20px", 
                                                 "width" : "95%", "height": "100px"}}></textarea> 
-                                <button type="button" onClick={(e)=>{this.sendRejection()}}>Tvirtinti šalinimą</button>                 
+                                <button type="button" onClick={()=>{this.sendRejection()}}>Tvirtinti šalinimą</button>                 
                             </Modal>    
                         </div>
                         )
@@ -191,8 +192,9 @@ class UserDocListGeted extends Component {
         this.props.history.push(path);
     }
 
-    openModal = () => {
-        this.setState({modalIsOpen: true});
+    openModal = async () => {
+        await this.setState({modalIsOpen: true});
+        await this.showDoc();   
     }
 
     openRejectModal = () => {
@@ -208,12 +210,6 @@ class UserDocListGeted extends Component {
     }
 
     changeSelectStatus = (row, isSelected, e)=>{
-        // const newDoc = this.state.userDocuments.map(datarow => {
-        //     if(datarow.id === row){
-        //         datarow.isChecked = !datarow.isChecked;
-        //     }
-        // return row;
-        // })
         if(isSelected){
             window.setTimeout(
                 function() {
@@ -229,20 +225,6 @@ class UserDocListGeted extends Component {
             console.log(row);           
         }
     }
- 
-    // changeDocByCondition = (newCondition) => {
-    //     let selectedDocuments = this.state.userDocuments.map(doc =>{
-    //        if(doc.isChecked){
-    //          return doc
-    //        } 
-    //        return selectedDocuments;
-    //     });
-
-    //     for (let doc of selectedDocuments) {
-    //         doc.condition = newCondition;
-    //     }
-    //     return selectedDocuments;
-    // }
 
     handleChange = (e) => {
         e.preventDefault();
@@ -254,45 +236,42 @@ class UserDocListGeted extends Component {
         console.log(this.state.rejectReason); 
     }
 
-    //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
-    showDoc =() => {
-        //const localDoc = this.state.userDocuments.id;
-        console.log('showDoc initiated')
-        const selectedDoc = this.state.selectedDocuments;
+    showDoc = async () => {
         let token = localStorage.getItem('token');
-        selectedDoc.forEach(async (e) => {
-            const res = await fetch(`http://localhost:8086/document/get/byId?id=${e.id}`,
-            {
-                method: "GET",
-                headers:{
-                    'token':token,
-                }
-            })
+        const selectedDoc = this.state.selectedDocuments;
+        const API =`http://localhost:8086/document/get/byId?id=${selectedDoc.id}`;
+        const res = await fetch(API, {
+            method: "GET",
+            headers: {
+                'token': token,
+                "content-type": "application/json"
+            },
+        })           
             const json = await res.json(); 
             console.log(json.content);
-    // text :value for editor to consume
-           this.setState({ 
+        // text :value for editor to consume
+            this.setState({ 
                 text: json.content,
-            });  
-        })
+        });      
     };
+  
  
     //Document condition changes to accepted. After that isn't shown in geted document list
     acceptDoc =(e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
-        const acceptDocList = this.changeDocByConditiont("accepted");
-        const API = 'http://localhost:8086/status/post/change';
+        const acceptDoc = this.state.selectedDocuments;
+        const API = `http://localhost:8086/status/post/change?docId=${acceptDoc.id}&statusId=3&description=''`;
         fetch(API, {
             method: 'PUT',
             headers: {
                 'token': token,
                 'content-Type': 'application/json'
             },
-            body: JSON.stringify({acceptDocList}),
+            body: JSON.stringify({acceptDoc}),
         }).then(response => {
             if(response.status === 200){
-                this.nextPath(`/adminboarddocs`);
+                this.nextPath(`/usergetdoc`);
             }else{
                 alert("Patvirtinti dokumento nepavyko");
             }
@@ -310,33 +289,31 @@ class UserDocListGeted extends Component {
         const token = localStorage.getItem("token");
         // const rejectDocList = this.changeDocByConditiont("rejected");
         const rejectReason = this.state.rejectReason
-        const rejectDocList = this.state.selectedDocuments;
-        const API =  `http://localhost:8086/status/put/change?docId=${rejectDocList.id}&statusId=5&description=${rejectReason}`;
+        const rejectDoc = this.state.selectedDocuments;
+        const API =  `http://localhost:8086/status/put/change?docId=${rejectDoc.id}&statusId=4&description=${rejectReason}`;
         fetch(API, {
             method: 'PUT',
             headers: {
                 'token': token,
                 'content-Type': 'application/json'
             },
-            body: JSON.stringify({rejectDocList}),
+            body: JSON.stringify({rejectDoc}),
         }).then(response => {
             if(response.status === 200){
-                alert("Dokumentas pašalintas sėkmingai");
+                alert("Dokumentas atmestas sėkmingai");
             }else{
                 alert("Pašalinti nepavyko");
             }
         }).catch(error => console.error(error));
     }
 
-
     componentDidMount(){
-        //this.fetchDataDocListGeted()
+        this.fetchDataDocListGeted()
     }
 
     //Gauna visus dokumentus, kuriuos jis tuiri teisę priimti ar atmesti. O returne (130) filtruoja pagal condition = 'submited'.
     fetchDataDocListGeted = async () => {
         const token = localStorage.getItem("token");
-        console.log("Geted " + token);
         const res = await fetch("http://localhost:8086/document/get/geted", 
         {
           method: "GET",
@@ -347,8 +324,7 @@ class UserDocListGeted extends Component {
         });
         if (res.status > 300) {
             alert("Fail")
-        }
-        
+        } 
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
