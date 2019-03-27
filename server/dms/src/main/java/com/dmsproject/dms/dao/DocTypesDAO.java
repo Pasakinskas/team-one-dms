@@ -17,32 +17,27 @@ public class DocTypesDAO {
     @Autowired
     private Database database;
 
-    public boolean addDocTemplate (DocTypes docTypes){
+    public boolean addDocTemplate (DocTypes docTypes) throws Exception{
         String query = "INSERT INTO document_types " +
             "(doc_type_descr, doc_template) " +
             "values (?, ?)";
-        try {
+
             PreparedStatement statement = database.connection.prepareStatement(query);
             statement.setString(1, docTypes.getDescription());
             statement.setString(2, docTypes.getTemplate());
 
             statement.executeUpdate();
             statement.close();
-        } catch (java.sql.SQLException e) {
-            System.out.println("Error adding to database");
-            System.out.println(e);
-            return false;
-        }
+
         return true;
     }
 
-    public void editDocTemplate(DocTypes docTypes) {
+    public void editDocTemplate(DocTypes docTypes) throws  Exception {
         String query = " UPDATE document_types "
                 + " SET doc_type_descr = ?, "
                 + " doc_template = ? "
                 + " WHERE doc_type_id = ? ";
 
-        try {
             PreparedStatement statement = database.connection.prepareStatement(query);
             statement.setString(1, docTypes.getDescription());
             statement.setString(2, docTypes.getTemplate());
@@ -51,9 +46,6 @@ public class DocTypesDAO {
             statement.executeUpdate();
             statement.close();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public void deleteTemplate(int id) throws Exception {
