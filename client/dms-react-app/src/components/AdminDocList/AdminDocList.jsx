@@ -17,7 +17,7 @@ import ModalHeader from '../ModalHeader/ModalHeader';
 class AdminDocList extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
             documents: [],
             selectedDocuments:[],
@@ -31,8 +31,8 @@ class AdminDocList extends Component {
         const { SearchBar } = Search;
         const bgcolor = {backgroundColor: "#9ef7e8"};
         const idStyle = {width: 60, backgroundColor: "#9ef7e8"};
-        
-        
+
+
         const pageButtonRenderer = ({
             page,
             active,
@@ -53,8 +53,8 @@ class AdminDocList extends Component {
 
         const options = {
             pageButtonRenderer
-        };      
-        
+        };
+
         const selectRow = {
             mode: 'radio',
             clickToSelect: true,
@@ -100,8 +100,8 @@ class AdminDocList extends Component {
             text: 'Pastabos',
             sort: true,
             headerStyle: bgcolor,
-        }]; 
-    
+        }];
+
 
         const customStyles = {
             content : {
@@ -115,20 +115,20 @@ class AdminDocList extends Component {
                 transform: 'translate(-50%, -50%)'
             }
         };
-        
+
         return (
             <div className="AdminDocList">
                 <ToolkitProvider
                     keyField="id"
-                    data={ this.state.documents }                
+                    data={ this.state.documents }
                     columns={ columns }
                     search
                     >
                     {
                         props => (
-                        <div className="tableElem">                      
+                        <div className="tableElem">
                             <SearchBar
-                                { ...props.searchProps } 
+                                { ...props.searchProps }
                                 placeholder='Paieška...' />
                             <span id="btn">
                                 <Button variant="danger" type="submit" onClick={(e) => { this.deleteDoc(e) }}>
@@ -137,15 +137,15 @@ class AdminDocList extends Component {
                                 <Button variant="secondary" type="submit" onClick={() => { this.openModal() }}>
                                     Peržiūrėti
                                 </Button>
-                                <Button className="repeat" variant="success" type="submit" onClick={() => { this.send() }}>
+                                <Button className="repeat" variant="success" type="submit" onClick={(e) => { this.letResubmitDoc(e) }}>
                                     Leisti pateikti pakartotinai
                                 </Button>
                             </span>
-                            <BootstrapTable 
+                            <BootstrapTable
                                 { ...props.baseProps }
                                 filter={ filterFactory()}
                                 pagination = { paginationFactory(options) }
-                                selectRow={ selectRow }    
+                                selectRow={ selectRow }
                             />
                             <Modal id='modal'
                                 isOpen={this.state.modalIsOpen}
@@ -154,12 +154,12 @@ class AdminDocList extends Component {
                                 style={customStyles}
                                 contentLabel="Dokumento peržiūra"
                                 autoFocus={false}
-                                >  
-                                <ModalHeader modalIsOpen = {this.closeModal} />                                            
-                                <TextEditor newEditorVar={text}/>                      
-                            </Modal>                          
+                                >
+                                <ModalHeader modalIsOpen = {this.closeModal} />
+                                <TextEditor newEditorVar={text}/>
+                            </Modal>
                         </div>
-                        )                    
+                        )
                     }
                 </ToolkitProvider>
             </div>
@@ -171,9 +171,9 @@ class AdminDocList extends Component {
 
     openModal = async() => {
         await this.setState({modalIsOpen: true});
-        await this.showDoc();   
+        await this.showDoc();
     }
-      
+
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
@@ -187,11 +187,11 @@ class AdminDocList extends Component {
                 });
                     }.bind(this),
                 0
-            );       
+            );
         }
     }
 
-    //Show selected documents 
+    //Show selected documents
     showDoc = async () => {
         let token = localStorage.getItem('token');
         const selectedDoc = this.state.selectedDocuments;
@@ -202,12 +202,13 @@ class AdminDocList extends Component {
                 'token': token,
                 "content-type": "application/json"
             },
-        })           
-            const json = await res.json(); 
+        })
+            const json = await res.json();
+            console.log(json.content)
         // text :value for editor to consume
-            this.setState({ 
+            this.setState({
                 text: json.content,
-        });      
+        });
     };
 
     //Document condition changes from rejected to submited
@@ -231,7 +232,7 @@ class AdminDocList extends Component {
             }
         }).catch(error => console.error(error));
     };
-    
+
     //Document condition changes to deleted
     deleteDoc = (e) => {
         e.preventDefault();
@@ -258,10 +259,10 @@ class AdminDocList extends Component {
         this.fetchDataDocList()
     }
 
-    //Get All submited, accepted and rejected documents 
+    //Get All submited, accepted and rejected documents
     fetchDataDocList = async () => {
         const token = localStorage.getItem("token");
-        const res = await fetch("http://localhost:8086/document/get/all", 
+        const res = await fetch("http://localhost:8086/document/get/all",
         {
           method: "GET",
           headers: {
@@ -273,7 +274,7 @@ class AdminDocList extends Component {
             alert("Fail")
         }
         const json = await res.json();
-        this.setState({ 
+        this.setState({
             documents: json
         });
     }

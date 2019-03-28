@@ -8,7 +8,7 @@ const API_ADD_TEMPLATE = "http://localhost:8086/document/post/new";
 
 class DocManagerForm extends Component {
     constructor(props) {
-        super(props);   
+        super(props);
         this.state = {
           doc_name: "",
         }
@@ -16,10 +16,6 @@ class DocManagerForm extends Component {
 
 // save template
     onSubmit  = async (event, editorValue) =>{
-//setting auth for testing
-        localStorage.setItem("authority","admin");
-       
-       
         event.preventDefault();
         console.log(this.state.doc_name);
 //editorValue broken
@@ -39,7 +35,7 @@ class DocManagerForm extends Component {
             headers:{
                 "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
                 'token': token
-            },           
+            },
            /* body: JSON.stringify({
                 description:this.state.doc_name,
                 template:data2,
@@ -57,27 +53,27 @@ class DocManagerForm extends Component {
     nextPath = (path)=>{
         this.props.history.push(path);
     }
-   
+
     render() {
         const {name} = this.state;
         return (
             <div className="form-wrapper" id="form">
              <Form onSubmit={(e)=>{this.onSubmit(e, this.props.newEditorVar)}}>
-                <div className="name"> 
+                <div className="name">
                     <FormLabel>Šablono pavadinimas</FormLabel>
-                    <FormControl 
-                        type="text" 
+                    <FormControl
+                        type="text"
                         name="template_name"
                         value={name}
                         placeholder="Įveskite pavadinimą"
                         onChange={this.handleChange}
-                    />                                
+                    />
                 </div>
                 <div className="docBtn">
                   <Button variant="success" type="submit">
                       Išsaugoti
                   </Button>
-                </div> 
+                </div>
               </Form>
             </div>
         );
@@ -89,7 +85,7 @@ class DocManagerForm extends Component {
       this.setState({
         "doc_name":value,
       });
-    } 
+    }
 }
 
 export default withRouter(DocManagerForm);

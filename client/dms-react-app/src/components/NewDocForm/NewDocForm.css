@@ -1,5 +1,5 @@
 #form {
-    margin-top: 60px;
+    margin-top: 70px;
     margin-left: 20px;
     width: 20%;
     padding: 20px 20px;
@@ -21,10 +21,11 @@ input::placeholder{
     font-weight: lighter;
     color: #999;
 }
-.docBtn button {
-    width: 100%;
-    margin: 0 0 0 5px;
-} 
+
+.docBtn {
+    margin-left: 5px;
+    margin-bottom: 50px;
+}
 
 .template,
 .input,

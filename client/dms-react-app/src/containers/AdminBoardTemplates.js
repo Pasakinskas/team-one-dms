@@ -8,14 +8,13 @@ class AdminBoardTemplates extends Component {
     render() {
         return (
             <div>
-                <AdminNavBar/> 
-                <p className="headers">ŠABLONAI</p>
+                <AdminNavBar/>
                 <TextEditor className="tempElements"/>
                 <NewDocFormAdmin className="tempElements"/>
-                <Footer/> 
+                <Footer/>
             </div>
         );
-    } 
+    }
 }
 
 export default AdminBoardTemplates;

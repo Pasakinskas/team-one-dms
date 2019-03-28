@@ -17,13 +17,13 @@ import UserBoardGroupDocs from './containers/UserBoardGroupDocs';
 import { withRouter } from 'react-router-dom';
 
 // kai turėsiu json iš BE tai pas mane bus tik const user = json ir iš vidaus matysis
-// kokias roles jis turi ir ką gali daryti. kol kas tai yra statiška, nežinau kaip padryti kad JIS ŽINOTŲ kas aš. 
+// kokias roles jis turi ir ką gali daryti. kol kas tai yra statiška, nežinau kaip padryti kad JIS ŽINOTŲ kas aš.
 // Create (POST) - Make something
 // Read (GET)_- Get something
 // Update (PUT) - Change something
 // Delete (DELETE)- Remove something
 
-//cookiai. 
+//cookiai.
 //rolės, kur jas man paimti?
 
 // const user = {
@@ -48,7 +48,7 @@ class App extends Component {
     if (localStorage.getItem('authority'))  {
       curentUserRoles = localStorage.getItem('authority').split(",");
     }
-  
+
 
     return (
       <Router>
@@ -66,7 +66,7 @@ class App extends Component {
           {/* {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/adminboardtemplates" component={AdminBoardTemplates} />} */}
           {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/newtemplate" component={newTemplate} />}
           {curentUserRoles.includes("ROLE_ADMIN")  &&<Route exact path="/usergroupdocs" component={UserBoardGroupDocs} />}
-          
+
         </Switch>
       </Router>
     );
@@ -93,7 +93,7 @@ class App extends Component {
     console.log("tai turi būti iš vaiko " + authority)
     if (this.state.authority.includes("ROLE_ADMIN")) {
       console.log("Nukreipia į adminbordą")
-      
+
       //this.nextPath(`/adminboarddocs`);
     } else {
       console.log("aš useris")

@@ -181,7 +181,7 @@ public class GroupDAO {
         String SELECT_SQL = "select groups.group_id, group_name from user_groups " +
                 "inner join groups " +
                 "on groups.group_id = user_groups.group_id " +
-                "where user_id = 1 && groups.deleted != (?)";
+                "where user_id = (?) && groups.deleted != 1";
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(SELECT_SQL);

@@ -6,7 +6,7 @@ import './GroupView.css';
 class GroupView extends Component {
     constructor(props) {
         super(props);
-    
+
         this.state = {
           groupRecipients: [],
           myGroups: [],
@@ -15,7 +15,7 @@ class GroupView extends Component {
     render() {
         const listGroups = this.state.groupRecipients.map((groups) =>
         <li className="list-group-item">{groups.name}</li> );
-        
+
         const listMyGroups = this.state.myGroups.map((mg) =>
         <li className="list-group-item">{mg.name}</li> );
 
@@ -41,7 +41,7 @@ class GroupView extends Component {
       this.fetchAllGroups();
       this.fetchMyGroups()
   }
-    
+
   //Get all the groups that belong to the user
   fetchMyGroups = async () => {
     const token = localStorage.getItem("token");
@@ -54,11 +54,12 @@ class GroupView extends Component {
       },
     });
     const json = await res.json();
+    console.log(json)
     this.setState({
-      myGroups: json,       
+      myGroups: json,
     });
   }
-  
+
   //Get all existing groups
   fetchAllGroups = async () => {
     const token = localStorage.getItem('token');
@@ -66,13 +67,13 @@ class GroupView extends Component {
     {
       method: "GET",
       headers: {
-        token:token,
+        "token": token,
         "content-type": "application/json",
       },
     });
     const json = await res.json();
     this.setState({
-      groupRecipients:json.groups,       
+      groupRecipients:json.groups,
     });
   }
 }

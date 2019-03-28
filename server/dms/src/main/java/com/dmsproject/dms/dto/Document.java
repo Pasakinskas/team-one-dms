@@ -7,6 +7,15 @@ public class Document {
     private String name;
     private String content;
 
+    public Document(String number, int typeId, String name, String content) {
+        this.number = number;
+        this.typeId = typeId;
+        this.name = name;
+        this.content = content;
+    }
+
+    public Document() {
+    }
 
     public int getId() {
         return id;

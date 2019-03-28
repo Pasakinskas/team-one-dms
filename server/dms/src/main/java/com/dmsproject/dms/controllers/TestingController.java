@@ -16,7 +16,7 @@ import com.dmsproject.dms.Constants;
 
 @CrossOrigin(origins = Constants.REACT_URL)
 
-@Secured("ROLE_SUPERADMIN")
+//@Secured("ROLE_SUPERADMIN")
 @RestController
 public class TestingController {
 

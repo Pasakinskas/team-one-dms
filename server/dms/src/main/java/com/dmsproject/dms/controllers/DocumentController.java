@@ -2,10 +2,13 @@ package com.dmsproject.dms.controllers;
 
 
 import com.dmsproject.dms.Constants;
+import com.dmsproject.dms.dao.DocReceiversDAO;
 import com.dmsproject.dms.dao.DocStatusDAO;
 import com.dmsproject.dms.dao.DocumentDAO;
+import com.dmsproject.dms.dto.DocReceivers;
 import com.dmsproject.dms.dto.DocSelection;
 import com.dmsproject.dms.dto.Document;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,12 +27,34 @@ public class DocumentController {
     @Autowired
     private DocStatusDAO docStatusDAO;
 
+    @Autowired
+    private DocReceiversDAO docReceiversDAO;
+
 // išsaugoti dokumentą
     @Secured("ROLE_USER")
     @RequestMapping(value = "/document/put/new", method = RequestMethod.PUT, consumes = "application/json")
-    public Integer add(@RequestBody Document document) throws Exception{
+    public Integer add(@RequestBody JsonNode documentAndData) throws Exception{
+        Document document = new Document(
+                documentAndData.get("number").asText(),
+                documentAndData.get("typeId").asInt(),
+                documentAndData.get("name").asText(),
+                documentAndData.get("content").asText()
+        );
+        Integer documentId = documentDAO.addDocument(document);
+        String recipientType = documentAndData.get("recipientType").asText();
+        Integer recipientId = documentAndData.get("recipient").asInt();
 
-        return documentDAO.addDocument(document);
+        DocReceivers docReceivers = new DocReceivers();
+        docReceivers.setDocId(documentId);
+        if (recipientType.equals("group")) {
+            docReceivers.setRecGroupId(recipientId);
+        } else if (recipientType.equals("user")) {
+            docReceivers.setRecUserId(recipientId);
+        }
+
+        docReceiversDAO.addDocReceiver(docReceivers);
+
+        return documentId;
     }
 
 // redaguoti dokumentą
