@@ -101,6 +101,7 @@ export default class TextEditor extends Component {
         need compare or something to have it work with load    */
         if(value.document !== this.state.value.document){
             const content = JSON.stringify(value.toJSON());
+            console.log(content)
             localStorage.setItem('content', content);
         }
        /* if(newVal !== null){

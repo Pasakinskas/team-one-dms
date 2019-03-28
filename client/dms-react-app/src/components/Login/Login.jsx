@@ -69,6 +69,7 @@ class Login extends Component {
     this.props.history.push(path);
   }
 
+  //Handling events hapening after submit
   handleSubmit = async (e) => {
       e.preventDefault();
       if (this.formValid()) {
@@ -82,12 +83,12 @@ class Login extends Component {
             console.log("Login role list")
             console.log(roleList);
             localStorage.setItem("authority", roleList);
-            // if (roleList.includes("ROLE_ADMIN")) {
-            //   console.log("Nukreipia į adminbordą")
-            //   this.nextPath(`/adminboarddocs`);
-            // } else {
-            //   this.nextPath(`/userboard`);
-            // }
+            if (roleList.includes("ROLE_ADMIN")) {
+              console.log("Nukreipia į adminbordą")
+              this.nextPath(`/adminboarddocs`);
+            } else {
+              this.nextPath(`/userboard`);
+            }
           }
         }
       } else {
@@ -123,6 +124,7 @@ class Login extends Component {
       }
   }
   
+  //Form validation
   formValid = (e) => {
       const { password, email } = this.state;
       if(email.length&&password.length !== 0){
@@ -133,15 +135,12 @@ class Login extends Component {
       }
   };
 
-  //userio duomenų gavimui ir setinimui
+  //Get specific user data
   fetchUserData = async () => {
-    //pasidarau iš anksto data
     const data = JSON.stringify({
       "email": this.state.email,
       "password": this.state.password
     });
-    //spausdinu
-    console.log("my data is: " + data)
     const res = await fetch("http://localhost:8086/login", 
     {
       method: "POST",
@@ -155,10 +154,7 @@ class Login extends Component {
         return;
       }
     const json = await res.json();
-    console.log(res.status)
-    console.log("visas useris" + JSON.stringify(json))
     const token = res.headers.get("token");
-    console.log(token);
     localStorage.setItem("token", token);
     this.setState({
       user: json, 
@@ -195,7 +191,7 @@ class Login extends Component {
     } else {
       console.error("asked for roles and got bad status")
     }
-
   }
 }
+
 export default withRouter(Login);

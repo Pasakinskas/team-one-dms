@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NewDocHeader from '../components/NewDocHeader/NewDocHeader';
+import NewDocHeaderAdmin from '../components/NewDocHeader/NewDocHeaderAdmin';
 import Footer from '../components/Footer/Footer';
 import DocumentManager from '../components/documentTypesUI/documentManager';
 
@@ -7,7 +7,7 @@ class NewTemplate extends Component {
     render() {
         return (
             <div>
-                <NewDocHeader/>
+                <NewDocHeaderAdmin/>
                 <p className="headers">ŠABLONAI</p>
                 <DocumentManager/>
                 <Footer/>

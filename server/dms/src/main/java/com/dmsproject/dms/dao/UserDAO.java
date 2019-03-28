@@ -151,7 +151,7 @@ public class UserDAO {
 
     public boolean deleteUser(int id) {
         String INSERT_SQL = "UPDATE users SET deleted = 1" +
-                " WHERE id = (?)";
+                " WHERE user_id = (?)";
         try {
             PreparedStatement statement = database.connection.prepareStatement(INSERT_SQL);
             statement.setInt(1, id);

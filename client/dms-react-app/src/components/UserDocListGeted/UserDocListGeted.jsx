@@ -172,13 +172,13 @@ class UserDocListGeted extends Component {
                                 style={customStyles}
                                 contentLabel="Atmetimo priežastis"
                                 >  
-                                <ModalHeaderGeted rejectModalIsOpen = {this.closeRejectModal}/> 
+                                <ModalHeaderGeted rejectModalIsOpen = {this.closeRejectModal} sendRejection = {this.sendRejection}/> 
                                 <textarea  name ="rejectReason"
                                             value ={ this.state.rejectReason }
                                 onChange={this.handleChange} 
                                           style={{"marginTop": "40px", "marginLeft": "20px", 
                                                 "width" : "95%", "height": "100px"}}></textarea> 
-                                <button type="button" onClick={()=>{this.sendRejection()}}>Tvirtinti šalinimą</button>                 
+                                {/* <button type="button" onClick={()=>{this.sendRejection()}}>Tvirtinti šalinimą</button>                  */}
                             </Modal>    
                         </div>
                         )
@@ -216,13 +216,9 @@ class UserDocListGeted extends Component {
                     this.setState({
                     selectedDocuments: row
                 });
-                console.log("šiuo metu state " );
-                console.log(this.state.selectedDocuments);
                     }.bind(this),
                 0
-            );
-            console.log("Spausdinu pažymėtą");
-            console.log(row);           
+            );        
         }
     }
 
@@ -232,10 +228,9 @@ class UserDocListGeted extends Component {
         this.setState({
           [name]:value,       
         });
-        console.log("Atmetimo priežastis " + this.state.rejectReason);
-        console.log(this.state.rejectReason); 
     }
 
+    //Show selected documents 
     showDoc = async () => {
         let token = localStorage.getItem('token');
         const selectedDoc = this.state.selectedDocuments;
@@ -248,7 +243,6 @@ class UserDocListGeted extends Component {
             },
         })           
             const json = await res.json(); 
-            console.log(json.content);
         // text :value for editor to consume
             this.setState({ 
                 text: json.content,
@@ -279,7 +273,6 @@ class UserDocListGeted extends Component {
     };
     
     //Document condition changes to rejected. After that isn't shown in geted document list
-    // make method for one document, not for list, and then loop the list and apply the method
     rejectDoc = (e) => {
         e.preventDefault();
         this.openRejectModal();  
@@ -287,7 +280,6 @@ class UserDocListGeted extends Component {
 
     sendRejection = () =>{
         const token = localStorage.getItem("token");
-        // const rejectDocList = this.changeDocByConditiont("rejected");
         const rejectReason = this.state.rejectReason
         const rejectDoc = this.state.selectedDocuments;
         const API =  `http://localhost:8086/status/put/change?docId=${rejectDoc.id}&statusId=4&description=${rejectReason}`;
@@ -329,8 +321,6 @@ class UserDocListGeted extends Component {
         this.setState({ 
             userDocuments: json
         });  
-        console.log(JSON.stringify(json))
-        return json;
     } 
 }
   

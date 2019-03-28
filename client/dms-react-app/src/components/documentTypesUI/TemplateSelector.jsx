@@ -24,13 +24,15 @@ class TemplateSelector extends Component{
       const token = localStorage.getItem('token');
       const res = await fetch(API, {
         method: 'GET',
-        token:token,
+        headers: {
+          "token":token,
+        },
         })
         const statusCode = await res.status;
         const json =  await res.json();
         console.log(json);
         this.setState({
-            "data":json
+            data:json,
         })
         this.setState({ isLoading: false });
         return statusCode;
@@ -52,7 +54,7 @@ class TemplateSelector extends Component{
           return (
             data.map(data =>
                <option 
-               key={data.id}
+                 key={data.id}
                  value={data.id}
                  >
                  {data.description}

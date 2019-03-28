@@ -163,52 +163,26 @@ class UserDocListSubmited extends Component {
         await this.setState({modalIsOpen: true});
         await this.showDoc();   
     }
-  
-    
+     
     closeModal = () => {
         this.setState({modalIsOpen: false});
     }
 
     changeSelectStatus = (row, isSelected, e)=>{
-        // const newDoc = this.state.userDocuments.map(datarow => {
-        //     if(datarow.id === row){
-        //         datarow.isChecked = !datarow.isChecked;
-        //     }
-        // return row;
-        // })
         if(isSelected){
             window.setTimeout(
                 function() {
                     this.setState({
                     selectedDocuments: row
                 });
-                console.log("šiuo metu state " );
-                console.log(this.state.selectedDocuments);
                     }.bind(this),
                 0
-            );
-            console.log("Spausdinu pažymėtą");
-            console.log(row);           
+            );        
         }
     }
 
-    // changeDocByCondition = (newCondition) => {
-    //     let selectedDocuments = this.state.userDocuments.map(doc =>{
-    //        if(doc.isChecked){
-    //          return doc
-    //        } 
-    //        return selectedDocuments;
-    //     });
-
-    //     for (let doc of selectedDocuments) {
-    //         doc.condition = newCondition;
-    //     }
-    //     return selectedDocuments;
-    // }
-
- 
-     //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
-     showDoc = async () => {
+    //Rodyti trinti ir pateikti reikia užchekboxintus dokumentus!!!!
+    showDoc = async () => {
         let token = localStorage.getItem('token');
         const selectedDoc = this.state.selectedDocuments;
         const API =`http://localhost:8086/document/get/byId?id=${selectedDoc.id}`;
@@ -220,7 +194,6 @@ class UserDocListSubmited extends Component {
             },
         })           
             const json = await res.json(); 
-            console.log(json.content);
         // text :value for editor to consume
             this.setState({ 
                 text: json.content,
@@ -231,7 +204,6 @@ class UserDocListSubmited extends Component {
         this.fetchDataDocListUser()
     }
 
-    
     fetchDataDocListUser = async () => {
         const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:8086/document/get/submited", 
@@ -249,8 +221,7 @@ class UserDocListSubmited extends Component {
         this.setState({ 
             userDocuments: json
         });             
-        return json;
     }
-  }
+}
   
   export default withRouter(UserDocListSubmited);

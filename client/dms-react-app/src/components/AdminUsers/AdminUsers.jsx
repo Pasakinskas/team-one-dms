@@ -18,69 +18,6 @@ class AdminUsers extends Component {
         this.state = {
             users: [],
             selectedUser:[],
-
-            user:[
-            {
-                id: 1,
-                name: "Ana",
-                surname: "Taurienė",
-                position: "Laisvo oro dir.",
-            }, {
-                id: 2,
-                name: "Dalia",
-                surname: "Krunglevičiūtė",
-                position: "Super Frontenderė",
-            }, {
-                id: 3,
-                name: "Marius",
-                surname: "Pašakinskas",
-                position: "Super mega full stackeris"
-            }, {
-                id: 4,
-                name: "Jonas",
-                surname: "Kažkuris",
-                position: "eilinis"
-            }, {
-                id: 5,
-                name: "Petras",
-                surname: "Anasten",
-                position: "eilinis"
-            }, {
-                id: 6,
-                name: "Mykolas",
-                surname: "Pavardenis",
-                position: "eilinis"
-            }, {
-                id: 7,
-                name: "Ana",
-                surname: "Taurienė",
-                position: "Laisvo oro dir.",
-            }, {
-                id: 8,
-                name: "Dalia",
-                surname: "Krunglevičiūtė",
-                position: "Super Frontenderė",
-            }, {
-                id: 9,
-                name: "Marius",
-                surname: "Pašakinskas",
-                position: "Super mega full stackeris"
-            }, {
-                id: 10,
-                name: "Jonas",
-                surname: "Kažkuris",
-                position: "eilinis"
-            }, {
-                id: 11,
-                name: "Petras",
-                surname: "Anasten",
-                position: "eilinis"
-            }, {
-                id: 12,
-                name: "Mykolas",
-                surname: "Pavardenis",
-                position: "eilinis"
-            }]
         } 
     }    
 
@@ -177,38 +114,19 @@ class AdminUsers extends Component {
     };
 
     changeSelectStatus = (row, isSelected, e)=>{
-        // const newDoc = this.state.userDocuments.map(datarow => {
-        //     if(datarow.id === row){
-        //         datarow.isChecked = !datarow.isChecked;
-        //     }
-        // return row;
-        // })
         if(isSelected){
             window.setTimeout(
                 function() {
                     this.setState({
                     selectedUser: row
                 });
-                console.log("šiuo metu state " );
-                console.log(this.state.selectedUser);
                     }.bind(this),
                 0
-            );
-            console.log("Spausdinu pažymėtą");
-            console.log(row);           
+            );          
         }
     }    
 
-    // selectedUsers = () => {
-    //     let selectedUsers= this.state.users.filter(doc =>{
-    //        if(doc.isChecked){
-    //          return doc
-    //        } 
-    //        return selectedUsers;
-    //     });
-    //     return selectedUsers;
-    // }
-
+    // Delete selected user
     deleteUser = (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
@@ -234,6 +152,7 @@ class AdminUsers extends Component {
         this.fetchDataUserList()
     };
 
+    //Get All existing users
     fetchDataUserList = async () => {
         const token = localStorage.getItem("token");
         const res = await fetch("http://localhost:8086/users",
@@ -251,7 +170,6 @@ class AdminUsers extends Component {
         this.setState({ 
             users: json
         });
-        return json;
     };
 }
 

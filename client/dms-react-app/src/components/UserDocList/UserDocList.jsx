@@ -14,15 +14,6 @@ import {TextEditor} from '../textEditor/index';
 import ModalHeader from '../ModalHeader/ModalHeader';
 import { ENETUNREACH } from 'constants';
 
-//255, 205,233 eil. API adresas - patikslinti
-//showDoc = () => pabaigti
-//document types: Saved(išsaugoti) - shown just to user,
-//                Submited(pateikti) - shown tu user and users who can accept or reject
-//                Accepted(priimti) - documents accepted by group or other users
-//                Rejected(atmesti) - documents rejected by group or other users
-//                Deleted(panaikinti) - can be deleted by user or admin only. After that don't shown in any list.
-
- 
 class UserDocList extends Component {
     constructor(props) {
         super(props);
@@ -153,7 +144,7 @@ class UserDocList extends Component {
                                 contentLabel="Dokumento peržiūra"
                                 autoFocus={false}
                                 >  
-                                <ModalHeader modalIsOpen = {this.closeModal}/>       
+                                <ModalHeader modalIsOpen = {this.closeModal} sendDoc = {this.sendDoc} deleteDoc = {this.deleteDoc}/>       
                                 <TextEditor newEditorVar={text}/>                                       
                             </Modal>                                               
                         </div>
@@ -178,44 +169,18 @@ class UserDocList extends Component {
     }
      
     changeSelectStatus = (row, isSelected, e)=>{
-        // const newDoc = this.state.userDocuments.map(datarow => {
-        //     if(datarow.id === row){
-        //         datarow.isChecked = !datarow.isChecked;
-        //     }
-        // return row;
-        // })
         if(isSelected){
             window.setTimeout(
                 function() {
                     this.setState({
                     selectedDocuments: row
                 });
-                console.log("šiuo metu state " );
-                console.log(this.state.selectedDocuments);
                     }.bind(this),
                 0
-            );
-            console.log("Spausdinu pažymėtą");
-            console.log(row);           
+            );        
         }
     }
 
-    // changeDocByCondition = (newCondition) => {
-    //     // let selectedDocuments = this.state.userDocuments.map(doc =>{
-    //     //    if(doc.isChecked){
-    //     //      return doc
-    //     //    } 
-    //     //    return selectedDocuments;
-    //     // });
-    //     for (let doc of this.state.selectedDocuments) {
-    //         console.log(doc)
-    //         doc.status = newCondition;
-    //     }
-    //     console.log("Dokumentai statuso keitimui ")
-    //     console.log(JSON.stringify(this.state.selectedDocuments));
-    //     return this.state.selectedDocuments;
-    // }
-    
     showDoc = async () => {
         let token = localStorage.getItem('token');
         const selectedDoc = this.state.selectedDocuments;
@@ -228,7 +193,6 @@ class UserDocList extends Component {
             },
         })           
             const json = await res.json(); 
-            console.log(json.content);
         // text :value for editor to consume
             this.setState({ 
                 text: json.content,
@@ -239,7 +203,6 @@ class UserDocList extends Component {
     sendDoc = (e) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
-        // const sentDocList = this.changeDocByCondition("submited");
         const selectedDoc = this.state.selectedDocuments;
         const API = `http://localhost:8086/status/put/change?docId=${selectedDoc.id}&statusId=2&description=''`;
         fetch(API, {
@@ -261,8 +224,6 @@ class UserDocList extends Component {
     //Document condition changes to deleted(Dokumentas pašalinamas, bet neištrinamas iš DB)
     deleteDoc = (e) => {
         const token = localStorage.getItem("token");
-        console.log("Deletinu")
-        // const deleteDocList = this.changeDocByCondition("deleted");
         const deleteDoc = this.state.selectedDocuments;
         const API = `http://localhost:8086/status/put/change?docId=${deleteDoc.id}&statusId=5&description=''`; 
         fetch(API, {
@@ -285,10 +246,9 @@ class UserDocList extends Component {
          this.fetchDataDocListUser()
     }
 
-    //Gauna visus šio userio dokumentus, o returne (130) filtruoja pagal condition = 'saved'.
+    //GET all users saved documents
     fetchDataDocListUser = async () => {
         const token = localStorage.getItem("token");
-        console.log(token)
         const res = await fetch("http://localhost:8086/document/get/saved",
         {
           method: "GET",
@@ -300,13 +260,11 @@ class UserDocList extends Component {
         if (res.status > 300) {
             alert("Fail")
         }
-        console.log(res)
         const json = await res.json();      
         this.setState({ 
             userDocuments: json
-        });       
-        console.log(JSON.stringify(json))    
-        return json;
+        });  
+        return json;     
     }
 }
 

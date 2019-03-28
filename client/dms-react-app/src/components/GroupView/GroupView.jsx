@@ -38,9 +38,11 @@ class GroupView extends Component {
     }
 
   componentDidMount(){
-      this.fetchAllGroups()
+      this.fetchAllGroups();
+      this.fetchMyGroups()
   }
     
+  //Get all the groups that belong to the user
   fetchMyGroups = async () => {
     const token = localStorage.getItem("token");
     const res = await fetch("http://localhost:8086/groups/mygroups",
@@ -57,6 +59,7 @@ class GroupView extends Component {
     });
   }
   
+  //Get all existing groups
   fetchAllGroups = async () => {
     const token = localStorage.getItem('token');
     const res = await fetch("http://localhost:8086/recipients",

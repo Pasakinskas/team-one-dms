@@ -126,13 +126,12 @@ class Registration extends Component {
     this.props.history.push(path);
   }
 
+  //POST data of new user
   fetchData = async () => {
-    const res = await fetch("http://localhost:8086/users", {
-      
+    const res = await fetch("http://localhost:8086/users", { 
       method: "POST",
       headers: {
-        "content-type": "Application/json",
-      
+        "content-type": "Application/json",   
       },
       body: JSON.stringify({
         name: this.state.name,
@@ -143,7 +142,6 @@ class Registration extends Component {
       })
     });
     const statusCode = await res.status;
-    console.log(statusCode)
     return statusCode;
   }
 
@@ -235,6 +233,7 @@ class Registration extends Component {
   return true;
   }
 
+  //Validation of name and surname
   allLetter = (name, surname) => { 
     if ((/^[A-Za-ząčęėįšųūžĄČĘĖĮŠŲŪŽ]+$/.test(name)) && (/^[A-Za-ząčęėįšųūžĄČĘĖĮŠŲŪŽ]+$/.test(surname))) {
       return true;
@@ -244,6 +243,7 @@ class Registration extends Component {
     }
   }
 
+  //E-mail validation
   validEmail = (email) => {
     if (/^[a-zA-Z0-9ąčęėįšųūžĄČĘĖĮŠŲŪŽ]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email)) {
       return true;
@@ -253,6 +253,7 @@ class Registration extends Component {
     }
   }
 
+  //Password validation
   checkPassword = (password, passwordrep) => {
     if(password === passwordrep) {
       return true;
@@ -262,6 +263,7 @@ class Registration extends Component {
     } 
   }
 
+  //Field fill validation
   isPositionFilled = (position) => {
     if(position.length === 0) {
       alert("Pareigos turi būti užpildytos");

@@ -11,7 +11,7 @@ class ModalHeaderGeted extends Component {
                 <Button variant="danger" type="button" onClick={this.props.rejectModalIsOpen}>
                      X
                 </Button>
-                <Button variant="success" type="button" onClick={()=>{this.props.sendRejection()}}>
+                <Button variant="success" type="button" onClick={this.props.sendRejection}>
                     Tvirtinti šalinimą
                 </Button>
             </span>    

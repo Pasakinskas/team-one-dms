@@ -6,13 +6,11 @@ import GroupUserSelector from './GroupUserSelector';
 
 
 // api - group list
-const API_TEST = 'https://reqres.in/api/users?page=2';
 const API = 'http://localhost:8086/groups'
 // api_add_user adress to add user to group
 const API_ADD_USER = 'http://localhost:8086/groups/users';
 const API_REMOVE_USER = 'http://localhost:8086/groups/users';
-const API_REMOVE_GROUP = 'http://localhost:8086/group';
-const DEFAULT_QUERY ='';
+
 
 export default class GroupManagerData extends Component {
     constructor(props) {
@@ -43,14 +41,11 @@ export default class GroupManagerData extends Component {
             userId: event.target.value,
             groupId:groupId,
         });
-//remove console.log for testing
-        console.log('Option selected:',event.target.value,' Group id: ', groupId);
     }
 
 //showing groups table with opions
     componentDidMount() {
         this.setState({ isLoading: true });
-//setting auth for testing
         this.fetchGroups();    
     }
 
@@ -66,15 +61,12 @@ export default class GroupManagerData extends Component {
             })
             const statusCode = await res.status;
             const json =  await res.json();
-            console.log(json);
            this.setState({
                 data: json
             })
             this.setState({ isLoading: false });
     }
 
-//options for selector
-    
 
 // adding user from selector
     addUsers = async (event) =>{
@@ -123,23 +115,16 @@ export default class GroupManagerData extends Component {
     removeGroup = async (event, groupId) =>{
         event.preventDefault();
         const token = localStorage.getItem('token');
-        console.log(token);
-        //const {isRemove} = this.state;
 //placeholder for modal aditional confirmation state
         if(true){
             try{
-            const res = await fetch(`http://localhost:8086/groups/` +groupId , {
+            const res = await fetch(`http://localhost:8086/groups/` + groupId , {
                 method: 'DELETE',
                 headers: {
                     "token": token,
                     "content-type": "application/json"
                 },
-                /*body: JSON.stringify({
-                    "groupId":groupId,
-                }),*/
               })
-      //remove console.log for testing
-              console.log("You want to remove group with id: ",groupId);
               const statusCode = await res.status;
               return statusCode;
             }catch(err){console.log(err)};
@@ -230,10 +215,8 @@ export default class GroupManagerData extends Component {
         e.preventDefault();
             if(this.state.togglePermission === false){
                 this.setState({togglePermission:true})
-                console.log("TRUE")
             }else if(this.state.togglePermission === true){
                 this.setState({togglePermission:false})
-                console.log("FALSE")
             }
     }
     submitRights = async(e, id) =>{
