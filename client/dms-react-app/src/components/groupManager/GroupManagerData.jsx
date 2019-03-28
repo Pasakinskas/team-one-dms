@@ -47,6 +47,14 @@ export default class GroupManagerData extends Component {
         console.log('Option selected:',event.target.value,' Group id: ', groupId);
     }
 
+//child call for father re-render
+   async componentRender(){
+        await this.setState({
+            isLoading:true
+        })
+       await this.fetchGroups();
+    }
+
 //showing groups table with opions
     componentDidMount() {
         this.setState({ isLoading: true });
@@ -93,10 +101,13 @@ export default class GroupManagerData extends Component {
                 "action":'add'
             }),
             })
+            await this.setState({
+                isLoading:true
+            })
+           await this.fetchGroups();
             const statusCode = await res.status;
             return statusCode;
         }catch(err){console.log(err)};
-        await this.fetchGroups();
       }
 
     removeUsers = async (event) =>{
@@ -115,6 +126,10 @@ export default class GroupManagerData extends Component {
                 "action":'remove',
             }),
             })
+            await this.setState({
+                isLoading:true
+            })
+           await this.fetchGroups();
             const statusCode = await res.status;
             return statusCode;
         }catch(err){console.log(err)};
@@ -138,6 +153,10 @@ export default class GroupManagerData extends Component {
                     "groupId":groupId,
                 }),*/
               })
+              await this.setState({
+                isLoading:true
+            })
+           await this.fetchGroups();
       //remove console.log for testing
               console.log("You want to remove group with id: ",groupId);
               const statusCode = await res.status;
@@ -234,9 +253,10 @@ export default class GroupManagerData extends Component {
             return false
         }
     }
-    
+// todo re-render component on change
     submitRights = async(e, id, currentPermission) =>{
         e.preventDefault();
+
         const token = localStorage.getItem('token');
         let setPermission;
         if(currentPermission === 0){
@@ -256,10 +276,15 @@ export default class GroupManagerData extends Component {
                 "canReceiveDocs":setPermission,
             }),
             })
+            await this.setState({
+                isLoading:true
+            })
+           await this.fetchGroups();
             await console.log('group'+ id + 'asked for '+ setPermission);
             const statusCode = await res.status;
             return statusCode;
         }catch(err){console.log(err)};
+       
     }
 
 }

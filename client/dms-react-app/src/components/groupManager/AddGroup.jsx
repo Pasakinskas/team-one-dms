@@ -34,15 +34,18 @@ export default class AddGroup extends Component{
           })
           await console.log("You want to add group ",groupName);
           const statusCode = await res.status;
-          await console.log(statusCode).catch((err)=>{console.log(err)});
+          await console.log(statusCode)
           
          
         }else{
           this.setState({ alert: true });
           setTimeout(() => this.setState({ alert: false}), 2000);
         }
-        
+        this.componentRender();
       }
+    componentRender = () => {
+       this.props.componentRender();
+    }
 
     handleChange = (event)=>{
       const {value} = event.target;
