@@ -16,6 +16,7 @@ public class StatisticController {
     @Autowired
     private StatisticDAO statisticDAO;
 
+// Visų pateiktų, priimtų ir atmestų dok. skaičius (adminui)
     @Secured("ROLE_USER")
     @RequestMapping(value = "/statistic/get/all", method = RequestMethod.GET, produces = "application/json")
     public Statistic getStatistic() throws  Exception {

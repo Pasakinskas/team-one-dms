@@ -52,6 +52,7 @@ class TemplateSelector extends Component{
           )
         }else{
           return (
+            
             data.map(data =>
                <option 
                  key={data.id}
@@ -60,8 +61,8 @@ class TemplateSelector extends Component{
                  {data.description}
                  </option>
             )
-        );
-        }
+        
+          );}
         
     }
 }

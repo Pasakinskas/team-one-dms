@@ -29,6 +29,7 @@ class ViewTemplates extends Component {
 
 // on submit GET template json using id
     onSubmit  = async (id) =>{
+      const token = localStorage.getItem('token');
         console.log("Select option selected");
 // text editor on change saves to session storage
         try{
@@ -36,7 +37,10 @@ class ViewTemplates extends Component {
 
             content:'application/x-www-form-urlencoded; charset=UTF-8',
             method: 'GET',
-            token:'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyaWQiLCJpZCI6M30.N_sFZI-6YgGcoh7j_VQFHzp4VBmJhKtyoXTYZbZ9pos',
+            headers:{
+              'token':token
+            },
+            
           })
             const statusCode = await res.status;
             const json =  await res.json();
@@ -59,6 +63,7 @@ class ViewTemplates extends Component {
 //remove template
       removeTemplate = async (event) =>{
         event.preventDefault();
+        const token = localStorage.getItem('token');
         const {doc_id} = this.state;
         console.log("Remove button pressed");
 // curently takes local storage value for testing value -> editor
@@ -67,10 +72,10 @@ class ViewTemplates extends Component {
 // after parse, stringify the value then send via POST
         console.log(JSON.stringify(testValue))
         try{
-            const res = await fetch(`http://localhost:8086/template/${doc_id}`, {
+            const res = await fetch(`http://localhost:8086/doctemplate/delete?docTypeId=${doc_id}`, {
             method: 'DELETE',
             headers: {
-                "content-type": "application/json"
+                "token": token
             },
             })
             const statusCode = await res.status;
